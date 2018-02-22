@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_home"
+        android:icon="@drawable/ic_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/main_car"
+        android:icon="@drawable/ic_car"
+        android:title="车源" />
+    <item
+        android:id="@+id/main_car_hang"
+        android:icon="@drawable/ic_car_hang"
+        android:title="车行" />
+    <item
+        android:id="@+id/main_person"
+        android:icon="@drawable/ic_person"
+        android:title="我的" />
+</menu>
