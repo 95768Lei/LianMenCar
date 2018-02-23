@@ -45,6 +45,7 @@
             android:background="@color/white"
             android:layout_marginRight="16dp"
             android:hint="您想要搜索的车"
+            android:textCursorDrawable="@null"
             android:paddingLeft="@dimen/dp_4"
             android:textSize="@dimen/dp_14" />
 

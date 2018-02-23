@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="38dp">
+
+    <TextView
+        android:id="@+id/car_item_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:text="燃油类型"
+        android:textSize="@dimen/dp_14" />
+
+    <TextView
+        android:id="@+id/car_data_line"
+        android:layout_width="1.2dp"
+        android:layout_height="26dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="170px"
+        android:background="@color/text_greyDark" />
+
+    <TextView
+        android:id="@+id/car_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_toRightOf="@id/car_data_line"
+        android:text="VALUE"
+        android:textSize="@dimen/dp_14" />
+</com.zhy.autolayout.AutoRelativeLayout>

@@ -1,4 +1,4 @@
-<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,12 +6,103 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/main_title_layout" />
+    <include
+        android:id="@+id/car_title"
+        layout="@layout/main_title_layout" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/linear_gong_neng"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_below="@id/car_title">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_qu_jian_money"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_qu_jian_money"
+                style="@style/TextCarStyle"
+                android:text="@string/money_interval" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_4"
+                app:srcCompat="@drawable/ic_money" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_car_nian_xian"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_car_nian_xian"
+                style="@style/TextCarStyle"
+                android:text="@string/car_nian_xian" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginLeft="@dimen/dp_4"
+                app:srcCompat="@drawable/ic_xin_hao" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_run_range"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/car_run_range"
+                style="@style/TextCarStyle"
+                android:text="行驶里程" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginLeft="@dimen/dp_4"
+                app:srcCompat="@drawable/ic_li_cheng_biao" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_more"
+                style="@style/TextCarStyle"
+                android:text="更多检索" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginLeft="@dimen/dp_4"
+                app:srcCompat="@drawable/ic_format_list_numbered_black" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:id="@+id/car_trl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/linear_gong_neng">
 
         <ListView
             android:id="@+id/car_listView"
@@ -20,4 +111,7 @@
             android:divider="@color/white"></ListView>
 
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
-</com.zhy.autolayout.AutoLinearLayout>
+
+    <include layout="@layout/fab_loop_layout" />
+
+</com.zhy.autolayout.AutoRelativeLayout>

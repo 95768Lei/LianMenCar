@@ -16,22 +16,29 @@
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_6">
 
-            <ImageView
-                android:id="@+id/iv_car_icon"
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:id="@+id/iv_car_rl"
                 android:layout_width="260px"
-                android:layout_height="175px"
-                android:layout_marginRight="@dimen/dp_8"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/icon1" />
+                android:layout_height="175px">
+
+                <ImageView
+                    android:id="@+id/iv_car_icon"
+                    android:layout_width="260px"
+                    android:layout_height="175px"
+                    android:layout_marginRight="@dimen/dp_8"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon1" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
 
             <TextView
                 android:id="@+id/tv_car_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_6"
-                android:layout_toRightOf="@id/iv_car_icon"
+                android:layout_toRightOf="@id/iv_car_rl"
                 android:text="劳斯莱斯"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dp_14" />
@@ -42,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_car_name"
                 android:layout_marginTop="@dimen/dp_2"
-                android:layout_toRightOf="@id/iv_car_icon"
+                android:layout_toRightOf="@id/iv_car_rl"
                 android:text="劳斯莱斯"
                 android:textSize="@dimen/dp_12" />
 
@@ -52,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_car_data"
                 android:layout_marginTop="@dimen/dp_2"
-                android:layout_toRightOf="@id/iv_car_icon"
+                android:layout_toRightOf="@id/iv_car_rl"
                 android:text="劳斯莱斯"
                 android:textSize="@dimen/dp_12" />
 
@@ -60,10 +67,9 @@
                 android:id="@+id/tv_car_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_car_icon"
-                android:layout_marginBottom="@dimen/dp_6"
+                android:layout_alignBottom="@id/iv_car_rl"
                 android:layout_marginTop="@dimen/dp_2"
-                android:layout_toRightOf="@id/iv_car_icon"
+                android:layout_toRightOf="@id/iv_car_rl"
                 android:text="14万"
                 android:textColor="@color/red"
                 android:textSize="@dimen/dp_14" />
@@ -72,7 +78,7 @@
                 android:id="@+id/tv_car_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_car_icon"
+                android:layout_alignBottom="@id/iv_car_rl"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/dp_6"
                 android:layout_marginRight="@dimen/dp_8"

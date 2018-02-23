@@ -1,20 +1,29 @@
 package com.zl.webproject.ui.fragment;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.ListView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.ui.activity.CarDetailActivity;
 import com.zl.webproject.view.MyGridView;
 import com.zl.webproject.view.MyListView;
 
@@ -40,15 +49,20 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.home_grid)
     MyGridView homeGrid;
     @BindView(R.id.home_listView)
-    ListView homeListView;
+    MyListView homeListView;
     @BindView(R.id.home_trl)
     TwinklingRefreshLayout homeTrl;
     Unbinder unbinder;
+    @BindView(R.id.iv_message)
+    ImageView ivMessage;
+    @BindView(R.id.fab_loop)
+    FloatingActionButton fabLoop;
 
     private UniversalAdapter<String> gAdapter;
     private UniversalAdapter<String> mAdapter;
     private List<String> mList = new ArrayList<>();
     private List<String> gList = new ArrayList<>();
+    private List<Integer> ivList = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -71,7 +85,17 @@ public class HomeFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         initView();
         initData();
+        initListener();
         return view;
+    }
+
+    private void initListener() {
+        homeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                startActivity(new Intent(mActivity, CarDetailActivity.class));
+            }
+        });
     }
 
     private void initData() {
@@ -81,6 +105,12 @@ public class HomeFragment extends BaseFragment {
         }
         gAdapter.notifyDataSetChanged();
         mAdapter.notifyDataSetChanged();
+
+        ivList.add(R.mipmap.icon1);
+        ivList.add(R.mipmap.icon1);
+        ivList.add(R.mipmap.icon1);
+
+        homeBanner.notifyDataSetChanged();
     }
 
     private void initView() {
@@ -96,8 +126,18 @@ public class HomeFragment extends BaseFragment {
 
             }
         };
+        homeTrl.setEnableRefresh(false);
         homeGrid.setAdapter(gAdapter);
         homeListView.setAdapter(mAdapter);
+
+        //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
+        homeBanner.setPages(
+                new CBViewHolderCreator<LocalImageHolderView>() {
+                    @Override
+                    public LocalImageHolderView createHolder() {
+                        return new LocalImageHolderView();
+                    }
+                }, ivList);
     }
 
     @Override
@@ -106,7 +146,7 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_city, R.id.iv_message})
+    @OnClick({R.id.tv_city, R.id.iv_message, R.id.fab_loop})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //选择城市
@@ -115,6 +155,32 @@ public class HomeFragment extends BaseFragment {
             //进入消息中心
             case R.id.iv_message:
                 break;
+            case R.id.fab_loop:
+                updateData();
+                break;
+        }
+    }
+
+    /**
+     * 刷新数据
+     */
+    private void updateData() {
+        startLoop(fabLoop);
+    }
+
+    public class LocalImageHolderView implements Holder<Integer> {
+        private ImageView imageView;
+
+        @Override
+        public View createView(Context context) {
+            imageView = new ImageView(context);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            return imageView;
+        }
+
+        @Override
+        public void UpdateUI(Context context, final int position, Integer data) {
+            imageView.setImageResource(data);
         }
     }
 }

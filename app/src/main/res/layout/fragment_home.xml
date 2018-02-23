@@ -1,70 +1,64 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_scrollFlags="enterAlways|scroll">
-
-            <com.zhy.autolayout.AutoLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/main_title_layout" />
-
-                <com.bigkoo.convenientbanner.ConvenientBanner
-                    android:id="@+id/home_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="360px"
-                    app:canLoop="true" />
-
-                <com.zl.webproject.view.MyGridView
-                    android:id="@+id/home_grid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:numColumns="5"
-                    android:paddingBottom="@dimen/dp_6"
-                    android:paddingTop="@dimen/dp_6"></com.zl.webproject.view.MyGridView>
-
-            </com.zhy.autolayout.AutoLinearLayout>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:text="————  最新发布  ————"
-            android:textColor="@color/black" />
-
-    </android.support.design.widget.AppBarLayout>
-
-
-    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-        android:id="@+id/home_trl"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@color/white"
+        android:fillViewport="true">
 
-        <ListView
-            android:id="@+id/home_listView"
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/white"></ListView>
+            android:orientation="vertical">
 
-    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+            <include layout="@layout/main_title_layout" />
 
-</android.support.design.widget.CoordinatorLayout>
+            <com.bigkoo.convenientbanner.ConvenientBanner
+                android:id="@+id/home_banner"
+                android:layout_width="match_parent"
+                android:layout_height="360px"
+                app:canLoop="true" />
+
+            <com.zl.webproject.view.MyGridView
+                android:id="@+id/home_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="5"
+                android:paddingBottom="@dimen/dp_6"
+                android:paddingTop="@dimen/dp_6"></com.zl.webproject.view.MyGridView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_32"
+                android:gravity="center"
+                android:text="————  最新发布  ————"
+                android:textColor="@color/black" />
+
+            <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+                android:id="@+id/home_trl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <com.zl.webproject.view.MyListView
+                    android:id="@+id/home_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/white"></com.zl.webproject.view.MyListView>
+
+            </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/fab_loop_layout" />
+
+</com.zhy.autolayout.AutoRelativeLayout>
+
 
 

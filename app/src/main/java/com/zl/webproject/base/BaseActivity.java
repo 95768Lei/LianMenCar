@@ -13,8 +13,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
+import com.zl.webproject.R;
 
 import java.util.List;
 
@@ -63,6 +65,18 @@ public class BaseActivity extends AppCompatActivity {
         baseDialog.setCanceledOnTouchOutside(true);
         baseDialog.setMessage(Message);
         baseDialog.show();
+    }
+
+    protected void initBanner(ConvenientBanner homeBanner) {
+        homeBanner
+                //设置指示器是否可见
+                .setPointViewVisible(true)
+                //设置自动切换（同时设置了切换时间间隔）
+                .startTurning(3000)
+                //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                .setPageIndicator(new int[]{R.drawable.ic_fiber_manual_record_black, R.drawable.ic_fiber_manual_record_white})
+                //设置指示器的方向（左、中、右）
+                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
     }
 
     /**

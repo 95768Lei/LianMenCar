@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b60a0909"
+    android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/tag_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:horizontalSpacing="16dp"
+        android:numColumns="3"
+        android:padding="@dimen/dp_16"
+        android:verticalSpacing="16dp"></GridView>
+
+    <TextView
+        android:id="@+id/bg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.zhy.autolayout.AutoLinearLayout>
