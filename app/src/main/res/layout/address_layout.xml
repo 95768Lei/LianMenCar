@@ -24,7 +24,7 @@
         android:background="@drawable/text_round_shape"
         android:gravity="center"
         android:textColor="#ffffffff"
-        android:textSize="30.0dip"
+        android:textSize="30dp"
         android:visibility="invisible" />
 
 </com.zhy.autolayout.AutoRelativeLayout>

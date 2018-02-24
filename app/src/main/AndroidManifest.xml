@@ -49,11 +49,12 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="3d94ba7023ce6027cd54d731" />
+
+        <!-- 百度定位 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" />
 
-        <!-- 百度定位 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -136,7 +137,9 @@
         </activity>
         <activity android:name=".ui.activity.WelComeActivity" />
         <activity android:name=".ui.activity.CarDetailActivity" />
-        <activity android:name=".ui.activity.CarHangDetailActivity"></activity>
+        <activity android:name=".ui.activity.CarHangDetailActivity" />
+        <activity android:name=".ui.activity.SettingsActivity" />
+        <activity android:name=".ui.activity.MessageActivity"></activity>
     </application>
 
 </manifest>

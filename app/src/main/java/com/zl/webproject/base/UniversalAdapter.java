@@ -13,8 +13,8 @@ import java.util.List;
 
 public abstract class UniversalAdapter<T> extends BaseAdapter {
 
-    private Context context;
-    private List<T> list;
+    protected Context context;
+    protected List<T> list;
     private int layoutId;
 
     public UniversalAdapter(Context context, List<T> list, int layoutId) {

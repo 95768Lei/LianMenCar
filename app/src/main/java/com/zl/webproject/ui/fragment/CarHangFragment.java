@@ -18,6 +18,7 @@ import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.ui.activity.CarHangDetailActivity;
+import com.zl.webproject.ui.activity.MessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +111,7 @@ public class CarHangFragment extends BaseFragment {
             case R.id.tv_city:
                 break;
             case R.id.iv_message:
+                startActivity(new Intent(mActivity, MessageActivity.class));
                 break;
         }
     }

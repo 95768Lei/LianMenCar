@@ -59,4 +59,14 @@
         <item name="android:textSize">@dimen/dp_12</item>
     </style>
 
+    <style name="SettingsTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:drawableRight">@mipmap/icon_right</item>
+        <item name="android:textSize">@dimen/dp_14</item>
+    </style>
+
 </resources>

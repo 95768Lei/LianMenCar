@@ -26,7 +26,7 @@
             android:layout_centerInParent="true"
             android:text="TitleName"
             android:textColor="@color/white"
-            android:textSize="30px" />
+            android:textSize="@dimen/dp_16" />
 
         <ImageView
             android:id="@+id/iv_title_share"
@@ -39,6 +39,18 @@
             android:padding="@dimen/dp_4"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_share_white" />
+
+        <TextView
+            android:id="@+id/tv_title_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_16"
+            android:text="TitleRight"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_14"
+            android:visibility="gone" />
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

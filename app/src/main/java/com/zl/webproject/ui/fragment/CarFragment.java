@@ -20,6 +20,7 @@ import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.ui.activity.CarDetailActivity;
+import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.dialog.MoreTagDialog;
 import com.zl.webproject.ui.dialog.TagDialog;
 
@@ -140,6 +141,7 @@ public class CarFragment extends BaseFragment {
                 break;
             //进入消息中心
             case R.id.iv_message:
+                startActivity(new Intent(mActivity, MessageActivity.class));
                 break;
             //刷新数据
             case R.id.fab_loop:
@@ -159,9 +161,33 @@ public class CarFragment extends BaseFragment {
                 break;
             //更多检索
             case R.id.linear_more:
-                moreTagDialog.showDialog(linearGongNeng);
+                showMoreWindow();
                 break;
         }
+    }
+
+    private void showMoreWindow() {
+
+        if (moreTagDialog.isShow()) {
+            moreTagDialog.dismiss();
+            return;
+        }
+
+        tagDialog.dismiss();
+        tagRunDialog.dismiss();
+        tagNianDialog.dismiss();
+
+        if (tagDialog.isShow() || tagRunDialog.isShow() || tagNianDialog.isShow()) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    moreTagDialog.showDialog(linearGongNeng);
+                }
+            }, 400);
+        } else {
+            moreTagDialog.showDialog(linearGongNeng);
+        }
+
     }
 
     private void showWindow(final TagDialog dialog) {
@@ -174,12 +200,16 @@ public class CarFragment extends BaseFragment {
         tagRunDialog.dismiss();
         tagNianDialog.dismiss();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dialog.showDialog(linearGongNeng);
-            }
-        }, 400);
+        if (tagDialog.isShow() || tagRunDialog.isShow() || tagNianDialog.isShow()) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.showDialog(linearGongNeng);
+                }
+            }, 400);
+        } else {
+            dialog.showDialog(linearGongNeng);
+        }
 
 
     }

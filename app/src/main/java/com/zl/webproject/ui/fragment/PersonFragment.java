@@ -1,6 +1,7 @@
 package com.zl.webproject.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.ui.activity.MessageActivity;
+import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.view.MyListView;
 
 import java.util.ArrayList;
@@ -94,9 +97,13 @@ public class PersonFragment extends BaseFragment {
     @OnClick({R.id.iv_setting, R.id.iv_message})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            //进入设置
             case R.id.iv_setting:
+                startActivity(new Intent(mActivity, SettingsActivity.class));
                 break;
+            //进入消息中心
             case R.id.iv_message:
+                startActivity(new Intent(mActivity, MessageActivity.class));
                 break;
         }
     }

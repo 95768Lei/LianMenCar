@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
@@ -24,6 +26,10 @@ import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.ui.activity.CarDetailActivity;
+import com.zl.webproject.ui.activity.MessageActivity;
+import com.zl.webproject.ui.activity.SettingsActivity;
+import com.zl.webproject.ui.dialog.AddressDialog;
+import com.zl.webproject.utils.LocationUtils;
 import com.zl.webproject.view.MyGridView;
 import com.zl.webproject.view.MyListView;
 
@@ -63,6 +69,8 @@ public class HomeFragment extends BaseFragment {
     private List<String> mList = new ArrayList<>();
     private List<String> gList = new ArrayList<>();
     private List<Integer> ivList = new ArrayList<>();
+    private AddressDialog addressDialog;
+    private LocationUtils locationUtils;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -94,6 +102,18 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 startActivity(new Intent(mActivity, CarDetailActivity.class));
+            }
+        });
+
+        locationUtils.setOnLocationListener(new LocationUtils.OnLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation location) {
+                Log.e("BDLocation", "");
+            }
+
+            @Override
+            public void onConnectHotSpotMessage(String s, int i) {
+                Log.e("BDLocation", "");
             }
         });
     }
@@ -138,6 +158,11 @@ public class HomeFragment extends BaseFragment {
                         return new LocalImageHolderView();
                     }
                 }, ivList);
+
+        addressDialog = new AddressDialog(mActivity);
+
+        locationUtils = LocationUtils.getInstance(mActivity);
+        locationUtils.startLocation();
     }
 
     @Override
@@ -151,9 +176,11 @@ public class HomeFragment extends BaseFragment {
         switch (view.getId()) {
             //选择城市
             case R.id.tv_city:
+                addressDialog.showDialog(view);
                 break;
             //进入消息中心
             case R.id.iv_message:
+                startActivity(new Intent(mActivity, MessageActivity.class));
                 break;
             case R.id.fab_loop:
                 updateData();

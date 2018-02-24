@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
@@ -117,6 +119,17 @@ public class BaseActivity extends AppCompatActivity {
             // 隐藏软键盘
             imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    /**
+     * 初始化刷新控件
+     *
+     * @param trl
+     */
+    protected void initProgress(TwinklingRefreshLayout trl) {
+        ProgressLayout progressLayout = new ProgressLayout(mActivity);
+        progressLayout.setColorSchemeResources(R.color.colorPrimary);
+        trl.setHeaderView(progressLayout);
     }
 
     /**

@@ -99,14 +99,14 @@ public class MoreTagDialog {
                 adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int i) {
-                        try{
+                        try {
                             Integer integer = sparseArray.get(position);
                             if (integer == i) {
                                 sparseArray.remove(position);
-                            }else{
+                            } else {
                                 sparseArray.put(position, i);
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             sparseArray.put(position, i);
                         }
                         adapter.notifyDataSetChanged();
@@ -126,6 +126,10 @@ public class MoreTagDialog {
 
     public void dismiss() {
         mPopupWindow.dismiss();
+    }
+
+    public boolean isShow() {
+        return mPopupWindow.isShowing();
     }
 
     private TagDialog.OnReturnDataListener onReturnDataListener;
