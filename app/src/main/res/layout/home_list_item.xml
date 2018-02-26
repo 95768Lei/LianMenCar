@@ -32,6 +32,14 @@
                     android:scaleType="centerCrop"
                     android:src="@mipmap/icon1" />
 
+                <ImageView
+                    android:id="@+id/iv_car_tag"
+                    android:layout_width="260px"
+                    android:layout_height="175px"
+                    android:layout_marginRight="@dimen/dp_8"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/hang" />
+
             </com.zhy.autolayout.AutoRelativeLayout>
 
             <TextView
@@ -39,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/iv_car_rl"
-                android:text="劳斯莱斯"
+                android:text="2013款路虎神行者"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dp_14" />
 
@@ -48,19 +56,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_car_name"
-                android:layout_marginTop="@dimen/dp_2"
+                android:layout_marginTop="@dimen/dp_6"
                 android:layout_toRightOf="@id/iv_car_rl"
-                android:text="劳斯莱斯"
-                android:textSize="@dimen/dp_12" />
-
-            <TextView
-                android:id="@+id/tv_car_d_money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_car_data"
-                android:layout_marginTop="@dimen/dp_2"
-                android:layout_toRightOf="@id/iv_car_rl"
-                android:text="劳斯莱斯"
+                android:text="2012-12/7万公里"
                 android:textSize="@dimen/dp_12" />
 
             <TextView
@@ -93,8 +91,169 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/dp_4"
                 android:layout_marginRight="@dimen/dp_8"
-                android:text="我是汽车的标签"
+                android:text="过户车"
                 android:textSize="@dimen/dp_12" />
+
+
+            <!--四项功能 预定、已售、下架、分享-->
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/linear_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_32"
+                android:layout_below="@id/iv_car_rl"
+                android:layout_marginTop="@dimen/dp_8"
+                android:visibility="gone">
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_yu_ding"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_lock_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="预定"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_yi_shou"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_local_grocery_store_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="已售"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_xia_jia"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_delete_sweep_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下架"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_fen_xiang"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_share_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分享"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <!--两项功能 删除、分享-->
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/linear_bottom_two"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_32"
+                android:layout_below="@id/iv_car_rl"
+                android:layout_marginTop="@dimen/dp_8"
+                android:visibility="gone">
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_delete_sweep_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="删除"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_share"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        app:srcCompat="@drawable/ic_share_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分享"
+                        android:textColor="@color/black"
+                        android:textSize="22px" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoLinearLayout>
 
         </com.zhy.autolayout.AutoRelativeLayout>
 

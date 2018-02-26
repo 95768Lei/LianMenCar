@@ -1,0 +1,49 @@
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.fragment.ImageFragment">
+
+    <include
+        android:id="@+id/image_title"
+        layout="@layout/base_title_layout" />
+
+    <GridView
+        android:id="@+id/image_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/image_title"
+        android:horizontalSpacing="8dp"
+        android:numColumns="3"
+        android:padding="@dimen/dp_8"
+        android:verticalSpacing="8dp"></GridView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tab_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120px"
+        app:srcCompat="@drawable/ic_add_white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="点击选择首页展示图，建议上传16:9的图片，最多上传9张"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_12" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_48"
+        android:background="@color/light_grey" />
+
+</com.zhy.autolayout.AutoRelativeLayout>

@@ -8,16 +8,17 @@
         android:id="@+id/linear_chakangengduo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:gravity="center_vertical">
 
         <ImageView
+            android:id="@+id/iv_list_item"
             android:layout_width="96px"
             android:layout_height="96px"
             android:padding="18px"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
+            android:id="@+id/tv_list_item"
             style="@style/TextStyle"
             android:layout_gravity="center_vertical"
             android:text="look_more" />

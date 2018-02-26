@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_title_layout" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_16">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="170px"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_8"
+                android:text="真实姓名"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_18" />
+
+            <EditText
+                android:id="@+id/et_input_realName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_44"
+                android:background="@color/white"
+                android:hint="请输入真实姓名"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:paddingLeft="@dimen/dp_32"
+                android:textSize="@dimen/dp_16" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/text_grey" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="170px"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_8"
+                android:text="身份证号"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_18" />
+
+            <EditText
+                android:id="@+id/et_input_idNumber"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_44"
+                android:background="@color/white"
+                android:hint="请输入身份证号"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingLeft="@dimen/dp_32"
+                android:textSize="@dimen/dp_16" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/text_grey" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="170px"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_8"
+                android:text="出生日期"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dp_18" />
+
+            <TextView
+                android:id="@+id/tv_person_date"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_44"
+                android:background="@color/white"
+                android:drawableRight="@mipmap/right_arrow"
+                android:gravity="center_vertical"
+                android:hint="点击选择"
+                android:paddingLeft="@dimen/dp_32"
+                android:textSize="@dimen/dp_16" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/text_grey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="证件照片▼"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_16"
+            android:textStyle="bold" />
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="210px"
+            android:layout_marginTop="@dimen/dp_8">
+
+            <ImageView
+                android:id="@+id/iv_person_front"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@mipmap/s1" />
+
+            <ImageView
+                android:id="@+id/iv_person_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:src="@mipmap/s2" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:id="@+id/tv_commit_update"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:layout_marginTop="@dimen/dp_32"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="确认修改"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_16" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

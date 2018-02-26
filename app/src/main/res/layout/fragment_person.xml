@@ -9,6 +9,8 @@
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:orientation="vertical">
 
         <com.zhy.autolayout.AutoRelativeLayout
@@ -60,6 +62,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/white"
-            android:paddingLeft="@dimen/dp_8"></com.zl.webproject.view.MyListView>
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8" />
+
+        <TextView
+            android:id="@+id/tv_sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:layout_marginTop="@dimen/dp_32"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_16" />
+
     </com.zhy.autolayout.AutoLinearLayout>
 </ScrollView>

@@ -68,7 +68,8 @@
 
                 <TextView
                     android:id="@+id/tv_sex"
-                    style="@style/SettingsTextStyle" />
+                    style="@style/SettingsTextStyle"
+                    android:text="无" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -93,7 +94,8 @@
 
                 <TextView
                     android:id="@+id/tv_nick_name"
-                    style="@style/SettingsTextStyle" />
+                    style="@style/SettingsTextStyle"
+                    android:text="测试用户" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -118,7 +120,8 @@
 
                 <TextView
                     android:id="@+id/tv_user_phone"
-                    style="@style/SettingsTextStyle" />
+                    style="@style/SettingsTextStyle"
+                    android:text="150****3917" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -169,8 +172,8 @@
 
                 <TextView
                     android:id="@+id/tv_update_password"
-                    android:text="点击修改密码"
-                    style="@style/SettingsTextStyle" />
+                    style="@style/SettingsTextStyle"
+                    android:text="点击修改密码" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -188,5 +191,10 @@
             android:textSize="@dimen/dp_16" />
 
     </com.zhy.autolayout.AutoLinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
 
 </com.zhy.autolayout.AutoRelativeLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.activity.FeedBackActivity">
+
+    <include layout="@layout/base_title_layout" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_6"
+        android:text="* 请您在此留下宝贵的意见，我们会及时给您答复，感谢您的留言。" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/dp_16"
+        app:counterEnabled="true"
+        app:counterMaxLength="300"
+        app:counterOverflowTextAppearance="@style/MyStyle"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/line_ju_xing_bg"
+            android:gravity="top"
+            android:maxHeight="240dp"
+            android:minHeight="140dp"
+            android:padding="6dp"
+            android:textSize="13sp" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_commit_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_46"
+        android:layout_margin="@dimen/dp_16"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="提交意见"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_16" />
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -20,7 +20,7 @@
             <com.bigkoo.convenientbanner.ConvenientBanner
                 android:id="@+id/home_banner"
                 android:layout_width="match_parent"
-                android:layout_height="360px"
+                android:layout_height="460px"
                 app:canLoop="true" />
 
             <com.zl.webproject.view.MyGridView

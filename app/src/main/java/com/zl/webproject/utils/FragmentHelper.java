@@ -40,7 +40,7 @@ public class FragmentHelper {
      *
      * @param fragment
      */
-    private void hideFragment(Fragment fragment) {
+    public void hideFragment(Fragment fragment) {
         FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
         transaction.hide(fragment).commit();
     }

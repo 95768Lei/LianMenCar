@@ -110,7 +110,7 @@ public class HttpUtils {
                     builder.addFormDataPart("userPhone", phone);
                 }
                 for (String s : mList) {
-                    byte[] getimage = ImageFactory.getimage(s,350);
+                    byte[] getimage = ImageFactory.getimage(s);
                     Log.e("length", getimage.length + "");
                     final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
                     String fileName = s.substring(s.lastIndexOf("/"));
@@ -168,7 +168,7 @@ public class HttpUtils {
                     builder.addFormDataPart("userPhone", phone);
                 }
                 for (String s : mList) {
-                    byte[] getimage = ImageFactory.getimage(s, size);
+                    byte[] getimage = ImageFactory.getimage(s);
                     Log.e("length", getimage.length + "");
                     final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
                     String fileName = s.substring(s.lastIndexOf("/"));

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Webproject</string>
+    <string name="app_name">联盟抵押车</string>
     <string name="choose_photo_mode">照片选取方式</string>
     <string name="camera">拍照</string>
     <string name="photo">相册</string>
@@ -13,4 +13,7 @@
     <string name="call_phone">拨打电话</string>
     <string name="money_interval">价格区间</string>
     <string name="car_nian_xian">车辆年限</string>
+    <string name="car_type">车辆类型</string>
+    <string name="click_selector">点击选择</string>
+    <string name="send_code">发送验证码</string>
 </resources>

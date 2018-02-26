@@ -28,12 +28,14 @@ public class MainActivity extends BaseActivity {
     private CarHangFragment carHangFragment;
     private PersonFragment personFragment;
     private FragmentHelper helper;
+    public static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mainActivity = this;
         initView();
         initListener();
     }

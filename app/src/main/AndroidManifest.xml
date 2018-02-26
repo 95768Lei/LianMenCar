@@ -39,7 +39,7 @@
     <application
         android:name=".APP"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -139,7 +139,16 @@
         <activity android:name=".ui.activity.CarDetailActivity" />
         <activity android:name=".ui.activity.CarHangDetailActivity" />
         <activity android:name=".ui.activity.SettingsActivity" />
-        <activity android:name=".ui.activity.MessageActivity"></activity>
+        <activity
+            android:name=".ui.activity.CameraActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ui.activity.MessageActivity" />
+        <activity android:name=".ui.activity.SendCarActivity" />
+        <activity android:name=".ui.activity.WebActivity" />
+        <activity android:name=".ui.activity.MyCarActivity" />
+        <activity android:name=".ui.activity.CarCollectActivity" />
+        <activity android:name=".ui.activity.CarHangCollectActivity" />
+        <activity android:name=".ui.activity.FeedBackActivity"></activity>
     </application>
 
 </manifest>

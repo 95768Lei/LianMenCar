@@ -27,6 +27,7 @@ import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.ui.activity.CarDetailActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
+import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.utils.LocationUtils;
@@ -69,6 +70,9 @@ public class HomeFragment extends BaseFragment {
     private List<String> mList = new ArrayList<>();
     private List<String> gList = new ArrayList<>();
     private List<Integer> ivList = new ArrayList<>();
+    private String[] names = {"发布车源", "查找车源", "车行收藏", "赚取佣金", "便捷查询", "违章处理", "维修服务", "保险服务", "年审服务", "联盟论坛"};
+    private Integer[] icons = {R.mipmap.fabu, R.mipmap.cheyuan, R.mipmap.shoucang, R.mipmap.zhongjie,
+            R.mipmap.chaxun, R.mipmap.weizhang, R.mipmap.weixiu,R.mipmap.baoxian, R.mipmap.nianshen, R.mipmap.luntan};
     private AddressDialog addressDialog;
     private LocationUtils locationUtils;
 
@@ -116,19 +120,60 @@ public class HomeFragment extends BaseFragment {
                 Log.e("BDLocation", "");
             }
         });
+
+        homeGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    //发布车源
+                    case 0:
+                        startActivity(new Intent(mActivity, SendCarActivity.class));
+                        break;
+                    //查找车源
+                    case 1:
+
+                        break;
+                    //车行收藏
+                    case 2:
+                        break;
+                    //赚取佣金
+                    case 3:
+                        break;
+                    //便捷查询
+                    case 4:
+                        break;
+                    //违章处理
+                    case 5:
+                        break;
+                    //维修服务
+                    case 6:
+                        break;
+                    //保险服务
+                    case 7:
+                        break;
+                    //年审服务
+                    case 8:
+                        break;
+                    //联盟论坛
+                    case 9:
+                        break;
+                }
+            }
+        });
     }
 
     private void initData() {
-        for (int i = 0; i < 10; i++) {
-            gList.add("");
-            mList.add("");
+        for (int i = 0; i < names.length; i++) {
+            gList.add(names[i]);
+            mList.add(names[i]);
         }
         gAdapter.notifyDataSetChanged();
         mAdapter.notifyDataSetChanged();
 
-        ivList.add(R.mipmap.icon1);
-        ivList.add(R.mipmap.icon1);
-        ivList.add(R.mipmap.icon1);
+        ivList.add(R.mipmap.guanggao1);
+        ivList.add(R.mipmap.guanggao2);
+        ivList.add(R.mipmap.guanggao3);
+        ivList.add(R.mipmap.guanggao4);
 
         homeBanner.notifyDataSetChanged();
     }
@@ -137,7 +182,8 @@ public class HomeFragment extends BaseFragment {
         gAdapter = new UniversalAdapter<String>(mActivity, gList, R.layout.home_grid_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, String s) {
-
+                holder.setText(R.id.tv_name, s);
+                holder.setImageResource(R.id.image_icon,icons[position]);
             }
         };
         mAdapter = new UniversalAdapter<String>(mActivity, mList, R.layout.home_list_item) {
@@ -158,6 +204,8 @@ public class HomeFragment extends BaseFragment {
                         return new LocalImageHolderView();
                     }
                 }, ivList);
+
+        initBanner(homeBanner);
 
         addressDialog = new AddressDialog(mActivity);
 

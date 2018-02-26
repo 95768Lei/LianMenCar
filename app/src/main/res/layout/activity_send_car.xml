@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.activity.SendCarActivity">
+
+    <include
+        android:id="@+id/send_car_title"
+        layout="@layout/base_title_layout" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/send_car_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_line_bg">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="完善信息方便检索"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/orange"
+            android:gravity="center"
+            android:text="发布车源"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_14" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/send_car_bottom"
+        android:layout_below="@id/send_car_title">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/image_add"
+                android:layout_width="match_parent"
+                android:layout_height="420px"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/add_image" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="品牌型号" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_car_type"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_car_type"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_car_type"
+                    android:hint="例：奥迪A6L" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="@string/car_type" />
+
+                <TextView
+                    android:id="@+id/tv_car_type"
+                    style="@style/TextStyle_right"
+                    android:text="@string/click_selector" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="变速方式" />
+
+                <TextView
+                    android:id="@+id/tv_bian_su_fang_shi"
+                    style="@style/TextStyle_right"
+                    android:text="@string/click_selector" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="上牌日期" />
+
+                <TextView
+                    android:id="@+id/tv_choose_length"
+                    style="@style/TextStyle_right"
+                    android:text="@string/click_selector" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="所在地区" />
+
+                <TextView
+                    android:id="@+id/tv_choose_address"
+                    style="@style/TextStyle_right"
+                    android:text="@string/click_selector" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="燃油类型" />
+
+                <TextView
+                    android:id="@+id/tv_ran_you_type"
+                    style="@style/TextStyle_right"
+                    android:text="@string/click_selector" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="行驶里程" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_li_cheng"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_li_cheng"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_li_cheng"
+                    android:hint="例：15.8 (单位万公里)" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="销售价格" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_car_money"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_car_money"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_car_money"
+                    android:hint="例：8.5 (单位万元)" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="订车定金" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_car_ding_jin"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_car_ding_jin"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_car_ding_jin"
+                    android:hint="例：2000 (单位元)" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="中介佣金" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_car_yong_jin"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_car_yong_jin"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_car_yong_jin"
+                    android:hint="例：2000 (单位元)" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="车辆排量" />
+
+                <ImageView
+                    android:id="@+id/iv_clear_car_pai_liang"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_clear" />
+
+                <EditText
+                    android:id="@+id/et_car_pai_liang"
+                    style="@style/EditTextSendCarType"
+                    android:layout_toLeftOf="@id/iv_clear_car_pai_liang"
+                    android:hint="例：1.5 (单位L)" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/dp_12"
+                android:paddingTop="@dimen/dp_12">
+
+                <TextView
+                    style="@style/SendGoodsTextStyle"
+                    android:text="车辆状态" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="可过户"
+                        android:textColor="@color/main_text_selector_color" />
+
+                    <RadioButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="不可过户"
+                        android:textColor="@color/main_text_selector_color" />
+
+                </RadioGroup>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zl.webproject.view.MyGridView
+                android:id="@+id/send_car_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.zl.webproject.view.MyGridView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:background="@color/light_grey" />
+
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="锁定"
+                    android:textColor="@color/main_text_selector_color" />
+
+                <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="查封"
+                    android:textColor="@color/main_text_selector_color" />
+
+                <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="违章王"
+                    android:textColor="@color/main_text_selector_color" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/et_car_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_18"
+                android:background="@drawable/line_ju_xing_bg"
+                android:gravity="top"
+                android:hint="车辆描述"
+                android:minHeight="260px"
+                android:padding="@dimen/dp_8"
+                android:textSize="@dimen/dp_14" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/send_car_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
+
+</com.zhy.autolayout.AutoRelativeLayout>
