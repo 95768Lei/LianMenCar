@@ -35,7 +35,7 @@ public class CityAdapter extends UniversalAdapter<CityBean> implements SectionIn
         } else {
             tvLetter.setVisibility(View.GONE);
         }
-        holder.setText(R.id.city_name, cityBean.getName());
+        holder.setText(R.id.city_name, cityBean.getCityName());
     }
 
     @Override

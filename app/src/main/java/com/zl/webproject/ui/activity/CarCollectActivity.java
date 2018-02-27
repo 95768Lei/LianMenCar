@@ -60,7 +60,7 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView() {
-        tvTitleName.setText("我的车源");
+        tvTitleName.setText("车辆关注");
 
         adapter = new UniversalAdapter<String>(mActivity, mList, R.layout.home_list_item) {
             @Override

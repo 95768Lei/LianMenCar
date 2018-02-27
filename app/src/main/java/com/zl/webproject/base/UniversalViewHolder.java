@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zl.webproject.utils.ImageLoader;
+
 /**
  * Created by zhanglei on 2016/12/15.
  * 通用的ViewHolder类Universal
@@ -110,6 +112,7 @@ public class UniversalViewHolder {
      */
     public void setImageUrl(Activity activity, int viewId, String imageUrl) {
         ImageView view = getView(viewId);
+        ImageLoader.loadImageUrl(activity, imageUrl, view);
     }
 
     /**

@@ -39,6 +39,7 @@ public class FeedBackActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_back);
         ButterKnife.bind(this);
+        tvTitleName.setText("意见反馈");
     }
 
     @OnClick({R.id.iv_title_back, R.id.tv_commit_feedback})
@@ -55,7 +56,7 @@ public class FeedBackActivity extends BaseActivity {
 
     private void commit() {
         String data = etFeedback.getText().toString().trim();
-        if (TextUtils.isEmpty(data)){
+        if (TextUtils.isEmpty(data)) {
             showToast("内容不能为空");
             return;
         }

@@ -91,4 +91,12 @@ public class SystemUtils {
         context.startActivity(intentFinalMessage);
     }
 
+    public static void toActivity(Activity mActivity, Intent intent) {
+        //TODO 在这里判断是登录状态
+    }
+
+    public static void siganOut(Activity mActivity) {
+
+    }
+
 }

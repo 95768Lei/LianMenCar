@@ -116,7 +116,7 @@ public class SettingsActivity extends BaseActivity {
                 break;
             //退出登录
             case R.id.tv_sign_out:
-
+                finish();
                 break;
         }
     }

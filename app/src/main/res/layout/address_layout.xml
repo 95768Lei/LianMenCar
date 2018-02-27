@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/white">
 
-    <ListView
-        android:id="@+id/dialog_listView"
+    <include layout="@layout/base_title_layout" />
+
+    <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent">
 
-    <com.zl.webproject.view.SideBar
-        android:id="@+id/dialog_side"
-        android:layout_width="52px"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true" />
+        <ListView
+            android:id="@+id/dialog_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
 
-    <TextView
-        android:id="@+id/dialog_text"
-        android:layout_width="200px"
-        android:layout_height="200px"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:background="@drawable/text_round_shape"
-        android:gravity="center"
-        android:textColor="#ffffffff"
-        android:textSize="30dp"
-        android:visibility="invisible" />
+        <com.zl.webproject.view.SideBar
+            android:id="@+id/dialog_side"
+            android:layout_width="52px"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" />
 
-</com.zhy.autolayout.AutoRelativeLayout>
+        <TextView
+            android:id="@+id/dialog_text"
+            android:layout_width="200px"
+            android:layout_height="200px"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/text_round_shape"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:textSize="30dp"
+            android:visibility="invisible" />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -103,9 +103,9 @@ public class ImageFragment extends BaseFragment {
         imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (onImageFragmentListener != null) {
-                        onImageFragmentListener.onHomeImage(mList.get(i));
-                    }
+                if (onImageFragmentListener != null) {
+                    onImageFragmentListener.onHomeImage(mList.get(i));
+                }
             }
         });
     }
@@ -115,10 +115,11 @@ public class ImageFragment extends BaseFragment {
             @Override
             public void convert(UniversalViewHolder holder, int position, String s) {
                 ImageView image = holder.getView(R.id.image_item);
-                ImageLoader.loadImageFile(mActivity,s, image);
+                ImageLoader.loadImageFile(mActivity, s, image);
             }
         };
         imageGrid.setAdapter(adapter);
+        tvTitleName.setText("选择图片");
     }
 
     /**
@@ -160,7 +161,7 @@ public class ImageFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.iv_title_back,R.id.tab_add_image, R.id.tv_title_right})
+    @OnClick({R.id.iv_title_back, R.id.tab_add_image, R.id.tv_title_right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:

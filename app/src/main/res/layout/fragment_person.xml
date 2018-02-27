@@ -9,8 +9,8 @@
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusableInTouchMode="true"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <com.zhy.autolayout.AutoRelativeLayout
@@ -63,7 +63,8 @@
             android:layout_height="match_parent"
             android:divider="@color/white"
             android:paddingLeft="@dimen/dp_8"
-            android:paddingRight="@dimen/dp_8" />
+            android:paddingRight="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_16" />
 
         <TextView
             android:id="@+id/tv_sign_out"

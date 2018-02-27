@@ -8,7 +8,8 @@
         android:id="@+id/linear_chakangengduo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_list_item"
@@ -25,10 +26,19 @@
 
     </com.zhy.autolayout.AutoLinearLayout>
 
-
     <TextView
+        android:id="@+id/tv_grid_title"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/light_grey" />
+        android:layout_height="@dimen/dp_32"
+        android:background="@drawable/tab_item_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="车辆相关" />
+
+    <com.zl.webproject.view.MyGridView
+        android:id="@+id/person_item_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="4"></com.zl.webproject.view.MyGridView>
 
 </com.zhy.autolayout.AutoLinearLayout>

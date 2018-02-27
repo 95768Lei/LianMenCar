@@ -1,46 +1,60 @@
 package com.zl.webproject.ui.fragment;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
+import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.activity.CarDetailActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
-import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.LocationUtils;
+import com.zl.webproject.utils.SpUtlis;
 import com.zl.webproject.view.MyGridView;
 import com.zl.webproject.view.MyListView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -64,17 +78,20 @@ public class HomeFragment extends BaseFragment {
     ImageView ivMessage;
     @BindView(R.id.fab_loop)
     FloatingActionButton fabLoop;
+    @BindView(R.id.home_scroll)
+    ScrollView homeScroll;
 
     private UniversalAdapter<String> gAdapter;
-    private UniversalAdapter<String> mAdapter;
-    private List<String> mList = new ArrayList<>();
+    private UniversalAdapter<CarInfoEntity> mAdapter;
+    private List<CarInfoEntity> mList = new ArrayList<>();
     private List<String> gList = new ArrayList<>();
     private List<Integer> ivList = new ArrayList<>();
     private String[] names = {"发布车源", "查找车源", "车行收藏", "赚取佣金", "便捷查询", "违章处理", "维修服务", "保险服务", "年审服务", "联盟论坛"};
     private Integer[] icons = {R.mipmap.fabu, R.mipmap.cheyuan, R.mipmap.shoucang, R.mipmap.zhongjie,
-            R.mipmap.chaxun, R.mipmap.weizhang, R.mipmap.weixiu,R.mipmap.baoxian, R.mipmap.nianshen, R.mipmap.luntan};
+            R.mipmap.chaxun, R.mipmap.weizhang, R.mipmap.weixiu, R.mipmap.baoxian, R.mipmap.nianshen, R.mipmap.luntan};
     private AddressDialog addressDialog;
     private LocationUtils locationUtils;
+    private int page = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -112,12 +129,16 @@ public class HomeFragment extends BaseFragment {
         locationUtils.setOnLocationListener(new LocationUtils.OnLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation location) {
-                Log.e("BDLocation", "");
+                final String data = location.getProvince() + location.getCity() + location.getStreet();
+                final String cityCode = location.getCityCode();
+                tvCity.setText(location.getCity());
+                SpUtlis.setLocationData(mActivity, cityCode, data, location.getCity());
+                getListData();
             }
 
             @Override
             public void onConnectHotSpotMessage(String s, int i) {
-                Log.e("BDLocation", "");
+                showToast("定位失败");
             }
         });
 
@@ -160,15 +181,31 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
+
+        addressDialog.setOnAddressDataListener(new AddressDialog.OnAddressDataListener() {
+            @Override
+            public void addressData(CityBean cityBean) {
+                tvCity.setText(cityBean.getCityName());
+                addressDialog.dismissDialog();
+                getListData();
+            }
+        });
+
+        homeTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                page++;
+                getListData();
+            }
+        });
     }
 
     private void initData() {
         for (int i = 0; i < names.length; i++) {
             gList.add(names[i]);
-            mList.add(names[i]);
         }
         gAdapter.notifyDataSetChanged();
-        mAdapter.notifyDataSetChanged();
 
         ivList.add(R.mipmap.guanggao1);
         ivList.add(R.mipmap.guanggao2);
@@ -176,6 +213,52 @@ public class HomeFragment extends BaseFragment {
         ivList.add(R.mipmap.guanggao4);
 
         homeBanner.notifyDataSetChanged();
+        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        tvCity.setText(locationData.getCityName());
+        //获取最新发布的车辆
+        getListData();
+    }
+
+    private void getListData() {
+        String cityCode = SpUtlis.getLocationData(mActivity).getCityCode();
+        Map<String, String> params = new HashMap<>();
+        params.put("did", "");
+        params.put("cityCode", cityCode);
+        params.put("page", page + "");
+
+        HttpUtils.getInstance().POST(mActivity, new JSONObject(params).toString(), API.getCarList, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                try {
+
+                    if (page == 1) {
+                        homeTrl.finishRefreshing();
+                        stopLoop(fabLoop);
+                        mList.clear();
+                    } else {
+                        homeTrl.finishLoadmore();
+                    }
+
+                    JSONObject object = new JSONObject(body);
+                    JSONArray array = object.optJSONArray("items");
+                    for (int i = 0; i < array.length(); i++) {
+                        mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    if (page == 1) {
+                        homeScroll.fullScroll(ScrollView.FOCUS_UP);
+//                        homeListView.smoothScrollToPosition(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
+            }
+        });
     }
 
     private void initView() {
@@ -183,13 +266,18 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void convert(UniversalViewHolder holder, int position, String s) {
                 holder.setText(R.id.tv_name, s);
-                holder.setImageResource(R.id.image_icon,icons[position]);
+                holder.setImageResource(R.id.image_icon, icons[position]);
             }
         };
-        mAdapter = new UniversalAdapter<String>(mActivity, mList, R.layout.home_list_item) {
+        mAdapter = new UniversalAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
             @Override
-            public void convert(UniversalViewHolder holder, int position, String s) {
-
+            public void convert(UniversalViewHolder holder, int position, CarInfoEntity s) {
+                holder.setText(R.id.tv_car_name, s.getCarTitle());
+                holder.setText(R.id.tv_car_money, s.getCarPrice() + "万");
+                holder.setText(R.id.tv_car_city, s.getCarAreaCitysEntity().getCityName());
+                holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
+                holder.setText(R.id.tv_car_data, s.getCarLicensingDateStr() + "/" + s.getCarMileage() + "公里");
+                holder.setImageUrl(mActivity, R.id.iv_car_icon, s.getCarImg());
             }
         };
         homeTrl.setEnableRefresh(false);
@@ -210,7 +298,22 @@ public class HomeFragment extends BaseFragment {
         addressDialog = new AddressDialog(mActivity);
 
         locationUtils = LocationUtils.getInstance(mActivity);
-        locationUtils.startLocation();
+        if (!isPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            applyPermission(Permission.LOCATION, new PermissionListener() {
+                @Override
+                public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                    locationUtils.startLocation();
+                }
+
+                @Override
+                public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                    showToast("您拒绝了定位，无法正常使用部分功能");
+                }
+            });
+        } else {
+            locationUtils.startLocation();
+        }
+
     }
 
     @Override
@@ -241,6 +344,13 @@ public class HomeFragment extends BaseFragment {
      */
     private void updateData() {
         startLoop(fabLoop);
+        page = 1;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getListData();
+            }
+        }, 400);
     }
 
     public class LocalImageHolderView implements Holder<Integer> {

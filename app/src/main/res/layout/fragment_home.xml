@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/home_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -33,10 +34,9 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_32"
+                android:layout_height="@dimen/dp_36"
                 android:gravity="center"
-                android:text="————  最新发布  ————"
-                android:textColor="@color/black" />
+                android:text="───  最新发布  ───" />
 
             <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
                 android:id="@+id/home_trl"

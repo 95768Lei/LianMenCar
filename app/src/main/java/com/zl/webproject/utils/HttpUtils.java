@@ -5,6 +5,12 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.zl.webproject.model.BaseBean;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -238,14 +244,33 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, Response response) throws IOException {
                 final String string = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (callback != null) {
-                            callback.onSuccess(string);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            boolean result = jsonObject.optBoolean("result");
+                            String jsonData = jsonObject.optString("data");
+                            if (result) {
+                                if (callback != null) {
+                                    callback.onSuccess(jsonData);
+                                }
+                            } else {
+                                Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                                if (callback != null) {
+                                    callback.onError(call.request(), new Exception());
+                                }
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(activity, "发生了未知错误", Toast.LENGTH_SHORT).show();
+                            if (callback != null) {
+                                callback.onError(call.request(), new Exception());
+                            }
                         }
+
                     }
                 });
             }

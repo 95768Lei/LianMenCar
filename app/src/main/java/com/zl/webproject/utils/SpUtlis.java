@@ -34,21 +34,24 @@ public class SpUtlis {
         return sp.getString("regId", "");
     }
 
-    public static void setLocationData(Context context, String cityCode, String data) {
+    public static void setLocationData(Context context, String cityCode, String data, String city) {
         SharedPreferences sp = context.getSharedPreferences("location", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         edit.putString("cityCode", cityCode);
-        edit.putString("data", data);
+        edit.putString("cityName", data);
+        edit.putString("city", city);
         edit.commit();
     }
 
     public static CityBean getLocationData(Context context) {
         SharedPreferences sp = context.getSharedPreferences("location", Context.MODE_PRIVATE);
-        String cityCode = sp.getString("cityCode", "123");
-        String data = sp.getString("data", "邢台");
+        String cityCode = sp.getString("cityCode", "");
+        String data = sp.getString("cityName", "全国城市");
+        String city = sp.getString("city", "全国城市");
         CityBean cityBean = new CityBean();
         cityBean.setCityCode(cityCode);
-        cityBean.setName(data);
+        cityBean.setCityName(city);
+        cityBean.setCityData(data);
         return cityBean;
     }
 
@@ -56,7 +59,7 @@ public class SpUtlis {
         SharedPreferences sp = context.getSharedPreferences("CurrentLocation", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         edit.putString("cityCode", cityBean.getCityCode());
-        edit.putString("data", cityBean.getName());
+        edit.putString("data", cityBean.getCityName());
         edit.commit();
     }
 
@@ -66,7 +69,7 @@ public class SpUtlis {
         String data = sp.getString("data", "");
         CityBean cityBean = new CityBean();
         cityBean.setCityCode(cityCode);
-        cityBean.setName(data);
+        cityBean.setCityName(data);
         return cityBean;
     }
 

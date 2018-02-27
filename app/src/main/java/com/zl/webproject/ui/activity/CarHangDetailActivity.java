@@ -93,6 +93,8 @@ public class CarHangDetailActivity extends BaseActivity {
 
         discussListView.setAdapter(disAdapter);
         carListView.setAdapter(carAdapter);
+
+        tvTitleName.setText("车行详情");
     }
 
     @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
