@@ -37,16 +37,19 @@
             android:layout_height="26dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_12"
-            android:src="@mipmap/ic_launcher" />
+            android:padding="@dimen/dp_2"
+            app:srcCompat="@drawable/ic_search_black" />
 
-        <EditText
+        <TextView
+            android:id="@+id/et_search_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_marginRight="16dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
             android:hint="您想要搜索的车"
-            android:textCursorDrawable="@null"
             android:paddingLeft="@dimen/dp_4"
+            android:textCursorDrawable="@null"
             android:textSize="@dimen/dp_14" />
 
     </com.zhy.autolayout.AutoLinearLayout>

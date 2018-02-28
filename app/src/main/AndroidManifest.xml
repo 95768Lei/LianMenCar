@@ -51,9 +51,9 @@
             android:value="3d94ba7023ce6027cd54d731" />
 
         <!-- 百度定位 -->
-        <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" />      -->
+        <!-- <meta-data -->
+        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
+        <!-- android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" /> -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" />
@@ -152,7 +152,14 @@
         <activity android:name=".ui.activity.CarCollectActivity" />
         <activity android:name=".ui.activity.CarHangCollectActivity" />
         <activity android:name=".ui.activity.FeedBackActivity" />
-        <activity android:name=".ui.activity.LoginActivity"></activity>
+        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.RegisterActivity" />
+        <activity android:name=".ui.activity.ForgetPasswordActivity" />
+        <activity android:name=".ui.activity.CarShareListActivity" />
+        <activity android:name=".ui.activity.MotorsCarListActivity" />
+        <activity android:name=".ui.activity.DiscussActivity" />
+        <activity android:name=".ui.activity.MyMotorsActivity" />
+        <activity android:name=".ui.activity.CarSearchActivity"></activity>
     </application>
 
 </manifest>

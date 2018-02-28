@@ -120,6 +120,8 @@ public class ImageFragment extends BaseFragment {
         };
         imageGrid.setAdapter(adapter);
         tvTitleName.setText("选择图片");
+        tvTitleRight.setText("保存");
+        tvTitleRight.setVisibility(View.VISIBLE);
     }
 
     /**

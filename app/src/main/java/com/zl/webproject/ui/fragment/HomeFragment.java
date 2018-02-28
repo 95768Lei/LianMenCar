@@ -32,6 +32,7 @@ import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.activity.CarDetailActivity;
+import com.zl.webproject.ui.activity.CarSearchActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
@@ -226,7 +227,7 @@ public class HomeFragment extends BaseFragment {
         params.put("cityCode", cityCode);
         params.put("page", page + "");
 
-        HttpUtils.getInstance().POST(mActivity, new JSONObject(params).toString(), API.getCarList, new HttpUtils.OnOkHttpCallback() {
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarList, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {
@@ -241,13 +242,16 @@ public class HomeFragment extends BaseFragment {
 
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
+                    if (array.length() <= 0) {
+                        showToast("没有更多了");
+                        return;
+                    }
                     for (int i = 0; i < array.length(); i++) {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
                     }
                     mAdapter.notifyDataSetChanged();
                     if (page == 1) {
                         homeScroll.fullScroll(ScrollView.FOCUS_UP);
-//                        homeListView.smoothScrollToPosition(0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -272,6 +276,13 @@ public class HomeFragment extends BaseFragment {
         mAdapter = new UniversalAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, CarInfoEntity s) {
+                Integer carSource = s.getCarSource();
+                ImageView ivCarTag = holder.getView(R.id.iv_car_tag);
+                if (carSource == 0) {
+                    ivCarTag.setImageResource(R.mipmap.geren);
+                } else {
+                    ivCarTag.setImageResource(R.mipmap.hang);
+                }
                 holder.setText(R.id.tv_car_name, s.getCarTitle());
                 holder.setText(R.id.tv_car_money, s.getCarPrice() + "万");
                 holder.setText(R.id.tv_car_city, s.getCarAreaCitysEntity().getCityName());
@@ -322,7 +333,7 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_city, R.id.iv_message, R.id.fab_loop})
+    @OnClick({R.id.tv_city, R.id.iv_message, R.id.et_search_data, R.id.fab_loop})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //选择城市
@@ -332,6 +343,10 @@ public class HomeFragment extends BaseFragment {
             //进入消息中心
             case R.id.iv_message:
                 startActivity(new Intent(mActivity, MessageActivity.class));
+                break;
+            //进入消息中心
+            case R.id.et_search_data:
+                startActivity(new Intent(mActivity, CarSearchActivity.class));
                 break;
             case R.id.fab_loop:
                 updateData();

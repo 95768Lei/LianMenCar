@@ -27,6 +27,7 @@
     <dimen name="dp_48">96px</dimen>
     <dimen name="dp_50">100px</dimen>
     <dimen name="dp_52">104px</dimen>
+    <dimen name="dp_64">128px</dimen>
     <dimen name="dp_200">400px</dimen>
 
 </resources>

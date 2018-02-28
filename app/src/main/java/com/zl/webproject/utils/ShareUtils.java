@@ -7,6 +7,7 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+import com.zl.webproject.model.ShareBean;
 
 /**
  * Created by zhanglei on 2017\12\8 0008.
@@ -14,12 +15,12 @@ import com.umeng.socialize.media.UMWeb;
 
 public class ShareUtils {
 
-    public static void share(final Activity context, String imageUrl, String webUrl, final OnShareListener onShareListener) {
-        UMImage thumb = new UMImage(context, imageUrl);
-        UMWeb web = new UMWeb(webUrl);
-        web.setTitle("货车多应用分享");//标题
+    public static void share(final Activity context, ShareBean shareBean, final OnShareListener onShareListener) {
+        UMImage thumb = new UMImage(context, shareBean.getImgUrl());
+        UMWeb web = new UMWeb(shareBean.getUrl());
+        web.setTitle(shareBean.getShareTitle());//标题
         web.setThumb(thumb);  //缩略图
-        web.setDescription("这里有一款好的软件分享给您，请点击查看");//描述
+        web.setDescription(shareBean.getShareContent());//描述
         new ShareAction(context)
                 .withMedia(web)
                 .setDisplayList(SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QZONE)

@@ -65,7 +65,7 @@ public class AddressDialog extends BaseDialog {
         //初始化数据
         Map<String, String> params = new HashMap<>();
         params.put("data", "");
-        HttpUtils.getInstance().POST(mActivity, new JSONObject(params).toString(), API.getCity, new HttpUtils.OnOkHttpCallback() {
+        HttpUtils.getInstance().Post(mActivity, params, API.getCity, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {

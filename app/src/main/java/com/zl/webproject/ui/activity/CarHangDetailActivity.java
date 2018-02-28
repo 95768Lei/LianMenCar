@@ -1,5 +1,6 @@
 package com.zl.webproject.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.utils.SystemUtils;
 import com.zl.webproject.view.MyListView;
 
 import java.util.ArrayList;
@@ -95,20 +97,28 @@ public class CarHangDetailActivity extends BaseActivity {
         carListView.setAdapter(carAdapter);
 
         tvTitleName.setText("车行详情");
+        ivTitleShare.setVisibility(View.VISIBLE);
     }
 
-    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
+    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call,  R.id.tv_to_discuss, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:
+                finish();
                 break;
             case R.id.iv_title_share:
                 break;
             case R.id.iv_call:
+                SystemUtils.call(mActivity, "15075993917");
+                break;
+            case R.id.tv_to_discuss:
+                startActivity(new Intent(mActivity, DiscussActivity.class));
                 break;
             case R.id.tv_info_more_discuss:
+                startActivity(new Intent(mActivity, DiscussActivity.class));
                 break;
             case R.id.tv_info_more_car:
+                startActivity(new Intent(mActivity, MotorsCarListActivity.class));
                 break;
         }
     }

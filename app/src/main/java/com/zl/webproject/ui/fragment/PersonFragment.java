@@ -17,10 +17,12 @@ import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.PersonGridBean;
 import com.zl.webproject.ui.activity.CarCollectActivity;
 import com.zl.webproject.ui.activity.CarHangCollectActivity;
+import com.zl.webproject.ui.activity.CarShareListActivity;
 import com.zl.webproject.ui.activity.FeedBackActivity;
 import com.zl.webproject.ui.activity.LoginActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.activity.MyCarActivity;
+import com.zl.webproject.ui.activity.MyMotorsActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.ui.activity.WebActivity;
@@ -170,7 +172,7 @@ public class PersonFragment extends BaseFragment {
                                 startActivity(new Intent(mActivity, MyCarActivity.class));
                                 break;
                             case "我的车行":
-
+                                startActivity(new Intent(mActivity, MyMotorsActivity.class));
                                 break;
                             case "车行收藏":
                                 startActivity(new Intent(mActivity, CarHangCollectActivity.class));
@@ -181,7 +183,7 @@ public class PersonFragment extends BaseFragment {
                                 break;
                             //赚取佣金
                             case "赚取佣金":
-                                startActivity(new Intent(mActivity, MyCarActivity.class));
+                                startActivity(new Intent(mActivity, CarShareListActivity.class));
                                 break;
                             //中介认证
                             case "中介认证":

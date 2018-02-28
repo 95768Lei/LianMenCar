@@ -223,7 +223,7 @@ public class HttpUtils {
      * @param url
      * @param callback
      */
-    public void POST(final Activity activity, String params, String url, final OnOkHttpCallback callback) {
+    private void POST(final Activity activity, String params, String url, final OnOkHttpCallback callback) {
 
         final RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), params);
         //创建请求体
@@ -284,7 +284,7 @@ public class HttpUtils {
      * @param url
      * @param callback
      */
-    public void LoginPost(final Activity activity, Map<String, String> params, String url, final OnOkHttpCallback callback) {
+    public void Post(final Activity activity, Map<String, String> params, String url, final OnOkHttpCallback callback) {
         FormBody.Builder builder = new FormBody.Builder();
         Set<Map.Entry<String, String>> entries = params.entrySet();
         for (Map.Entry<String, String> entry : entries) {
@@ -308,20 +308,30 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(Call call, final Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 final String string = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (callback != null) {
-
-//                            //储存session
-//                            Headers headers = response.headers();
-//                            String cookie = headers.get("Set-Cookie");
-//                            String session = cookie.substring(0, cookie.indexOf(";"));
-//                            SpUtlis.setSessionId(activity, session);
-
-                            callback.onSuccess(string);
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            boolean result = jsonObject.optBoolean("result");
+                            String jsonData = jsonObject.optString("data");
+                            if (result) {
+                                if (callback != null) {
+                                    callback.onSuccess(jsonData);
+                                }
+                            } else {
+                                Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                                if (callback != null) {
+                                    callback.onError(call.request(), new Exception());
+                                }
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(activity, "发生了未知错误", Toast.LENGTH_SHORT).show();
+                            if (callback != null) {
+                                callback.onError(call.request(), new Exception());
+                            }
                         }
                     }
                 });

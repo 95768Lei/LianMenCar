@@ -126,10 +126,19 @@ public class CarFragment extends BaseFragment {
             public void addressData(CityBean cityBean) {
                 tvCity.setText(cityBean.getCityName());
                 addressDialog.dismissDialog();
+                page = 1;
                 getDataList();
             }
         });
         carTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                page = 1;
+                getDataList();
+            }
+
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
@@ -162,7 +171,7 @@ public class CarFragment extends BaseFragment {
         params.put("gearbox", "");
         params.put("page", page + "");
 
-        HttpUtils.getInstance().POST(mActivity, new JSONObject(params).toString(), API.carInfoList, new HttpUtils.OnOkHttpCallback() {
+        HttpUtils.getInstance().Post(mActivity, params, API.carInfoList, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {
@@ -177,6 +186,10 @@ public class CarFragment extends BaseFragment {
 
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
+                    if (array.length() <= 0) {
+                        showToast("没有更多了");
+                        return;
+                    }
                     for (int i = 0; i < array.length(); i++) {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
                     }

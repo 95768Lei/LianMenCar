@@ -130,10 +130,14 @@
                 android:layout_height="match_parent"></com.zl.webproject.view.MyListView>
 
             <TextView
+                android:id="@+id/tv_to_discuss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:drawableRight="@mipmap/send"
+                android:gravity="center_vertical"
                 android:paddingBottom="@dimen/dp_8"
+                android:drawablePadding="@dimen/dp_6"
                 android:paddingTop="@dimen/dp_8"
                 android:text="还没有人来评论，点击去评论" />
 
@@ -184,6 +188,7 @@
                 android:divider="@color/white" />
 
             <TextView
+                android:id="@+id/tv_no_car"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

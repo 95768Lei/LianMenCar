@@ -121,6 +121,9 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         umShareAPI = UMShareAPI.get(mActivity);
         tvTitleName.setText("用户登录");
+        tvTitleRight.setText("注册");
+        tvTitleRight.setVisibility(View.VISIBLE);
+        ivTitleBack.setImageResource(R.drawable.ic_clear_white);
     }
 
     @Override
@@ -129,14 +132,20 @@ public class LoginActivity extends BaseActivity {
         UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick({R.id.iv_title_back, R.id.tv_login, R.id.iv_login_qq, R.id.iv_login_wx})
+    @OnClick({R.id.iv_title_back, R.id.tv_title_right, R.id.tv_login, R.id.iv_login_qq, R.id.tv_forget_password, R.id.iv_login_wx})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:
                 back();
                 break;
+            case R.id.tv_title_right:
+                toRegister();
+                break;
             case R.id.tv_login:
                 login();
+                break;
+            case R.id.tv_forget_password:
+                toForgetPassword();
                 break;
             case R.id.iv_login_qq:
                 umShareAPI.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, authListener);
@@ -145,6 +154,14 @@ public class LoginActivity extends BaseActivity {
                 umShareAPI.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, authListener);
                 break;
         }
+    }
+
+    private void toForgetPassword() {
+        startActivity(new Intent(mActivity, ForgetPasswordActivity.class));
+    }
+
+    private void toRegister() {
+        startActivity(new Intent(mActivity, RegisterActivity.class));
     }
 
     private void back() {
@@ -182,17 +199,13 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        Map<String, String> map = new HashMap<>();
-        map.put("phone", phone);
-        map.put("pass", password);
-        map.put("pustCode", regId);
-        map.put("cityCode", locationData.getCityCode());
-        map.put("location", locationData.getCityData());
-
-        JSONObject object = new JSONObject(map);
-        Map<String, JSONObject> params = new HashMap<>();
-        params.put("data", object);
-        HttpUtils.getInstance().POST(mActivity, new JSONObject(params).toString(), API.login, new HttpUtils.OnOkHttpCallback() {
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        params.put("pass", password);
+        params.put("pustCode", regId);
+        params.put("cityCode", locationData.getCityCode());
+        params.put("location", locationData.getCityData());
+        HttpUtils.getInstance().Post(mActivity,params, API.login, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 Log.e("body", body.toString());

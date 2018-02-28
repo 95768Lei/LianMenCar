@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.activity.RegisterActivity">
+
+    <include layout="@layout/base_title_layout" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_16">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4">
+
+            <EditText
+                android:id="@+id/et_input_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_12"
+                android:hint="请输入手机号"
+                android:textSize="13sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4">
+
+                <EditText
+                    android:id="@+id/et_input_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:hint="验证码"
+                    android:inputType="textPassword"
+                    android:textSize="13sp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_send_code"
+                android:layout_width="185px"
+                android:layout_height="@dimen/dp_36"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:background="@drawable/bg_blue_round"
+                android:gravity="center"
+                android:text="@string/send_code"
+                android:textColor="@color/white"
+                android:textSize="22px" />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4">
+
+            <EditText
+                android:id="@+id/et_input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_12"
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:textSize="13sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_to_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="有账号去登录>>" />
+
+        <TextView
+            android:id="@+id/tv_register"
+            style="@style/TextButtonStyle"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="注册" />
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

@@ -68,9 +68,13 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.tv_camera) {
-            getCameraPhoto();
+            if (onChoosePhotoListener != null) {
+                onChoosePhotoListener.openCamera();
+            }
         } else if (i == R.id.tv_photo) {
-            openAlbum();
+            if (onChoosePhotoListener != null) {
+                onChoosePhotoListener.openAlbum();
+            }
         }
         dismissDialog();
     }
@@ -78,7 +82,7 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     /**
      * 进行拍照
      */
-    protected void getCameraPhoto() {
+    public void getCameraPhoto(Activity mActivity) {
 
         imagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Ybjk";
         File file = new File(imagePath);
@@ -99,9 +103,9 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     }
 
     /**
-     * 打开相册的方法
+     * 打开相册的方法(多选)
      */
-    private void openAlbum() {
+    public void openAlbum(Activity mActivity) {
         PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
         intent.setSelectModel(SelectModel.MULTI);
         intent.setShowCarema(false); // 是否显示拍照， 默认false
@@ -110,7 +114,10 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
         mActivity.startActivityForResult(intent, REQUEST_CAMERA_CODE);
     }
 
-    private void singleOpenAlbum() {
+    /**
+     * 打开相册的方法(单选)
+     */
+    public void singleOpenAlbum(Activity mActivity) {
         PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
         intent.setSelectModel(SelectModel.SINGLE);
         intent.setShowCarema(false); // 是否显示拍照， 默认false
@@ -121,6 +128,18 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     public void setPhotoList(ArrayList<String> list) {
         photoList.clear();
         photoList.addAll(list);
+    }
+
+    private OnChoosePhotoListener onChoosePhotoListener;
+
+    public void setOnChoosePhotoListener(OnChoosePhotoListener onChoosePhotoListener) {
+        this.onChoosePhotoListener = onChoosePhotoListener;
+    }
+
+    public interface OnChoosePhotoListener {
+        void openAlbum();
+
+        void openCamera();
     }
 
 }

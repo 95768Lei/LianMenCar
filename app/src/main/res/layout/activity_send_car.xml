@@ -57,9 +57,9 @@
             <ImageView
                 android:id="@+id/image_add"
                 android:layout_width="match_parent"
-                android:layout_height="420px"
+                android:layout_height="460px"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/add_image" />
+                android:src="@mipmap/xiangce" />
 
             <com.zhy.autolayout.AutoRelativeLayout
                 android:layout_width="match_parent"

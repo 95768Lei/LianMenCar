@@ -58,7 +58,7 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
     }
 
     private void initView() {
-        tvTitleName.setText("我的车源");
+        tvTitleName.setText("车行收藏");
 
         adapter = new UniversalAdapter<String>(mActivity, mList, R.layout.car_hang_list_item) {
             @Override
