@@ -7,7 +7,36 @@
     android:orientation="vertical"
     tools:context="com.zl.webproject.ui.activity.RegisterActivity">
 
-    <include layout="@layout/base_title_layout" />
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/login_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48">
+
+        <ImageView
+            android:id="@+id/iv_title_back"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_34"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/dp_4"
+            app:srcCompat="@drawable/ic_arrow_back_black" />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:text="新用户注册"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_26"
+        android:textStyle="bold" />
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"

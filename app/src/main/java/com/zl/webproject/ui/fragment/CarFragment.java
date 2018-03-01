@@ -291,20 +291,20 @@ public class CarFragment extends BaseFragment {
             return;
         }
 
-        tagDialog.dismiss();
-        tagRunDialog.dismiss();
-        tagNianDialog.dismiss();
-
         if (tagDialog.isShow() || tagRunDialog.isShow() || tagNianDialog.isShow()) {
+            tagDialog.dismiss();
+            tagRunDialog.dismiss();
+            tagNianDialog.dismiss();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     moreTagDialog.showDialog(linearGongNeng);
                 }
-            }, 400);
+            }, 300);
         } else {
             moreTagDialog.showDialog(linearGongNeng);
         }
+
 
     }
 
@@ -314,17 +314,17 @@ public class CarFragment extends BaseFragment {
             return;
         }
 
-        tagDialog.dismiss();
-        tagRunDialog.dismiss();
-        tagNianDialog.dismiss();
-
-        if (tagDialog.isShow() || tagRunDialog.isShow() || tagNianDialog.isShow()) {
+        if (tagDialog.isShow() || tagRunDialog.isShow() || tagNianDialog.isShow() || moreTagDialog.isShow()) {
+            tagDialog.dismiss();
+            tagRunDialog.dismiss();
+            tagNianDialog.dismiss();
+            moreTagDialog.dismiss();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     dialog.showDialog(linearGongNeng);
                 }
-            }, 400);
+            }, 300);
         } else {
             dialog.showDialog(linearGongNeng);
         }

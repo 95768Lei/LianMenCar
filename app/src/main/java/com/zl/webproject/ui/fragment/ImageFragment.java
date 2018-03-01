@@ -40,7 +40,6 @@ import static com.zl.webproject.ui.dialog.PhotoDialog.REQUEST_CAMERA_CODE;
  */
 public class ImageFragment extends BaseFragment {
 
-
     @BindView(R.id.iv_title_back)
     ImageView ivTitleBack;
     @BindView(R.id.tv_title_name)
@@ -113,9 +112,17 @@ public class ImageFragment extends BaseFragment {
     private void initView() {
         adapter = new UniversalAdapter<String>(mActivity, mList, R.layout.image_grid_item) {
             @Override
-            public void convert(UniversalViewHolder holder, int position, String s) {
+            public void convert(UniversalViewHolder holder, final int position, String s) {
                 ImageView image = holder.getView(R.id.image_item);
                 ImageLoader.loadImageFile(mActivity, s, image);
+                holder.getView(R.id.iv_clear_item).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mList.remove(position);
+                        photoList.remove(position);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         };
         imageGrid.setAdapter(adapter);

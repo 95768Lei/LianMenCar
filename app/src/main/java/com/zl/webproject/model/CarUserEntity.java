@@ -80,5 +80,200 @@ public class CarUserEntity implements java.io.Serializable {
     private CarIntermediaryEntity inter;
 
     private CarDealerEntity dealer;
-	
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserState() {
+        return userState;
+    }
+
+    public void setUserState(String userState) {
+        this.userState = userState;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
+    public Integer getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(Integer userSex) {
+        this.userSex = userSex;
+    }
+
+    public String getUserNikeName() {
+        return userNikeName;
+    }
+
+    public void setUserNikeName(String userNikeName) {
+        this.userNikeName = userNikeName;
+    }
+
+    public String getUserLoginQq() {
+        return userLoginQq;
+    }
+
+    public void setUserLoginQq(String userLoginQq) {
+        this.userLoginQq = userLoginQq;
+    }
+
+    public String getUserLoginWechat() {
+        return userLoginWechat;
+    }
+
+    public void setUserLoginWechat(String userLoginWechat) {
+        this.userLoginWechat = userLoginWechat;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getUserDate() {
+        return userDate;
+    }
+
+    public void setUserDate(String userDate) {
+        this.userDate = userDate;
+    }
+
+    public String getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation(String userLocation) {
+        this.userLocation = userLocation;
+    }
+
+    public String getUserCreateDate() {
+        return userCreateDate;
+    }
+
+    public void setUserCreateDate(String userCreateDate) {
+        this.userCreateDate = userCreateDate;
+    }
+
+    public String getUserCreateDateStr() {
+        return userCreateDateStr;
+    }
+
+    public void setUserCreateDateStr(String userCreateDateStr) {
+        this.userCreateDateStr = userCreateDateStr;
+    }
+
+    public String getUserLoginDate() {
+        return userLoginDate;
+    }
+
+    public void setUserLoginDate(String userLoginDate) {
+        this.userLoginDate = userLoginDate;
+    }
+
+    public String getUserLoginDateStr() {
+        return userLoginDateStr;
+    }
+
+    public void setUserLoginDateStr(String userLoginDateStr) {
+        this.userLoginDateStr = userLoginDateStr;
+    }
+
+    public String getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.userImg = userImg;
+    }
+
+    public Integer getCarDealerId() {
+        return carDealerId;
+    }
+
+    public void setCarDealerId(Integer carDealerId) {
+        this.carDealerId = carDealerId;
+    }
+
+    public Integer getUserCityId() {
+        return userCityId;
+    }
+
+    public void setUserCityId(Integer userCityId) {
+        this.userCityId = userCityId;
+    }
+
+    public String getUserPustCode() {
+        return userPustCode;
+    }
+
+    public void setUserPustCode(String userPustCode) {
+        this.userPustCode = userPustCode;
+    }
+
+    public Integer getUserInter() {
+        return userInter;
+    }
+
+    public void setUserInter(Integer userInter) {
+        this.userInter = userInter;
+    }
+
+    public Integer getUserApply() {
+        return userApply;
+    }
+
+    public void setUserApply(Integer userApply) {
+        this.userApply = userApply;
+    }
+
+    public CarIntermediaryEntity getInter() {
+        return inter;
+    }
+
+    public void setInter(CarIntermediaryEntity inter) {
+        this.inter = inter;
+    }
+
+    public CarDealerEntity getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(CarDealerEntity dealer) {
+        this.dealer = dealer;
+    }
 }

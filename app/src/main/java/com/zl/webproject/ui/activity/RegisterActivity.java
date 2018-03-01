@@ -26,10 +26,6 @@ public class RegisterActivity extends BaseActivity {
     ImageView ivTitleBack;
     @BindView(R.id.tv_title_name)
     TextView tvTitleName;
-    @BindView(R.id.iv_title_share)
-    ImageView ivTitleShare;
-    @BindView(R.id.tv_title_right)
-    TextView tvTitleRight;
     @BindView(R.id.et_input_phone)
     EditText etInputPhone;
     @BindView(R.id.et_input_code)

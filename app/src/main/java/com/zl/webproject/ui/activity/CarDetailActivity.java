@@ -2,7 +2,6 @@ package com.zl.webproject.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,24 +18,15 @@ import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CarResourceEntity;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
-import com.zl.webproject.ui.fragment.HomeFragment;
-import com.zl.webproject.utils.API;
-import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
 import com.zl.webproject.view.MyListView;
 
-import org.json.JSONObject;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -66,6 +56,14 @@ public class CarDetailActivity extends BaseActivity {
     MyListView carDetailDataListView;
     @BindView(R.id.carDetail_iv_listView)
     MyListView carDetailIvListView;
+    @BindView(R.id.iv_title_share)
+    ImageView ivTitleShare;
+    @BindView(R.id.tv_title_right)
+    TextView tvTitleRight;
+    @BindView(R.id.tv_car_tag)
+    TextView tvCarTag;
+    @BindView(R.id.tv_car_content)
+    TextView tvCarContent;
 
     private List<String> dList = new ArrayList<>();
     private List<CarResourceEntity> ivList = new ArrayList<>();
@@ -120,6 +118,8 @@ public class CarDetailActivity extends BaseActivity {
         dList.add("订车定金：" + carInfoEntity.getCarDeposit());
         dList.add("车辆排量：" + carInfoEntity.getCarDisplacement());
         dList.add("燃油类型：" + carInfoEntity.getFuel().getDictName());
+
+        tvCarContent.setText("*" + carInfoEntity.getCarContext());
 
         dAdapter.notifyDataSetChanged();
     }

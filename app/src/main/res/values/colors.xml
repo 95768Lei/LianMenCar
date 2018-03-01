@@ -11,11 +11,11 @@
     <color name="bg_color">#F2F6F9</color>
     <color name="light_grey">#E0E0E0</color>
     <color name="goods_tv_color">#012806</color>
-    <color name="blue">#4CA0F8</color>
     <color name="red">#ce2538</color>
     <color name="red_cc">#fa1f2a</color>
     <color name="hint_color">#686868</color>
     <color name="green_empty">#24CAA5</color>
+    <color name="blue">#4CA0F8</color>
     <color name="orange">#FF7A4A</color>
     <color name="orange_cc">#F0E7E8</color>
     <color name="color_yin">#c0c0c0</color>

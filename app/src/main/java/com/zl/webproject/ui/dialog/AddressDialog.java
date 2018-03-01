@@ -128,7 +128,7 @@ public class AddressDialog extends BaseDialog {
                 CityBean cityBean = sourceDataList.get(position);
                 cityTv2.setText(cityBean.getCityName());
                 //储存选择的城市
-                SpUtlis.setCurrentLocationData(mActivity, cityBean);
+                SpUtlis.setLocationData(mActivity, cityBean.getCityCode(), cityBean.getCityData(), cityBean.getCityName());
                 if (onAddressDataListener != null) {
                     onAddressDataListener.addressData(cityBean);
                 }
@@ -163,7 +163,7 @@ public class AddressDialog extends BaseDialog {
                 cityBean.setCityCode("");
                 cityTv2.setText(cityBean.getCityName());
                 //储存选择的城市
-                SpUtlis.setCurrentLocationData(mActivity, cityBean);
+                SpUtlis.setLocationData(mActivity, "", "全国城市", "全国城市");
                 if (onAddressDataListener != null) {
                     onAddressDataListener.addressData(cityBean);
                 }
@@ -201,7 +201,7 @@ public class AddressDialog extends BaseDialog {
      * 赋值当前选择的城市
      */
     private void setAddressData() {
-        CityBean currentCityBean = SpUtlis.getCurrentLocationData(mActivity);
+        CityBean currentCityBean = SpUtlis.getLocationData(mActivity);
         String name = currentCityBean.getCityName();
         if (!TextUtils.isEmpty(name)) {
             cityTv2.setText(name);
@@ -209,7 +209,7 @@ public class AddressDialog extends BaseDialog {
             cityTv2.setText("无");
         }
 
-        CityBean cityBean = SpUtlis.getLocationData(mActivity);
+        CityBean cityBean = SpUtlis.getCuLocationData(mActivity);
         String cityName = cityBean.getCityName();
         if (!TextUtils.isEmpty(cityName)) {
             cityTv1.setText(cityName);

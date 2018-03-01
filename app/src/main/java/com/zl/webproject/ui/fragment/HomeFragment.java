@@ -134,6 +134,7 @@ public class HomeFragment extends BaseFragment {
                 final String cityCode = location.getCityCode();
                 tvCity.setText(location.getCity());
                 SpUtlis.setLocationData(mActivity, cityCode, data, location.getCity());
+                SpUtlis.setCuLocationData(mActivity, cityCode, data, location.getCity());
                 getListData();
             }
 

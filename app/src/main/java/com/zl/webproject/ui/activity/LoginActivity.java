@@ -43,8 +43,6 @@ public class LoginActivity extends BaseActivity {
     ImageView ivTitleBack;
     @BindView(R.id.tv_title_name)
     TextView tvTitleName;
-    @BindView(R.id.iv_title_share)
-    ImageView ivTitleShare;
     @BindView(R.id.tv_title_right)
     TextView tvTitleRight;
     @BindView(R.id.et_input_phone)
@@ -121,9 +119,6 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         umShareAPI = UMShareAPI.get(mActivity);
         tvTitleName.setText("用户登录");
-        tvTitleRight.setText("注册");
-        tvTitleRight.setVisibility(View.VISIBLE);
-        ivTitleBack.setImageResource(R.drawable.ic_clear_white);
     }
 
     @Override

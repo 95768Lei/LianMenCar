@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="WhiteTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/bg_color</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="TextPhotoStyle">
         <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
@@ -26,6 +33,11 @@
     <style name="WindowAnim">
         <item name="android:windowEnterAnimation">@anim/bottom_info_anim</item>
         <item name="android:windowExitAnimation">@anim/bottom_exit_anim</item>
+    </style>
+
+    <style name="WindowScaleAnim">
+        <item name="android:windowEnterAnimation">@anim/scale_big_anim</item>
+        <item name="android:windowExitAnimation">@anim/scale_simall_anim</item>
     </style>
 
     <style name="PhotoPickerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -104,7 +116,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp_46</item>
         <item name="android:layout_marginTop">@dimen/dp_32</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@drawable/blue_round_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/dp_16</item>

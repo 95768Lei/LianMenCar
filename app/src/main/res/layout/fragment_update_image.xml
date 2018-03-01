@@ -1,0 +1,104 @@
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.fragment.ImageFragment">
+
+    <include
+        android:id="@+id/image_title"
+        layout="@layout/base_title_layout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/image_title"
+        android:layout_marginTop="@dimen/dp_8">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:background="@drawable/tab_item_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="原始图片" />
+
+                <TextView
+                    android:id="@+id/tv_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:background="@drawable/blue_round_bg"
+                    android:paddingBottom="@dimen/dp_4"
+                    android:paddingLeft="@dimen/dp_8"
+                    android:paddingRight="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_4"
+                    android:text="撤销"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_14" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <com.zl.webproject.view.MyGridView
+                android:id="@+id/image_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="8dp"
+                android:numColumns="3"
+                android:padding="@dimen/dp_8"
+                android:verticalSpacing="8dp"></com.zl.webproject.view.MyGridView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_32"
+                android:background="@drawable/tab_item_bg"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="新增图片" />
+
+            <com.zl.webproject.view.MyGridView
+                android:id="@+id/image_new_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="8dp"
+                android:numColumns="3"
+                android:padding="@dimen/dp_8"
+                android:verticalSpacing="8dp"></com.zl.webproject.view.MyGridView>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tab_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120px"
+        app:srcCompat="@drawable/ic_add_white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_line_bg"
+        android:gravity="center"
+        android:text="点击选择首页展示图，建议上传16:9的图片，最多上传9张"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_12" />
+
+</com.zhy.autolayout.AutoRelativeLayout>

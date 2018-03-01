@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
+    <!--android:background="@drawable/text_seletor_bg"-->
 
     <TextView
         android:id="@+id/tv_more_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_2"
-        android:layout_marginLeft="@dimen/dp_6"
-        android:layout_marginRight="@dimen/dp_6"
-        android:layout_marginTop="@dimen/dp_2"
-        android:background="@drawable/text_seletor_bg"
         android:gravity="center"
-        android:padding="@dimen/dp_4"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingRight="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_6"
         android:text="14万以下"
         android:textColor="@color/text_selector_color"
-        android:textSize="26px" />
+        android:textSize="13sp" />
 
 
-</LinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>

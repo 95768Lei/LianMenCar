@@ -3,6 +3,7 @@ package com.zl.webproject.ui.dialog;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,9 +76,10 @@ public class MoreTagDialog {
             @Override
             public void convert(UniversalViewHolder holder, final int position, String s) {
                 RecyclerView itemRv = holder.getView(R.id.list_item_rv);
-                itemRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
+//                itemRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
+                itemRv.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 List<String> list = new ArrayList<>();
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 8; i++) {
                     list.add("");
                 }
                 final RecyclerAdapter<String> adapter = new RecyclerAdapter<String>(mActivity, list, R.layout.more_tv_item) {
@@ -116,7 +118,7 @@ public class MoreTagDialog {
         };
         listView.setAdapter(mAdapter);
         mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setAnimationStyle(R.style.WindowAnim);
+        mPopupWindow.setAnimationStyle(R.style.WindowScaleAnim);
 
     }
 

@@ -3,6 +3,7 @@ package com.zl.webproject.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -66,6 +67,16 @@ public class CarHangDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        carListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
     }
 
     private void initData() {
@@ -100,7 +111,7 @@ public class CarHangDetailActivity extends BaseActivity {
         ivTitleShare.setVisibility(View.VISIBLE);
     }
 
-    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call,  R.id.tv_to_discuss, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
+    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call, R.id.tv_to_discuss, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:

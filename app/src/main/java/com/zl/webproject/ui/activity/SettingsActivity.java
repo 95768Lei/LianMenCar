@@ -1,25 +1,39 @@
 package com.zl.webproject.ui.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.foamtrace.photopicker.PhotoPickerActivity;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 import com.zhy.autolayout.AutoRelativeLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.ui.dialog.PhotoDialog;
 import com.zl.webproject.ui.fragment.RealPersonFragment;
 import com.zl.webproject.ui.fragment.UpdateNickNameFragment;
 import com.zl.webproject.ui.fragment.UpdatePasswordFragment;
 import com.zl.webproject.ui.fragment.UpdatePhoneFragment;
+import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.PhotoBitmapUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.zl.webproject.ui.dialog.PhotoDialog.PICK_FROM_CAMERA;
+import static com.zl.webproject.ui.dialog.PhotoDialog.REQUEST_CAMERA_CODE;
 
 /**
  * @author zhanglei
@@ -53,6 +67,8 @@ public class SettingsActivity extends BaseActivity {
     private AlertDialog sexDialog;
     String[] sexs = {"男", "女"};
     private RealPersonFragment realPersonFragment;
+    private PhotoDialog photoDialog;
+    private String userIconPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +76,21 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
         initView();
+        initListener();
+    }
+
+    private void initListener() {
+        photoDialog.setOnChoosePhotoListener(new PhotoDialog.OnChoosePhotoListener() {
+            @Override
+            public void openAlbum() {
+                photoDialog.openSingleAlbum();
+            }
+
+            @Override
+            public void openCamera() {
+                photoDialog.openCamera();
+            }
+        });
     }
 
     private void initView() {
@@ -73,6 +104,8 @@ public class SettingsActivity extends BaseActivity {
                         sexDialog.dismiss();
                     }
                 }).create();
+
+        photoDialog = new PhotoDialog(mActivity);
     }
 
     @Override
@@ -80,6 +113,21 @@ public class SettingsActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (realPersonFragment != null) {
             realPersonFragment.onActivityResult(requestCode, resultCode, data);
+        }
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PICK_FROM_CAMERA:
+                    String imagePath = photoDialog.getImagePath();
+                    //修改小米手机拍照后图片旋转的问题
+                    userIconPath = PhotoBitmapUtils.amendRotatePhoto(imagePath, mActivity);
+                    break;
+                case REQUEST_CAMERA_CODE:
+                    ArrayList<String> pathList = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+                    userIconPath = pathList.get(0);
+                    break;
+            }
+
+            ImageLoader.loadImageFile(mActivity,userIconPath,civUserIcon);
         }
     }
 
@@ -93,6 +141,7 @@ public class SettingsActivity extends BaseActivity {
                 break;
             //修改头像
             case R.id.civ_user_icon:
+                openPhoto();
                 break;
             //修改性别
             case R.id.rl_sex:
@@ -119,6 +168,43 @@ public class SettingsActivity extends BaseActivity {
                 finish();
                 break;
         }
+    }
+
+    private void openPhoto() {
+        //动态申请相机权限
+        if (!isPermission(Manifest.permission.CAMERA)) {
+            applyPermission(Permission.CAMERA, new PermissionListener() {
+                @Override
+                public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                    openPhoto();
+                }
+
+                @Override
+                public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                    showToast("您拒绝了相机权限，无法进行拍照");
+                    finish();
+                }
+            });
+            return;
+        }
+        //动态申请文件读写权限
+        if (!isPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            applyPermission(Permission.STORAGE, new PermissionListener() {
+                @Override
+                public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                    openPhoto();
+                }
+
+                @Override
+                public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                    showToast("您拒绝了文件储存权限，无法进行拍照");
+                    finish();
+                }
+            });
+            return;
+        }
+
+        photoDialog.showDialog(civUserIcon);
     }
 
     private void intoRealPerson() {

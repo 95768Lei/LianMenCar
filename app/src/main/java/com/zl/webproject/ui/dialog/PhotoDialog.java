@@ -63,6 +63,15 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
         initPopupWindow(view);
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void showDialog(View view) {
+        super.showDialog(view);
+
+    }
 
     @Override
     public void onClick(View view) {
@@ -82,7 +91,7 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     /**
      * 进行拍照
      */
-    public void getCameraPhoto(Activity mActivity) {
+    public void openCamera() {
 
         imagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Ybjk";
         File file = new File(imagePath);
@@ -105,7 +114,7 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     /**
      * 打开相册的方法(多选)
      */
-    public void openAlbum(Activity mActivity) {
+    public void openAlbum() {
         PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
         intent.setSelectModel(SelectModel.MULTI);
         intent.setShowCarema(false); // 是否显示拍照， 默认false
@@ -117,7 +126,7 @@ public class PhotoDialog extends BaseDialog implements View.OnClickListener {
     /**
      * 打开相册的方法(单选)
      */
-    public void singleOpenAlbum(Activity mActivity) {
+    public void openSingleAlbum() {
         PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
         intent.setSelectModel(SelectModel.SINGLE);
         intent.setShowCarema(false); // 是否显示拍照， 默认false

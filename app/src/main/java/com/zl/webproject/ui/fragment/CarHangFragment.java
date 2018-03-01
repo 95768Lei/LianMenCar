@@ -19,6 +19,7 @@ import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.ui.activity.CarHangDetailActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
+import com.zl.webproject.utils.SpUtlis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,8 @@ public class CarHangFragment extends BaseFragment {
     }
 
     private void initData() {
+
+        tvCity.setText(SpUtlis.getLocationData(mActivity).getCityName());
         for (int i = 0; i < 10; i++) {
             mList.add("0");
         }

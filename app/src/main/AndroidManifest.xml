@@ -51,9 +51,6 @@
             android:value="3d94ba7023ce6027cd54d731" />
 
         <!-- 百度定位 -->
-        <!-- <meta-data -->
-        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
-        <!-- android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" /> -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="ElAvcGGvvk0rf0RvAPhr4knpXIENiiY1" />
@@ -83,6 +80,17 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 兼容Android7.0安装应用 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.zl.webproject.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- QQ精简版分享 -->
         <activity
@@ -152,8 +160,12 @@
         <activity android:name=".ui.activity.CarCollectActivity" />
         <activity android:name=".ui.activity.CarHangCollectActivity" />
         <activity android:name=".ui.activity.FeedBackActivity" />
-        <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.RegisterActivity" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:theme="@style/WhiteTheme" />
+        <activity
+            android:name=".ui.activity.RegisterActivity"
+            android:theme="@style/WhiteTheme" />
         <activity android:name=".ui.activity.ForgetPasswordActivity" />
         <activity android:name=".ui.activity.CarShareListActivity" />
         <activity android:name=".ui.activity.MotorsCarListActivity" />

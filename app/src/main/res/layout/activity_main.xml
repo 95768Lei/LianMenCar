@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/light_grey"
+        android:background="@color/bg_color"
         app:itemIconTint="@color/main_text_selector_color"
         app:itemTextColor="@color/main_text_selector_color"
         app:menu="@menu/main_menu"></android.support.design.widget.BottomNavigationView>

@@ -1,8 +1,10 @@
 package com.zl.webproject.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.zl.webproject.R;
@@ -79,4 +81,14 @@ public class MainActivity extends BaseActivity {
         helper.showFragment(homeFragment);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            mActivity.startActivity(intent);
+        }
+        return true;
+    }
 }

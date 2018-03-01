@@ -5,102 +5,105 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <android.support.v7.widget.CardView
+
+    <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_6"
-        android:layout_marginLeft="@dimen/dp_12"
-        android:layout_marginRight="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_6"
-        app:cardElevation="10px">
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingRight="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_12">
 
         <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/iv_car_rl"
+            android:layout_width="260px"
+            android:layout_height="175px"
+            android:layout_marginRight="@dimen/dp_12">
+
+            <ImageView
+                android:id="@+id/iv_car_icon"
+                android:layout_width="260px"
+                android:layout_height="175px"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon1" />
+
+            <ImageView
+                android:id="@+id/iv_car_tag"
+                android:layout_width="260px"
+                android:layout_height="175px"
+                android:scaleType="fitXY"
+                android:src="@mipmap/hang" />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_car_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_car_rl"
+            android:maxLines="2"
+            android:text="2013款路虎神行者"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/tv_car_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_car_name"
+            android:layout_marginTop="6px"
+            android:layout_toRightOf="@id/iv_car_rl"
+            android:text="2012-12/7万公里"
+            android:textSize="@dimen/dp_12" />
+
+        <TextView
+            android:id="@+id/tv_car_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_car_data"
+            android:layout_marginTop="6px"
+            android:layout_toRightOf="@id/iv_car_rl"
+            android:text="14万"
+            android:textColor="@color/red"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/tv_car_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_car_money"
+            android:layout_below="@id/tv_car_data"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_toRightOf="@id/tv_car_money"
+            android:text="邢台市"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/tv_car_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tv_car_city"
+            android:layout_alignBottom="@id/iv_car_rl"
+            android:layout_toRightOf="@id/iv_car_rl"
+            android:background="@drawable/line_orange_round"
+            android:paddingBottom="1dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="1dp"
+            android:text="过户车"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/dp_12" />
+
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_6">
-
-            <com.zhy.autolayout.AutoRelativeLayout
-                android:id="@+id/iv_car_rl"
-                android:layout_width="260px"
-                android:layout_height="175px">
-
-                <ImageView
-                    android:id="@+id/iv_car_icon"
-                    android:layout_width="260px"
-                    android:layout_height="175px"
-                    android:layout_marginRight="@dimen/dp_8"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/icon1" />
-
-                <ImageView
-                    android:id="@+id/iv_car_tag"
-                    android:layout_width="260px"
-                    android:layout_height="175px"
-                    android:layout_marginRight="@dimen/dp_8"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/hang" />
-
-            </com.zhy.autolayout.AutoRelativeLayout>
-
-            <TextView
-                android:id="@+id/tv_car_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_car_rl"
-                android:text="2013款路虎神行者"
-                android:textColor="@color/black"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/tv_car_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_car_name"
-                android:layout_marginTop="@dimen/dp_6"
-                android:layout_toRightOf="@id/iv_car_rl"
-                android:text="2012-12/7万公里"
-                android:textSize="@dimen/dp_12" />
-
-            <TextView
-                android:id="@+id/tv_car_money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_car_rl"
-                android:layout_marginTop="@dimen/dp_2"
-                android:layout_toRightOf="@id/iv_car_rl"
-                android:text="14万"
-                android:textColor="@color/red"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/tv_car_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_car_rl"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="@dimen/dp_6"
-                android:layout_marginRight="@dimen/dp_8"
-                android:text="邢台市"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/tv_car_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/tv_car_city"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:layout_marginRight="@dimen/dp_8"
-                android:text="过户车"
-                android:textSize="@dimen/dp_12" />
-
+            android:layout_below="@id/iv_car_rl"
+            android:orientation="vertical">
 
             <!--四项功能 预定、已售、下架、分享-->
             <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/linear_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_32"
-                android:layout_below="@id/iv_car_rl"
                 android:layout_marginTop="@dimen/dp_8"
                 android:visibility="gone">
 
@@ -203,7 +206,6 @@
                 android:id="@+id/linear_bottom_two"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_32"
-                android:layout_below="@id/iv_car_rl"
                 android:layout_marginTop="@dimen/dp_8"
                 android:visibility="gone">
 
@@ -255,8 +257,14 @@
 
             </com.zhy.autolayout.AutoLinearLayout>
 
-        </com.zhy.autolayout.AutoRelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginTop="@dimen/dp_12"
+                android:background="@color/light_grey" />
 
-    </android.support.v7.widget.CardView>
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
 
 </com.zhy.autolayout.AutoLinearLayout>

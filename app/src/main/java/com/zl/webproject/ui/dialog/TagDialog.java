@@ -85,7 +85,7 @@ public class TagDialog {
         };
         gridView.setAdapter(mAdapter);
         mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setAnimationStyle(R.style.WindowAnim);
+        mPopupWindow.setAnimationStyle(R.style.WindowScaleAnim);
 
     }
 
