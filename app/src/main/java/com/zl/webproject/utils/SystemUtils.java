@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
+import com.zl.webproject.ui.activity.LoginActivity;
 
 import java.util.List;
 
@@ -92,7 +93,12 @@ public class SystemUtils {
     }
 
     public static void toActivity(Activity mActivity, Intent intent) {
-        //TODO 在这里判断是登录状态
+        if (!SpUtlis.getLoginData(mActivity).isLogin()) {
+            mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+            return;
+        }
+
+        mActivity.startActivity(intent);
     }
 
     public static void siganOut(Activity mActivity) {

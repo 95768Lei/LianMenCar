@@ -103,17 +103,83 @@ public class HttpUtils {
     /**
      * @param activity
      * @param mList
-     * @param url
      * @param callback
      */
-    public void upLoadFile(final Activity activity, final List<String> mList, final String phone, final String url, final OnOkHttpCallback callback) {
+    public void upLoadFile(final Activity activity, final List<String> mList, final OnOkHttpCallback callback) {
 
         new Thread() {
             @Override
             public void run() {
                 MultipartBody.Builder builder = new MultipartBody.Builder();
-                if (!TextUtils.isEmpty(phone)) {
-                    builder.addFormDataPart("userPhone", phone);
+                for (String s : mList) {
+                    byte[] getimage = ImageFactory.getimage(s);
+                    Log.e("length", getimage.length + "");
+                    final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
+                    String fileName = s.substring(s.lastIndexOf("/"));
+                    builder.addFormDataPart("file", fileName, body);
+                }
+
+                //创建请求体
+                Request request = new Request.Builder().url(API.saveTempImg).post(builder.build()).build();
+
+                //加入任务调度
+                mOkClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(final Call call, final IOException e) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onError(call.request(), e);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            final String string = response.body().string();
+                            JSONObject jsonObject = new JSONObject(string);
+                            boolean result = jsonObject.optBoolean("result");
+                            String jsonData = jsonObject.optString("data");
+                            if (result) {
+                                if (callback != null) {
+                                    callback.onSuccess(jsonData);
+                                }
+                            } else {
+                                Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                                if (callback != null) {
+                                    callback.onError(call.request(), new Exception());
+                                }
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(activity, "发生了未知错误", Toast.LENGTH_SHORT).show();
+                            if (callback != null) {
+                                callback.onError(call.request(), new Exception());
+                            }
+                        }
+                    }
+                });
+            }
+        }.start();
+
+    }
+
+    /**
+     * @param activity
+     * @param mList
+     * @param callback
+     */
+    public void upLoadFile(final Activity activity, final Map<String, String> params, final String url, final List<String> mList, final OnOkHttpCallback callback) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                MultipartBody.Builder builder = new MultipartBody.Builder();
+                Set<Map.Entry<String, String>> entries = params.entrySet();
+                for (Map.Entry<String, String> entry : entries) {
+                    builder.addFormDataPart(entry.getKey(), entry.getValue());
                 }
                 for (String s : mList) {
                     byte[] getimage = ImageFactory.getimage(s);
@@ -141,16 +207,34 @@ public class HttpUtils {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(final Call call, final Response response) throws IOException {
                         final String string = response.body().string();
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (callback != null) {
-                                    callback.onSuccess(string);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(string);
+                                    boolean result = jsonObject.optBoolean("result");
+                                    String jsonData = jsonObject.optString("data");
+                                    if (result) {
+                                        if (callback != null) {
+                                            callback.onSuccess(jsonData);
+                                        }
+                                    } else {
+                                        Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                                        if (callback != null) {
+                                            callback.onError(call.request(), new Exception());
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Toast.makeText(activity, "发生了未知错误", Toast.LENGTH_SHORT).show();
+                                    if (callback != null) {
+                                        callback.onError(call.request(), new Exception());
+                                    }
                                 }
                             }
                         });
+
                     }
                 });
             }
@@ -324,9 +408,11 @@ public class HttpUtils {
                             } else {
                                 Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
                                 if (callback != null) {
-                                    callback.onError(call.request(), new Exception());
+                                    Exception exception = new Exception(jsonObject.optString("msg"));
+                                    callback.onError(call.request(), exception);
                                 }
                             }
+
                         } catch (Exception e) {
                             Toast.makeText(activity, "发生了未知错误", Toast.LENGTH_SHORT).show();
                             if (callback != null) {

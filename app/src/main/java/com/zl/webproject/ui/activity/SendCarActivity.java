@@ -84,6 +84,7 @@ public class SendCarActivity extends BaseActivity {
     private FragmentHelper helper;
     private ImageFragment imageFragment;
     private List<String> paths = new ArrayList<>();
+    private String iconPath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +104,8 @@ public class SendCarActivity extends BaseActivity {
 
             @Override
             public void onHomeImage(String path) {
-                ImageLoader.loadImageFile(mActivity,path, imageAdd);
+                iconPath = path;
+                ImageLoader.loadImageFile(mActivity, path, imageAdd);
             }
 
             @Override
@@ -128,7 +130,7 @@ public class SendCarActivity extends BaseActivity {
 
     @OnClick({R.id.iv_title_back, R.id.image_add, R.id.iv_clear_car_type, R.id.tv_bian_su_fang_shi, R.id.tv_choose_length,
             R.id.tv_choose_address, R.id.tv_ran_you_type, R.id.iv_clear_li_cheng, R.id.iv_clear_car_money,
-            R.id.iv_clear_car_ding_jin, R.id.iv_clear_car_yong_jin, R.id.iv_clear_car_pai_liang})
+            R.id.iv_clear_car_ding_jin, R.id.iv_clear_car_yong_jin, R.id.iv_clear_car_pai_liang, R.id.tv_send_car})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //返回
@@ -145,6 +147,7 @@ public class SendCarActivity extends BaseActivity {
                 break;
             //选择变速方式
             case R.id.tv_bian_su_fang_shi:
+
                 break;
             //选择上牌日期
             case R.id.tv_choose_length:
@@ -156,6 +159,7 @@ public class SendCarActivity extends BaseActivity {
                 break;
             //选择燃油类型
             case R.id.tv_ran_you_type:
+
                 break;
             //删除行驶里程
             case R.id.iv_clear_li_cheng:
@@ -177,7 +181,18 @@ public class SendCarActivity extends BaseActivity {
             case R.id.iv_clear_car_pai_liang:
                 etCarPaiLiang.setText("");
                 break;
+            //发布车辆
+            case R.id.tv_send_car:
+                sendCar();
+                break;
         }
+    }
+
+    /**
+     * 发布车辆
+     */
+    private void sendCar() {
+
     }
 
     private void addImage() {

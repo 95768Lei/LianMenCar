@@ -8,15 +8,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.RegexUtils;
+import com.google.gson.Gson;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.CityBean;
+import com.zl.webproject.model.LoginBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.SpUtlis;
@@ -24,13 +28,20 @@ import com.zl.webproject.utils.SpUtlis;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author zhanglei
@@ -58,6 +69,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.linear_other_login)
     AutoLinearLayout linearOtherLogin;
     private UMShareAPI umShareAPI;
+
+    public static LoginActivity loginActivity;
 
     private UMAuthListener authListener = new UMAuthListener() {
         /**
@@ -114,17 +127,31 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
+        loginActivity = this;
     }
 
     private void initView() {
         umShareAPI = UMShareAPI.get(mActivity);
         tvTitleName.setText("用户登录");
+        LoginBean loginData = SpUtlis.getLoginData(mActivity);
+        if (!TextUtils.isEmpty(loginData.getPhone())) {
+            etInputPhone.setText(loginData.getPhone());
+            etInputPassword.setText(loginData.getPassword());
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 66:
+                    etInputPhone.setText(data.getStringExtra("phone"));
+                    etInputPassword.setText("");
+                    break;
+            }
+        }
     }
 
     @OnClick({R.id.iv_title_back, R.id.tv_title_right, R.id.tv_login, R.id.iv_login_qq, R.id.tv_forget_password, R.id.iv_login_wx})
@@ -143,7 +170,7 @@ public class LoginActivity extends BaseActivity {
                 toForgetPassword();
                 break;
             case R.id.iv_login_qq:
-                umShareAPI.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, authListener);
+                umShareAPI.getPlatformInfo(mActivity, SHARE_MEDIA.QQ, authListener);
                 break;
             case R.id.iv_login_wx:
                 umShareAPI.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, authListener);
@@ -156,7 +183,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void toRegister() {
-        startActivity(new Intent(mActivity, RegisterActivity.class));
+        Intent intent = new Intent(mActivity, RegisterActivity.class);
+        startActivityForResult(intent, 66);
     }
 
     private void back() {
@@ -166,16 +194,156 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void wxLogin(String openid) {
+        String regId = SpUtlis.getRegId(mActivity);
+        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        Map<String, String> params = new HashMap<>();
+        params.put("unionType", "WECHAT");
+        params.put("loginQq", "");
+        params.put("loginWechat", openid);
+        params.put("pustCode", regId);
+        params.put("cityCode", locationData.getCityCode());
+        params.put("location", locationData.getCityData());
 
+        final FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.unionLogin).post(builder.build()).build();
+
+        //加入任务调度
+        pDialog.setTitleText("登录中...");
+        pDialog.show();
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String string = response.body().string();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pDialog.hide();
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            int result = jsonObject.optInt("result");
+                            String jsonData = jsonObject.optString("data");
+                            switch (result) {
+                                //登录成功但未绑定手机号
+                                case 0:
+                                    SpUtlis.setUserData(mActivity, new Gson().fromJson(jsonData, CarUserEntity.class));
+                                    Intent intent = new Intent(mActivity, BindPhoneActivity.class);
+                                    startActivity(intent);
+                                    break;
+                                //登录成功
+                                case 1:
+                                    SpUtlis.setUserData(mActivity, new Gson().fromJson(jsonData, CarUserEntity.class));
+                                    LoginBean bean = new LoginBean();
+                                    bean.setLogin(true);
+                                    SpUtlis.setLoginData(mActivity, bean);
+                                    finish();
+                                    break;
+                                //登录失败
+                                default:
+                                    showToast(jsonObject.optString("msg"));
+                                    break;
+                            }
+
+                        } catch (Exception e) {
+                        }
+
+                    }
+                }, 1000);
+            }
+        });
     }
 
     private void qqLogin(String openid) {
+        String regId = SpUtlis.getRegId(mActivity);
+        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        Map<String, String> params = new HashMap<>();
+        params.put("unionType", "QQ");
+        params.put("loginQq", openid);
+        params.put("loginWechat", "");
+        params.put("pustCode", regId);
+        params.put("cityCode", locationData.getCityCode());
+        params.put("location", locationData.getCityData());
 
+        final FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.unionLogin).post(builder.build()).build();
+
+        //加入任务调度
+        pDialog.setTitleText("登录中...");
+        pDialog.show();
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String string = response.body().string();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pDialog.hide();
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            int result = jsonObject.optInt("result");
+                            String jsonData = jsonObject.optString("data");
+                            switch (result) {
+                                //登录成功但未绑定手机号
+                                case 0:
+                                    SpUtlis.setUserData(mActivity, new Gson().fromJson(jsonData, CarUserEntity.class));
+                                    Intent intent = new Intent(mActivity, BindPhoneActivity.class);
+                                    startActivity(intent);
+                                    break;
+                                //登录成功
+                                case 1:
+                                    SpUtlis.setUserData(mActivity, new Gson().fromJson(jsonData, CarUserEntity.class));
+                                    LoginBean bean = new LoginBean();
+                                    bean.setLogin(true);
+                                    SpUtlis.setLoginData(mActivity, bean);
+                                    finish();
+                                    break;
+                                //登录失败
+                                default:
+                                    showToast(jsonObject.optString("msg"));
+                                    break;
+                            }
+
+                        } catch (Exception e) {
+                        }
+
+                    }
+                }, 1000);
+            }
+        });
     }
 
     private void login() {
-        String phone = etInputPhone.getText().toString().trim();
-        String password = etInputPassword.getText().toString().trim();
+        final String phone = etInputPhone.getText().toString().trim();
+        final String password = etInputPassword.getText().toString().trim();
         String regId = SpUtlis.getRegId(mActivity);
         CityBean locationData = SpUtlis.getLocationData(mActivity);
 
@@ -200,15 +368,17 @@ public class LoginActivity extends BaseActivity {
         params.put("pustCode", regId);
         params.put("cityCode", locationData.getCityCode());
         params.put("location", locationData.getCityData());
-        HttpUtils.getInstance().Post(mActivity,params, API.login, new HttpUtils.OnOkHttpCallback() {
+        pDialog.setTitleText("登录中...");
+        pDialog.show();
+        HttpUtils.getInstance().Post(mActivity, params, API.login, new HttpUtils.OnOkHttpCallback() {
             @Override
-            public void onSuccess(String body) {
-                Log.e("body", body.toString());
+            public void onSuccess(final String body) {
+
             }
 
             @Override
             public void onError(Request error, Exception e) {
-                Log.e("body", "");
+                pDialog.hide();
             }
         });
     }

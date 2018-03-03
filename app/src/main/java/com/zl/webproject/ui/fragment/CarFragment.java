@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -76,6 +75,8 @@ public class CarFragment extends BaseFragment {
     TextView tvMore;
     @BindView(R.id.linear_gong_neng)
     AutoLinearLayout linearGongNeng;
+    @BindView(R.id.message_iv_tag)
+    ImageView messageIvTag;
     private UniversalAdapter<CarInfoEntity> mAdapter;
     private List<CarInfoEntity> mList = new ArrayList<>();
     private TagDialog tagDialog;
@@ -111,6 +112,12 @@ public class CarFragment extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getNoReadMessage(messageIvTag);
+    }
+
     private void initListener() {
         carListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -143,7 +150,13 @@ public class CarFragment extends BaseFragment {
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
                 page++;
-                getDataList();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getDataList();
+                    }
+                }, 800);
+
             }
         });
     }

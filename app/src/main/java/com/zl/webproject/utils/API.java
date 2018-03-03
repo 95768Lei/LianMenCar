@@ -22,6 +22,7 @@ public class API {
     public static final String GYWM_URL = "http://app.tzlm.cc/app/main/toAboutUs.do";
 
 //    public static final String BASEURL = "http://app.tzlm.cc";
+//    public static final String BASEURL = "http://60.6.202.157:8889/CARS";
     public static final String BASEURL = "http://172.16.18.20:8888/CARS";
 
     //用户登录
@@ -29,9 +30,9 @@ public class API {
     //用户注册检索手机是否被注册
     public static final String checkPhone = BASEURL + "/app/user/checkPhone.do";
     //用户注册
-    public static final String Register = BASEURL + "/app/user/Register.do";
+    public static final String Register = BASEURL + "/app/user/register.do";
     //用户密码修改
-    public static final String editPass = BASEURL + "/app/user/login.do";
+    public static final String editPass = BASEURL + "/app/user/editPass.do";
     //登录状态下，获得用户信息
     public static final String getUserInfo = BASEURL + "/app/user/getUserInfo.do";
     //获得个人完善信息

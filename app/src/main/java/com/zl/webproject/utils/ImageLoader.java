@@ -28,15 +28,15 @@ public class ImageLoader {
     public static void loadImageUrl(Activity activity, String url, ImageView imageView) {
         if (TextUtils.isEmpty(url)) return;
 
-//        Glide.with(activity)
-//                .load(API.BASEURL + url)
-//                .crossFade()
-//                .into(imageView);
-
         Glide.with(activity)
-                .load("http://app.tzlm.cc/" + url)
+                .load(API.BASEURL + "/" + url)
                 .crossFade()
                 .into(imageView);
+
+//        Glide.with(activity)
+//                .load("http://app.tzlm.cc/" + url)
+//                .crossFade()
+//                .into(imageView);
     }
 
     public static void loadImageUrl(Fragment activity, String url, ImageView imageView) {

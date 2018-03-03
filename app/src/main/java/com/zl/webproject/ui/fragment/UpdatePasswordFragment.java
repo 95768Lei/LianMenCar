@@ -3,6 +3,7 @@ package com.zl.webproject.ui.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,21 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.RegexUtils;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
+import com.zl.webproject.model.LoginBean;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.SmsUtils;
+import com.zl.webproject.utils.SpUtlis;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.jpush.sms.listener.SmscheckListener;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -69,6 +79,11 @@ public class UpdatePasswordFragment extends BaseFragment {
 
     private void initView() {
         tvTitleName.setText("修改密码");
+
+        LoginBean loginData = SpUtlis.getLoginData(mActivity);
+        if (!TextUtils.isEmpty(loginData.getPhone())) {
+            etInputPhone.setText(loginData.getPhone());
+        }
     }
 
     @Override
@@ -95,56 +110,78 @@ public class UpdatePasswordFragment extends BaseFragment {
     private void commit() {
         String phone = etInputPhone.getText().toString();
         String code = etInputCode.getText().toString();
-        String oldPassword = etInputOldPassword.getText().toString();
-        String newPassword = etInputNewPassword.getText().toString();
+        final String oldPassword = etInputOldPassword.getText().toString();
+        final String newPassword = etInputNewPassword.getText().toString();
         String againPassword = etInputAgainPassword.getText().toString();
 
-        if (!TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
             return;
         }
 
-        if (!RegexUtils.isMobileExact(phone)){
+        if (!RegexUtils.isMobileExact(phone)) {
             showToast("手机号格式不对");
             return;
         }
 
-        if (!TextUtils.isEmpty(code)) {
+        if (TextUtils.isEmpty(code)) {
             showToast("验证码不能为空");
             return;
         }
 
-        if (!TextUtils.isEmpty(oldPassword)) {
+        if (TextUtils.isEmpty(oldPassword)) {
             showToast("旧密码不能为空");
             return;
         }
 
-        if (!TextUtils.isEmpty(newPassword)) {
+        if (TextUtils.isEmpty(newPassword)) {
             showToast("新密码不能为空");
             return;
         }
-        if (!TextUtils.isEmpty(againPassword)) {
+        if (TextUtils.isEmpty(againPassword)) {
             showToast("确认密码不能为空");
             return;
         }
 
+        //验证
+        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
+            @Override
+            public void checkCodeSuccess(String s) {
+                Map<String, String> params = new HashMap<>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("oldPass", oldPassword);
+                params.put("newPass", newPassword);
+                HttpUtils.getInstance().Post(mActivity, params, API.editPass, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+                        showToast("密码修改成功");
+                        getFragmentManager().popBackStack();
+                    }
 
-        if (!SmsUtils.checkSmsCode(mActivity, phone, code)) {
-            return;
-        }
+                    @Override
+                    public void onError(Request error, Exception e) {
+                        Log.e("body", "");
+                    }
+                });
+            }
 
+            @Override
+            public void checkCodeFail(int i, String s) {
+
+            }
+        });
 
     }
 
     private void sendCode() {
         String phone = etInputPhone.getText().toString();
 
-        if (!TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
             return;
         }
 
-        if (!RegexUtils.isMobileExact(phone)){
+        if (!RegexUtils.isMobileExact(phone)) {
             showToast("手机号格式不对");
             return;
         }

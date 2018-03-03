@@ -55,6 +55,7 @@ public class ImageFragment extends BaseFragment {
     private List<String> mList = new ArrayList<>();
     private ArrayList<String> photoList = new ArrayList<>();
     private UniversalAdapter<String> adapter;
+    private int choosePosition = 0;
 
     public ImageFragment() {
         // Required empty public constructor
@@ -102,6 +103,8 @@ public class ImageFragment extends BaseFragment {
         imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                choosePosition = i;
+                adapter.notifyDataSetChanged();
                 if (onImageFragmentListener != null) {
                     onImageFragmentListener.onHomeImage(mList.get(i));
                 }
@@ -114,7 +117,13 @@ public class ImageFragment extends BaseFragment {
             @Override
             public void convert(UniversalViewHolder holder, final int position, String s) {
                 ImageView image = holder.getView(R.id.image_item);
+                ImageView ivChoose = holder.getView(R.id.iv_choose);
                 ImageLoader.loadImageFile(mActivity, s, image);
+                if (choosePosition == position) {
+                    ivChoose.setVisibility(View.VISIBLE);
+                } else {
+                    ivChoose.setVisibility(View.GONE);
+                }
                 holder.getView(R.id.iv_clear_item).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -188,6 +197,7 @@ public class ImageFragment extends BaseFragment {
     private void commit() {
         if (onImageFragmentListener != null) {
             onImageFragmentListener.onHide();
+            onImageFragmentListener.onHomeImage(mList.get(choosePosition));
             onImageFragmentListener.onImageList(mList);
         }
     }

@@ -230,6 +230,8 @@ public class AddressDialog extends BaseDialog {
         for (int i = 0; i < lsit.size(); i++) {
             CityBean friendModel = new CityBean();
             friendModel.setCityName(lsit.get(i).getCityName());
+            friendModel.setCityCode(lsit.get(i).getCityCode());
+            friendModel.setCityData(lsit.get(i).getCityData());
             //汉字转换成拼音
             String pinyin = characterParser.getSelling(lsit.get(i).getCityName());
             String sortString = pinyin.substring(0, 1).toUpperCase();

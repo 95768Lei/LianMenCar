@@ -75,7 +75,6 @@ public class FragmentHelper {
         private Builder(AppCompatActivity context) {
             mActivity = context;
             transaction = mActivity.getSupportFragmentManager().beginTransaction();
-
         }
 
         @Override

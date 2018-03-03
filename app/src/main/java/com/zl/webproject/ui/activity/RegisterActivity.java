@@ -1,20 +1,33 @@
 package com.zl.webproject.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.RegexUtils;
+import com.google.gson.Gson;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.model.CarUserEntity;
+import com.zl.webproject.model.CityBean;
+import com.zl.webproject.model.LoginBean;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.SmsUtils;
+import com.zl.webproject.utils.SpUtlis;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -70,11 +83,11 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void register() {
-        String phone = etInputPhone.getText().toString().trim();
+        final String phone = etInputPhone.getText().toString().trim();
         String code = etInputCode.getText().toString().trim();
-        String password = etInputPassword.toString().trim();
+        String password = etInputPassword.getText().toString().trim();
 
-        if (!TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
             return;
         }
@@ -84,25 +97,47 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(code)) {
-            showToast("验证码不能为空");
-            return;
-        }
+//        if (TextUtils.isEmpty(code)) {
+//            showToast("验证码不能为空");
+//            return;
+//        }
 
-        if (!TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             showToast("密码不能为空");
             return;
         }
 
-        if (!SmsUtils.checkSmsCode(mActivity, phone, code)) {
-            return;
-        }
+//        if (!SmsUtils.checkSmsCode(mActivity, phone, code)) {
+//            return;
+//        }
+        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        params.put("pass", password);
+        params.put("cityCode", locationData.getCityCode());
+        params.put("location", locationData.getCityData());
+        HttpUtils.getInstance().Post(mActivity, params, API.Register, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                Log.e("body", body.toString());
+                showToast("注册成功");
+                Intent intent = new Intent();
+                intent.putExtra("phone", phone);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
+            }
+        });
     }
 
     private void sendCode() {
         String phone = etInputPhone.getText().toString();
 
-        if (!TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
             return;
         }

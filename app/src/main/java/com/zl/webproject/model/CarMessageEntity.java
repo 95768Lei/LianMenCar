@@ -23,7 +23,7 @@ public class CarMessageEntity implements java.io.Serializable {
 	private String messContext;
 
 	/** 发送时间 */
-	private String messDate;
+	private Date messDate;
 
 	private String messDateStr;
 	
@@ -64,11 +64,11 @@ public class CarMessageEntity implements java.io.Serializable {
 		this.messContext = messContext;
 	}
 
-	public String getMessDate() {
+	public Date getMessDate() {
 		return messDate;
 	}
 
-	public void setMessDate(String messDate) {
+	public void setMessDate(Date messDate) {
 		this.messDate = messDate;
 	}
 

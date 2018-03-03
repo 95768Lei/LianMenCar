@@ -3,13 +3,17 @@ package com.zl.webproject.base;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -23,6 +27,8 @@ import com.zl.webproject.R;
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Created by Administrator on 2017/11/3.
  */
@@ -35,6 +41,8 @@ public class BaseActivity extends AppCompatActivity {
 
     protected AppCompatActivity mActivity;
     protected ProgressDialog baseDialog;
+    protected Handler handler = new Handler();
+    protected SweetAlertDialog pDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +50,10 @@ public class BaseActivity extends AppCompatActivity {
         mActivity = this;
         baseDialog = new ProgressDialog(mActivity);
         baseDialog.setMessage("加载中...");
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("加载中...");
+        pDialog.setCancelable(true);
     }
 
     protected void showToast(String message) {

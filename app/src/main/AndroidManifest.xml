@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zl.webproject">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -43,7 +44,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon,android:theme">
 
         <!-- 极光推送 -->
         <meta-data
@@ -63,7 +65,7 @@
         <!-- 友盟KEY -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5a7ba4468f4a9d295e00084b" />
+            android:value="5a9a0bd58f4a9d4140000b47" />
 
         <!-- 注册设计图纸 -->
         <meta-data
@@ -139,7 +141,9 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".ui.activity.LauncherActivity">
+        <activity
+            android:name=".ui.activity.LauncherActivity"
+            android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -171,7 +175,8 @@
         <activity android:name=".ui.activity.MotorsCarListActivity" />
         <activity android:name=".ui.activity.DiscussActivity" />
         <activity android:name=".ui.activity.MyMotorsActivity" />
-        <activity android:name=".ui.activity.CarSearchActivity"></activity>
+        <activity android:name=".ui.activity.CarSearchActivity" />
+        <activity android:name=".ui.activity.BindPhoneActivity"></activity>
     </application>
 
 </manifest>

@@ -1,12 +1,16 @@
 package com.zl.webproject.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.zl.webproject.utils.ImageLoader;
 
 /**
  * Created by Administrator on 2017/11/19.
@@ -59,6 +63,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public void setText(int viewId, String text) {
         TextView view = getView(viewId);
         view.setText(text);
+    }
+
+    /**
+     * 为ImageView添加数据
+     *
+     * @param viewId
+     */
+    public void setImageUrl(Activity activity, int viewId, String imageUrl) {
+        ImageView view = getView(viewId);
+        ImageLoader.loadImageUrl(activity, imageUrl, view);
     }
 
 }

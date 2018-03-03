@@ -44,6 +44,12 @@ public class CarIntermediaryEntity implements java.io.Serializable {
     
     /** 姓名 */
     private String inserName;
+
+	/** 身份证号 */
+	private String inserNo;
+
+	/** 生日 */
+	private String inserDate;
     
     private String inserAuditDateStr;
     
@@ -155,5 +161,21 @@ public class CarIntermediaryEntity implements java.io.Serializable {
 
 	public void setInserCreateDateStr(String inserCreateDateStr) {
 		this.inserCreateDateStr = inserCreateDateStr;
+	}
+
+	public String getInserNo() {
+		return inserNo;
+	}
+
+	public void setInserNo(String inserNo) {
+		this.inserNo = inserNo;
+	}
+
+	public String getInserDate() {
+		return inserDate;
+	}
+
+	public void setInserDate(String inserDate) {
+		this.inserDate = inserDate;
 	}
 }

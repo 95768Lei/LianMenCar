@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +29,16 @@ import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.SpUtlis;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import okhttp3.Request;
 
 /**
  * Created by Administrator on 2017/8/25.
@@ -43,12 +54,17 @@ public class BaseFragment extends Fragment {
     protected Fragment mFragment;
     protected Handler handler = new Handler();
     private ProgressDialog baseDialog;
+    protected SweetAlertDialog pDialog;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
         baseDialog = new ProgressDialog(mActivity);
+        pDialog = new SweetAlertDialog(mActivity, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("加载中...");
+        pDialog.setCancelable(true);
     }
 
     @Nullable
@@ -71,6 +87,34 @@ public class BaseFragment extends Fragment {
         baseDialog.setCanceledOnTouchOutside(true);
         baseDialog.setMessage(Message);
         baseDialog.show();
+    }
+
+    /**
+     * 获取是否有未读的消息
+     */
+    protected void getNoReadMessage(final View view) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.unReadMessageList, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                try {
+                    int i = Integer.parseInt(body);
+                    if (i > 0) {
+                        view.setVisibility(View.VISIBLE);
+                    } else {
+                        view.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
+            }
+        });
     }
 
     /**

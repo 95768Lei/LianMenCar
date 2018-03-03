@@ -2,6 +2,7 @@ package com.zl.webproject.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,15 +19,21 @@ import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CarResourceEntity;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.StringUtils;
 import com.zl.webproject.view.MyListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -64,6 +71,8 @@ public class CarDetailActivity extends BaseActivity {
     TextView tvCarTag;
     @BindView(R.id.tv_car_content)
     TextView tvCarContent;
+    @BindView(R.id.tv_carCollectionCount)
+    TextView tvCarCollectionCount;
 
     private List<String> dList = new ArrayList<>();
     private List<CarResourceEntity> ivList = new ArrayList<>();
@@ -111,7 +120,7 @@ public class CarDetailActivity extends BaseActivity {
         dList.add("品牌型号：" + carInfoEntity.getCarBrandName());
         dList.add("车辆类型：" + carInfoEntity.getLv().getDictName());
         dList.add("变速器：" + carInfoEntity.getGearbox().getDictName());
-        dList.add("上牌日期：" + carInfoEntity.getCarBrandName());
+        dList.add("上牌日期：" + StringUtils.dateYYYY_MM_DD(carInfoEntity.getCarLicensingDate()));
         dList.add("行驶里程：" + carInfoEntity.getCarMileage() + "万公里");
         dList.add("所在地区：" + carInfoEntity.getCarAreaCitysEntity().getCityName());
         dList.add("销售价格：" + carInfoEntity.getCarPrice() + "万元");
@@ -120,8 +129,24 @@ public class CarDetailActivity extends BaseActivity {
         dList.add("燃油类型：" + carInfoEntity.getFuel().getDictName());
 
         tvCarContent.setText("*" + carInfoEntity.getCarContext());
-
+        tvCarCollectionCount.setText("热度  " + carInfoEntity.getCarCollectionCount() + "");
         dAdapter.notifyDataSetChanged();
+
+        //插入浏览记录
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", carInfoEntity.getId() + "");
+        params.put("isUpDate", "false");
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarInfo, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                Log.e("body", body);
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
+            }
+        });
     }
 
     private void initView() {
@@ -166,17 +191,33 @@ public class CarDetailActivity extends BaseActivity {
                 break;
             //进入车行
             case R.id.into_car_hang:
+                intoCarHang();
                 break;
             //分享车辆
             case R.id.into_share_car:
                 break;
             //收藏车辆
             case R.id.info_shou_cang_car:
+                shouCang();
                 break;
             //打电话
             case R.id.info_call:
                 break;
         }
+    }
+
+    /**
+     * 进入车行
+     */
+    private void intoCarHang() {
+
+    }
+
+    /**
+     * 收藏车辆
+     */
+    private void shouCang() {
+
     }
 
     public class LocalImageHolderView implements Holder<CarResourceEntity> {

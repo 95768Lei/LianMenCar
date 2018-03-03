@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 
 import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.CityBean;
+import com.zl.webproject.model.LoginBean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhanglei on 2017/8/6.
@@ -83,6 +87,7 @@ public class SpUtlis {
         SharedPreferences sp = context.getSharedPreferences("userEntity", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         edit.putString("userImg", userEntity.getUserImg());
+        edit.putInt("userId", userEntity.getId());
         edit.putString("userPustCode", userEntity.getUserPustCode());
         edit.putInt("userApply", userEntity.getUserApply());
         edit.putString("userNikeName", userEntity.getUserNikeName());
@@ -92,11 +97,30 @@ public class SpUtlis {
     public static CarUserEntity getUserData(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userEntity", Context.MODE_PRIVATE);
         CarUserEntity entity = new CarUserEntity();
+        entity.setId(sp.getInt("userId",0));
         entity.setUserImg(sp.getString("userImg", ""));
         entity.setUserApply(sp.getInt("userApply", 0));
         entity.setUserPustCode(sp.getString("userPustCode", ""));
         entity.setUserNikeName(sp.getString("userNikeName", ""));
         return entity;
+    }
+
+    public static void setLoginData(Context context, LoginBean bean) {
+        SharedPreferences sp = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("phone", bean.getPhone());
+        edit.putString("password", bean.getPassword());
+        edit.putBoolean("isLogin", bean.isLogin());
+        edit.commit();
+    }
+
+    public static LoginBean getLoginData(Context context) {
+        LoginBean bean = new LoginBean();
+        SharedPreferences sp = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        bean.setPhone(sp.getString("phone", ""));
+        bean.setPassword(sp.getString("password", ""));
+        bean.setLogin(sp.getBoolean("isLogin", false));
+        return bean;
     }
 
 }

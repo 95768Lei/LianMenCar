@@ -4,59 +4,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/home_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:fillViewport="true">
+        android:background="@color/white">
 
-        <com.zhy.autolayout.AutoLinearLayout
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <include layout="@layout/main_title_layout" />
-
-            <com.bigkoo.convenientbanner.ConvenientBanner
-                android:id="@+id/home_banner"
-                android:layout_width="match_parent"
-                android:layout_height="460px"
-                app:canLoop="true" />
-
-            <com.zl.webproject.view.MyGridView
-                android:id="@+id/home_grid"
+            <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:numColumns="5"
-                android:paddingBottom="@dimen/dp_6"
-                android:paddingTop="@dimen/dp_6"></com.zl.webproject.view.MyGridView>
+                android:background="@color/white"
+                android:minHeight="@dimen/dp_52"
+                app:layout_scrollFlags="scroll">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_36"
-                android:gravity="center"
-                android:text="───  最新发布  ───" />
-
-            <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-                android:id="@+id/home_trl"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <com.zl.webproject.view.MyListView
-                    android:id="@+id/home_listView"
+                <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/white"></com.zl.webproject.view.MyListView>
+                    android:orientation="vertical">
 
-            </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+                    <include layout="@layout/main_title_layout" />
 
-        </com.zhy.autolayout.AutoLinearLayout>
+                    <com.bigkoo.convenientbanner.ConvenientBanner
+                        android:id="@+id/home_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="460px"
+                        app:canLoop="true" />
 
-    </ScrollView>
+
+                    <com.zl.webproject.view.MyGridView
+                        android:id="@+id/home_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:numColumns="5"
+                        android:paddingBottom="@dimen/dp_6"
+                        android:paddingTop="@dimen/dp_6"></com.zl.webproject.view.MyGridView>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <com.zl.webproject.view.MRecyclerView
+            android:id="@+id/home_rlv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"></com.zl.webproject.view.MRecyclerView>
+
+    </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/fab_loop_layout" />
 

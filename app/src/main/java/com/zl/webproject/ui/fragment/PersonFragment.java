@@ -3,6 +3,8 @@ package com.zl.webproject.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.PersonGridBean;
 import com.zl.webproject.ui.activity.CarCollectActivity;
 import com.zl.webproject.ui.activity.CarHangCollectActivity;
@@ -27,18 +30,24 @@ import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.ui.activity.WebActivity;
 import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.SpUtlis;
 import com.zl.webproject.utils.SystemUtils;
 import com.zl.webproject.view.MyGridView;
 import com.zl.webproject.view.MyListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -166,24 +175,24 @@ public class PersonFragment extends BaseFragment {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         switch (imageList.get(i).getName()) {
                             case "发布车源":
-                                startActivity(new Intent(mActivity, SendCarActivity.class));
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, SendCarActivity.class));
                                 break;
                             case "我的车源":
-                                startActivity(new Intent(mActivity, MyCarActivity.class));
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, MyCarActivity.class));
                                 break;
                             case "我的车行":
-                                startActivity(new Intent(mActivity, MyMotorsActivity.class));
+                                intoMyMotors();
                                 break;
                             case "车行收藏":
-                                startActivity(new Intent(mActivity, CarHangCollectActivity.class));
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarHangCollectActivity.class));
                                 break;
                             //车辆关注
                             case "车辆关注":
-                                startActivity(new Intent(mActivity, CarCollectActivity.class));
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarCollectActivity.class));
                                 break;
                             //赚取佣金
                             case "赚取佣金":
-                                startActivity(new Intent(mActivity, CarShareListActivity.class));
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarShareListActivity.class));
                                 break;
                             //中介认证
                             case "中介认证":
@@ -215,6 +224,43 @@ public class PersonFragment extends BaseFragment {
             }
         };
         personListView.setAdapter(mAdapter);
+
+        updatePerson();
+    }
+
+    private void intoMyMotors() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.getApproverInfo, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                Log.e("body", body);
+                SystemUtils.toActivity(mActivity, new Intent(mActivity, MyMotorsActivity.class));
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePerson();
+    }
+
+    private void updatePerson() {
+        boolean login = SpUtlis.getLoginData(mActivity).isLogin();
+        if (login) {
+            CarUserEntity userData = SpUtlis.getUserData(mActivity);
+            tvPersonName.setText(userData.getUserNikeName());
+            if (TextUtils.isEmpty(userData.getUserImg())) {
+                return;
+            }
+            ImageLoader.loadImageUrl(mActivity, userData.getUserImg(), ivPersonIcon);
+        }
     }
 
     @Override
@@ -228,11 +274,11 @@ public class PersonFragment extends BaseFragment {
         switch (view.getId()) {
             //进入设置
             case R.id.iv_setting:
-                startActivity(new Intent(mActivity, SettingsActivity.class));
+                SystemUtils.toActivity(mActivity, new Intent(mActivity, SettingsActivity.class));
                 break;
             //进入消息中心
             case R.id.iv_message:
-                startActivity(new Intent(mActivity, MessageActivity.class));
+                SystemUtils.toActivity(mActivity, new Intent(mActivity, MessageActivity.class));
                 break;
             //点击头像（若是未登录状态则进入登录页）
             case R.id.iv_person_icon:
@@ -246,6 +292,11 @@ public class PersonFragment extends BaseFragment {
     }
 
     private void login() {
+
+        if (SpUtlis.getLoginData(mActivity).isLogin()) {
+            return;
+        }
+
         Intent intent = new Intent(mActivity, LoginActivity.class);
         intent.putExtra(API.ISFINISH, false);
         startActivity(intent);

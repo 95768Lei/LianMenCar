@@ -12,11 +12,20 @@ import android.widget.TextView;
 
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
+import com.zl.webproject.model.CarUserEntity;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.OnReturnStringListener;
+import com.zl.webproject.utils.SpUtlis;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Request;
 
 /**
  * @author zhanglei
@@ -38,6 +47,8 @@ public class UpdateNickNameFragment extends BaseFragment {
     @BindView(R.id.tv_update_nickname)
     TextView tvUpdateNickname;
     Unbinder unbinder;
+
+    private OnReturnStringListener onReturnStringListener;
 
     public UpdateNickNameFragment() {
         // Required empty public constructor
@@ -78,11 +89,36 @@ public class UpdateNickNameFragment extends BaseFragment {
     }
 
     private void updateNickName() {
-        String nickName = etInputNickname.getText().toString().trim();
-        if (TextUtils.isEmpty(nickName)){
+        final String nickName = etInputNickname.getText().toString().trim();
+        if (TextUtils.isEmpty(nickName)) {
             showToast("昵称不能为空");
             return;
         }
+        final CarUserEntity userData = SpUtlis.getUserData(mActivity);
+        Map<String, String> params = new HashMap<>();
+        params.put("nikeName", nickName);
+        params.put("uid", userData.getId() + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.editNikeName, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                getFragmentManager().popBackStack();
+                showToast("昵称修改成功");
+                userData.setUserNikeName(nickName);
+                SpUtlis.setUserData(mActivity, userData);
+                if (onReturnStringListener != null) {
+                    onReturnStringListener.onReturnString(nickName);
+                }
+            }
 
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
+
+    }
+
+    public void setOnReturnStringListener(OnReturnStringListener onReturnStringListener) {
+        this.onReturnStringListener = onReturnStringListener;
     }
 }

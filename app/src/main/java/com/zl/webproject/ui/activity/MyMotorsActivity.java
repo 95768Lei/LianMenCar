@@ -15,15 +15,21 @@ import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.fragment.ImageFragment;
+import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.FragmentHelper;
+import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.SpUtlis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Request;
 
 import static com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT;
 
@@ -80,7 +86,24 @@ public class MyMotorsActivity extends BaseActivity {
         setContentView(R.layout.activity_my_motors);
         ButterKnife.bind(this);
         initView();
+        initData();
         initListener();
+    }
+
+    private void initData() {
+        Map<String,String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.toMyCarDealer, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
     }
 
     private void initListener() {
@@ -170,6 +193,8 @@ public class MyMotorsActivity extends BaseActivity {
     }
 
     private void commit() {
+
+
 
     }
 

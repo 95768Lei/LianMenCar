@@ -117,10 +117,10 @@ public class CarListFragment extends BaseFragment {
         } else if (type == 1) {
             url = API.getForwardList;
             params.put("page", page + "");
-            params.put("uid", "");
+            params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
         }
 
-        HttpUtils.getInstance().Post(mActivity,params, url, new HttpUtils.OnOkHttpCallback() {
+        HttpUtils.getInstance().Post(mActivity, params, url, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {

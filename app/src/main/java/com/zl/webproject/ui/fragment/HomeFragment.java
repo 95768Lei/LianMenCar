@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -21,14 +22,14 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.google.gson.Gson;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
+import com.zl.webproject.base.RecyclerAdapter;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.base.ViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.activity.CarDetailActivity;
@@ -40,8 +41,8 @@ import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.LocationUtils;
 import com.zl.webproject.utils.SpUtlis;
+import com.zl.webproject.view.MRecyclerView;
 import com.zl.webproject.view.MyGridView;
-import com.zl.webproject.view.MyListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,27 +64,28 @@ import okhttp3.Request;
  */
 public class HomeFragment extends BaseFragment {
 
-
     @BindView(R.id.tv_city)
     TextView tvCity;
     @BindView(R.id.home_banner)
     ConvenientBanner homeBanner;
     @BindView(R.id.home_grid)
     MyGridView homeGrid;
-    @BindView(R.id.home_listView)
-    MyListView homeListView;
-    @BindView(R.id.home_trl)
-    TwinklingRefreshLayout homeTrl;
     Unbinder unbinder;
     @BindView(R.id.iv_message)
     ImageView ivMessage;
     @BindView(R.id.fab_loop)
     FloatingActionButton fabLoop;
+    @BindView(R.id.et_search_data)
+    TextView etSearchData;
+    @BindView(R.id.home_rlv)
+    MRecyclerView homeRlv;
     @BindView(R.id.home_scroll)
-    ScrollView homeScroll;
+    CoordinatorLayout homeScroll;
+    @BindView(R.id.message_iv_tag)
+    ImageView messageIvTag;
 
     private UniversalAdapter<String> gAdapter;
-    private UniversalAdapter<CarInfoEntity> mAdapter;
+    private RecyclerAdapter<CarInfoEntity> rAdapter;
     private List<CarInfoEntity> mList = new ArrayList<>();
     private List<String> gList = new ArrayList<>();
     private List<Integer> ivList = new ArrayList<>();
@@ -120,19 +122,21 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initListener() {
-        homeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        rAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(mActivity, CarDetailActivity.class));
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(mActivity, CarDetailActivity.class);
+                intent.putExtra("data", mList.get(position));
+                startActivity(intent);
             }
         });
-
         locationUtils.setOnLocationListener(new LocationUtils.OnLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation location) {
                 final String data = location.getProvince() + location.getCity() + location.getStreet();
                 final String cityCode = location.getCityCode();
                 tvCity.setText(location.getCity());
+                showToast("已切换到：" + location.getCity());
                 SpUtlis.setLocationData(mActivity, cityCode, data, location.getCity());
                 SpUtlis.setCuLocationData(mActivity, cityCode, data, location.getCity());
                 getListData();
@@ -193,12 +197,17 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        homeTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+        homeRlv.setOnBottomListener(new MRecyclerView.OnBottomListener() {
             @Override
-            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-                super.onLoadMore(refreshLayout);
+            public void onBottom() {
                 page++;
-                getListData();
+                startLoop(fabLoop);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getListData();
+                    }
+                }, 800);
             }
         });
     }
@@ -217,6 +226,7 @@ public class HomeFragment extends BaseFragment {
         homeBanner.notifyDataSetChanged();
         CityBean locationData = SpUtlis.getLocationData(mActivity);
         tvCity.setText(locationData.getCityName());
+
         //获取最新发布的车辆
         getListData();
     }
@@ -232,13 +242,9 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onSuccess(String body) {
                 try {
-
+                    stopLoop(fabLoop);
                     if (page == 1) {
-                        homeTrl.finishRefreshing();
-                        stopLoop(fabLoop);
                         mList.clear();
-                    } else {
-                        homeTrl.finishLoadmore();
                     }
 
                     JSONObject object = new JSONObject(body);
@@ -250,9 +256,9 @@ public class HomeFragment extends BaseFragment {
                     for (int i = 0; i < array.length(); i++) {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
                     }
-                    mAdapter.notifyDataSetChanged();
+                    rAdapter.notifyDataSetChanged();
                     if (page == 1) {
-                        homeScroll.fullScroll(ScrollView.FOCUS_UP);
+                        homeRlv.scrollToPosition(0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -274,9 +280,9 @@ public class HomeFragment extends BaseFragment {
                 holder.setImageResource(R.id.image_icon, icons[position]);
             }
         };
-        mAdapter = new UniversalAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
+        rAdapter = new RecyclerAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
             @Override
-            public void convert(UniversalViewHolder holder, int position, CarInfoEntity s) {
+            protected void convert(ViewHolder holder, CarInfoEntity s, int position) {
                 Integer carSource = s.getCarSource();
                 ImageView ivCarTag = holder.getView(R.id.iv_car_tag);
                 if (carSource == 0) {
@@ -290,11 +296,13 @@ public class HomeFragment extends BaseFragment {
                 holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
                 holder.setText(R.id.tv_car_data, s.getCarLicensingDateStr() + "/" + s.getCarMileage() + "公里");
                 holder.setImageUrl(mActivity, R.id.iv_car_icon, s.getCarImg());
+                holder.setText(R.id.carForWard, s.getCarForWard() + "");
+                holder.setText(R.id.tv_carBrowse, s.getCarBrowse() + "");
             }
         };
-        homeTrl.setEnableRefresh(false);
+        homeRlv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        homeRlv.setAdapter(rAdapter);
         homeGrid.setAdapter(gAdapter);
-        homeListView.setAdapter(mAdapter);
 
         //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
         homeBanner.setPages(
@@ -326,6 +334,12 @@ public class HomeFragment extends BaseFragment {
             locationUtils.startLocation();
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getNoReadMessage(messageIvTag);
     }
 
     @Override

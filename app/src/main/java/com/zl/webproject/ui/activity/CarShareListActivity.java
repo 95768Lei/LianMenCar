@@ -2,12 +2,11 @@ package com.zl.webproject.ui.activity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
-import com.zl.webproject.ui.fragment.CarListFragment;
+import com.zl.webproject.ui.fragment.CarForwardFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +33,7 @@ public class CarShareListActivity extends BaseActivity {
         setContentView(R.layout.activity_car_share_list);
         ButterKnife.bind(this);
         tvTitleName.setText("赚取佣金");
-        openFragment(CarListFragment.newInstance(1), R.id.car_share_rl);
+        openFragment(CarForwardFragment.newInstance(), R.id.car_share_rl);
     }
 
     @OnClick(R.id.iv_title_back)
