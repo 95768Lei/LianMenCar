@@ -30,6 +30,7 @@ public class WrapLayout extends ViewGroup {
     public int BUTTON_STYLE = 1;
     private int style;
     private View btn;
+    private int position = -1;
 
     public WrapLayout(Context context) {
         super(context);
@@ -75,7 +76,7 @@ public class WrapLayout extends ViewGroup {
     }
 
     private void createChild(String[] data, final Context context, int textSize, int pl, int pt, int pr, int pb, int ml, int mt, int mr, int mb) {
-        int size = data.length;
+        final int size = data.length;
         for (int i = 0; i < size; i++) {
             String text = data[i];
             //通过判断style是TextView还是Button进行不同的操作，还可以继续添加不同的view
@@ -103,6 +104,14 @@ public class WrapLayout extends ViewGroup {
             btn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    for (int i1 = 0; i1 < size; i1++) {
+                        getChildAt(i1).setSelected(false);
+                        ((TextView) getChildAt(i1)).setTextColor(getResources().getColor(R.color.hint_color));
+                    }
+                    position = finalI;
+                    TextView childAt = (TextView) getChildAt(position);
+                    childAt.setSelected(true);
+                    childAt.setTextColor(getResources().getColor(R.color.white));
                     if (markClickListener != null) {
                         markClickListener.clickMark(finalI);
                     }
@@ -110,11 +119,15 @@ public class WrapLayout extends ViewGroup {
             });
 
             //设置背景
-            Drawable drawable = context.getResources().getDrawable(R.drawable.grey_round_shape);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.tag_selector_bg);
             btn.setBackground(drawable);
 
             this.addView(btn);
         }
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     private MarkClickListener markClickListener;

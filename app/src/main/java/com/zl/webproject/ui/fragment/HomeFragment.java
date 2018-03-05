@@ -41,6 +41,7 @@ import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.LocationUtils;
 import com.zl.webproject.utils.SpUtlis;
+import com.zl.webproject.utils.TagUtils;
 import com.zl.webproject.view.MRecyclerView;
 import com.zl.webproject.view.MyGridView;
 
@@ -83,6 +84,8 @@ public class HomeFragment extends BaseFragment {
     CoordinatorLayout homeScroll;
     @BindView(R.id.message_iv_tag)
     ImageView messageIvTag;
+    @BindView(R.id.home_tv_bottom)
+    TextView homeTvBottom;
 
     private UniversalAdapter<String> gAdapter;
     private RecyclerAdapter<CarInfoEntity> rAdapter;
@@ -250,8 +253,11 @@ public class HomeFragment extends BaseFragment {
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
                     if (array.length() <= 0) {
-                        showToast("没有更多了");
+                        homeTvBottom.setVisibility(View.VISIBLE);
+                        homeTvBottom.setText("共" + mList.size() + "条车辆信息");
                         return;
+                    } else {
+                        homeTvBottom.setVisibility(View.GONE);
                     }
                     for (int i = 0; i < array.length(); i++) {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
@@ -284,16 +290,40 @@ public class HomeFragment extends BaseFragment {
             @Override
             protected void convert(ViewHolder holder, CarInfoEntity s, int position) {
                 Integer carSource = s.getCarSource();
+                TextView carTag = holder.getView(R.id.tv_car_tag);
+                TextView carTag1 = holder.getView(R.id.tv_car_tag1);
                 ImageView ivCarTag = holder.getView(R.id.iv_car_tag);
+                Integer carLocking = s.getCarLocking();
+                Integer carSeized = s.getCarSeized();
+                Integer carPeccancy = s.getCarPeccancy();
                 if (carSource == 0) {
                     ivCarTag.setImageResource(R.mipmap.geren);
                 } else {
                     ivCarTag.setImageResource(R.mipmap.hang);
                 }
+                if (carLocking == 1) {
+                    carTag1.setText("锁定");
+                    carTag1.setVisibility(View.VISIBLE);
+                } else {
+                    carTag1.setVisibility(View.GONE);
+                }
+                if (carSeized == 1) {
+                    carTag1.setText("查封");
+                    carTag1.setVisibility(View.VISIBLE);
+                } else {
+                    carTag1.setVisibility(View.GONE);
+                }
+                if (carPeccancy == 1) {
+                    carTag1.setText("违章");
+                    carTag1.setVisibility(View.VISIBLE);
+                } else {
+                    carTag1.setVisibility(View.GONE);
+                }
                 holder.setText(R.id.tv_car_name, s.getCarTitle());
                 holder.setText(R.id.tv_car_money, s.getCarPrice() + "万");
                 holder.setText(R.id.tv_car_city, s.getCarAreaCitysEntity().getCityName());
-                holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
+//                holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
+                TagUtils.setTag(mActivity, s.getLabel().getId(), carTag);
                 holder.setText(R.id.tv_car_data, s.getCarLicensingDateStr() + "/" + s.getCarMileage() + "公里");
                 holder.setImageUrl(mActivity, R.id.iv_car_icon, s.getCarImg());
                 holder.setText(R.id.carForWard, s.getCarForWard() + "");

@@ -4,10 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/home_title"
+        layout="@layout/main_title_layout" />
+
+    <TextView
+        android:id="@+id/home_tv_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_color"
+        android:gravity="center"
+        android:text="共60条车辆信息"
+        android:textSize="@dimen/dp_14"
+        android:visibility="gone" />
+
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/home_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/home_tv_bottom"
+        android:layout_below="@id/home_title"
         android:background="@color/white">
 
         <android.support.design.widget.AppBarLayout
@@ -26,14 +43,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <include layout="@layout/main_title_layout" />
-
                     <com.bigkoo.convenientbanner.ConvenientBanner
                         android:id="@+id/home_banner"
                         android:layout_width="match_parent"
                         android:layout_height="460px"
                         app:canLoop="true" />
-
 
                     <com.zl.webproject.view.MyGridView
                         android:id="@+id/home_grid"

@@ -100,7 +100,7 @@ public class CarUserEntity implements java.io.Serializable {
     /**
      * 车行ID
      */
-    private Integer carDealerId;
+    private Integer carDealerId = -1;
 
     /**
      * 城市地址

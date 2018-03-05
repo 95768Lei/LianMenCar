@@ -31,6 +31,12 @@ public class TagDialog {
     private PopupWindow mPopupWindow;
     private int mPostion = -1;
     private View bgTv;
+    private View view;
+
+    public TagDialog(Activity mActivity, List<String> mList) {
+        this.mActivity = mActivity;
+        this.mList = mList;
+    }
 
     public TagDialog(Activity mActivity) {
         this.mActivity = mActivity;
@@ -43,10 +49,18 @@ public class TagDialog {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mPostion = i;
+                if (mPostion == i) {
+                    mPostion = -1;
+                } else {
+                    mPostion = i;
+                }
                 mAdapter.notifyDataSetChanged();
                 if (onReturnDataListener != null) {
-                    onReturnDataListener.returnData(mList.get(i));
+                    if (mPostion == -1) {
+                        onReturnDataListener.returnData("");
+                    } else {
+                        onReturnDataListener.returnData(mList.get(mPostion));
+                    }
                 }
             }
         });
@@ -60,32 +74,38 @@ public class TagDialog {
     }
 
     private void initData() {
-        for (int i = 0; i < 9; i++) {
-            mList.add("");
-        }
-        mAdapter.notifyDataSetChanged();
+
     }
 
     private void initView() {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.tag_grid_layout, null);
+        view = LayoutInflater.from(mActivity).inflate(R.layout.tag_grid_layout, null);
         gridView = view.findViewById(R.id.tag_grid);
         bgTv = view.findViewById(R.id.bg_tv);
         mAdapter = new UniversalAdapter<String>(mActivity, mList, R.layout.tag_grid_item_layout) {
             @Override
             public void convert(UniversalViewHolder holder, int position, String s) {
+                TextView item = holder.getView(R.id.tv_grid_item);
+                item.setText(s);
                 if (mPostion != -1) {
-                    TextView item = holder.getView(R.id.tv_grid_item);
                     if (mPostion == position) {
                         item.setSelected(true);
                     } else {
                         item.setSelected(false);
                     }
+                } else {
+                    item.setSelected(false);
                 }
             }
         };
         gridView.setAdapter(mAdapter);
         mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setAnimationStyle(R.style.WindowScaleAnim);
+    }
+
+    public void setData(List<String> list) {
+        mList.clear();
+        mList.addAll(list);
+        mAdapter.notifyDataSetChanged();
 
     }
 

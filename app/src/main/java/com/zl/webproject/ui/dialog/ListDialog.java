@@ -39,9 +39,10 @@ public class ListDialog extends BaseDialog {
             public void onClick(View view) {
                 int selected = wheelView.getSelected();
                 String selectedText = wheelView.getSelectedText();
-                if (onSelectorDataListener != null){
-                    onSelectorDataListener.onSelector(selectedText);
+                if (onSelectorDataListener != null) {
+                    onSelectorDataListener.onSelector(selectedText, selected);
                 }
+                dismissDialog();
             }
         });
     }
@@ -73,7 +74,7 @@ public class ListDialog extends BaseDialog {
     }
 
     public interface OnSelectorDataListener {
-        void onSelector(String data);
+        void onSelector(String data, int position);
     }
 
 }

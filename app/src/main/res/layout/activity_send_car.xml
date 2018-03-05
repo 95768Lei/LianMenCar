@@ -224,6 +224,7 @@
                 <EditText
                     android:id="@+id/et_li_cheng"
                     style="@style/EditTextSendCarType"
+                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_li_cheng"
                     android:hint="例：15.8 (单位万公里)" />
 
@@ -255,6 +256,7 @@
                 <EditText
                     android:id="@+id/et_car_money"
                     style="@style/EditTextSendCarType"
+                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_money"
                     android:hint="例：8.5 (单位万元)" />
 
@@ -286,6 +288,7 @@
                 <EditText
                     android:id="@+id/et_car_ding_jin"
                     style="@style/EditTextSendCarType"
+                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_ding_jin"
                     android:hint="例：2000 (单位元)" />
 
@@ -317,6 +320,7 @@
                 <EditText
                     android:id="@+id/et_car_yong_jin"
                     style="@style/EditTextSendCarType"
+                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_yong_jin"
                     android:hint="例：2000 (单位元)" />
 
@@ -348,6 +352,7 @@
                 <EditText
                     android:id="@+id/et_car_pai_liang"
                     style="@style/EditTextSendCarType"
+                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_pai_liang"
                     android:hint="例：1.5 (单位L)" />
 
@@ -371,11 +376,13 @@
                     android:text="车辆状态" />
 
                 <RadioGroup
+                    android:id="@+id/rg_ok_no"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/rb_ok"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -385,6 +392,7 @@
                         android:textColor="@color/main_text_selector_color" />
 
                     <RadioButton
+                        android:id="@+id/rb_no"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -397,10 +405,20 @@
 
             </com.zhy.autolayout.AutoLinearLayout>
 
-            <com.zl.webproject.view.MyGridView
-                android:id="@+id/send_car_grid"
+            <com.zl.webproject.view.WrapLayout
+                android:id="@+id/send_car_wrap"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></com.zl.webproject.view.MyGridView>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:layout_marginLeft="@dimen/dp_16"></com.zl.webproject.view.WrapLayout>
+
+            <com.zl.webproject.view.WrapLayout
+                android:id="@+id/send_car_wrap_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:visibility="gone"></com.zl.webproject.view.WrapLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -408,46 +426,37 @@
                 android:layout_marginLeft="@dimen/dp_18"
                 android:background="@color/light_grey" />
 
-
-            <RadioGroup
+            <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="锁定"
-                    android:textColor="@color/main_text_selector_color" />
+                <TextView
+                    android:id="@+id/tv_tag_suo_ding"
+                    style="@style/SendCarTextType"
+                    android:text="锁定" />
 
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="查封"
-                    android:textColor="@color/main_text_selector_color" />
+                <TextView
+                    android:id="@+id/tv_tag_cha_feng"
+                    style="@style/SendCarTextType"
+                    android:text="查封" />
 
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="违章王"
-                    android:textColor="@color/main_text_selector_color" />
-            </RadioGroup>
+                <TextView
+                    android:id="@+id/tv_tag_wei_zhang"
+                    style="@style/SendCarTextType"
+                    android:text="违章" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
 
             <EditText
                 android:id="@+id/et_car_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_18"
+                android:layout_marginBottom="@dimen/dp_18"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:layout_marginRight="@dimen/dp_18"
+                android:layout_marginTop="@dimen/dp_8"
                 android:background="@drawable/line_ju_xing_bg"
                 android:gravity="top"
                 android:hint="车辆描述"

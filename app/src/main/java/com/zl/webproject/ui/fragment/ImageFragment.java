@@ -56,11 +56,24 @@ public class ImageFragment extends BaseFragment {
     private ArrayList<String> photoList = new ArrayList<>();
     private UniversalAdapter<String> adapter;
     private int choosePosition = 0;
+    private int type = 0;
 
     public ImageFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * @param type 0 不显示选中图标  1 显示选中图标
+     * @return
+     */
+    public static ImageFragment newInstance(int type) {
+
+        Bundle args = new Bundle();
+        args.putInt("type", type);
+        ImageFragment fragment = new ImageFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,14 +126,19 @@ public class ImageFragment extends BaseFragment {
     }
 
     private void initView() {
+        type = getArguments().getInt("type", 0);
         adapter = new UniversalAdapter<String>(mActivity, mList, R.layout.image_grid_item) {
             @Override
             public void convert(UniversalViewHolder holder, final int position, String s) {
                 ImageView image = holder.getView(R.id.image_item);
                 ImageView ivChoose = holder.getView(R.id.iv_choose);
                 ImageLoader.loadImageFile(mActivity, s, image);
-                if (choosePosition == position) {
-                    ivChoose.setVisibility(View.VISIBLE);
+                if (type != 0) {
+                    if (choosePosition == position) {
+                        ivChoose.setVisibility(View.VISIBLE);
+                    } else {
+                        ivChoose.setVisibility(View.GONE);
+                    }
                 } else {
                     ivChoose.setVisibility(View.GONE);
                 }
@@ -197,6 +215,9 @@ public class ImageFragment extends BaseFragment {
     private void commit() {
         if (onImageFragmentListener != null) {
             onImageFragmentListener.onHide();
+            if (mList.size() <= 0) {
+                return;
+            }
             onImageFragmentListener.onHomeImage(mList.get(choosePosition));
             onImageFragmentListener.onImageList(mList);
         }

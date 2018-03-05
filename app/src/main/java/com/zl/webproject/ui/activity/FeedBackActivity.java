@@ -9,10 +9,17 @@ import android.widget.TextView;
 
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.SpUtlis;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Request;
 
 
 /**
@@ -60,7 +67,21 @@ public class FeedBackActivity extends BaseActivity {
             showToast("内容不能为空");
             return;
         }
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("feedbackContext", data);
+        HttpUtils.getInstance().Post(mActivity, params, API.saveFeedback, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                showToast("反馈成功");
+                finish();
+            }
 
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
 
     }
 }

@@ -61,6 +61,8 @@ public class API {
     public static final String getHot = BASEURL + "/app/main/getHot.do";
     //热门检索
     public static final String getHotKey = BASEURL + "/app/main/getHotKey.do";
+    //车源车辆检索数据
+    public static final String getRetrieval = BASEURL + "/app/main/getRetrieval.do";
     //登陆用户收到的信息列表
     public static final String getMessageList = BASEURL + "/app/message/getMessageList.do";
     //未读信息数量
@@ -119,5 +121,7 @@ public class API {
     public static final String editCarStateInfo = BASEURL + "/app/car/editCarStateInfo.do";
     //刷新车辆信息
     public static final String refreshCarInfo = BASEURL + "/app/car/refreshCarInfo.do";
+    //反馈意见
+    public static final String saveFeedback = BASEURL + "/app/feedback/saveFeedback.do";
 
 }

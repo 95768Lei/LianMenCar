@@ -333,6 +333,7 @@ public class LoginActivity extends BaseActivity {
                             }
 
                         } catch (Exception e) {
+                            Log.e("body", "");
                         }
 
                     }
@@ -373,7 +374,13 @@ public class LoginActivity extends BaseActivity {
         HttpUtils.getInstance().Post(mActivity, params, API.login, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(final String body) {
-
+                SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
+                LoginBean bean = new LoginBean();
+                bean.setLogin(true);
+                bean.setPhone(phone);
+                bean.setPassword(password);
+                SpUtlis.setLoginData(mActivity, bean);
+                finish();
             }
 
             @Override
