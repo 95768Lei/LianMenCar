@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.google.gson.Gson;
@@ -42,7 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,7 +66,7 @@ import okhttp3.Response;
  * @author zhanglei
  * @date 18/2/25
  */
-public class SendCarActivity extends BaseActivity {
+public class EditCarActivity extends BaseActivity {
 
     @BindView(R.id.iv_title_back)
     ImageView ivTitleBack;
@@ -158,6 +156,7 @@ public class SendCarActivity extends BaseActivity {
     private int carType, speedType, fuelType = -1;
     private CityBean mCityBean;
     private CarDictionaryEntity carDictionaryEntity;
+    private CarInfoEntity data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +171,55 @@ public class SendCarActivity extends BaseActivity {
     private void initData() {
         //获取选择 车辆类型、变速方式、燃油类型数据
         getTagData();
+        //获取界面数据
+        getUiData();
+    }
+
+    private void getUiData() {
+        data = (CarInfoEntity) getIntent().getSerializableExtra("data");
+        etCarPaiLiang.setText(data.getCarDisplacement() + "");
+        etCarType.setText(data.getCarBrandName());
+        etCarMoney.setText(data.getCarPrice() + "");
+        etCarDingJin.setText(data.getCarDeposit() + "");
+        etCarYongJin.setText(data.getCarCommission() + "");
+        etCarContent.setText(data.getCarContext() + "");
+        etLiCheng.setText(data.getCarMileage() + "");
+        tvChooseAddress.setText(data.getCarLocation());
+        mCityBean = new CityBean();
+        mCityBean.setCityCode(data.getCarLocationCitys() + "");
+        mCityBean.setCityName(data.getCarLocation());
+        tvChooseLength.setText(data.getCarDate());
+        upDate = data.getCarDate();
+        tvCarType.setText(data.getLv().getDictName());
+        carType = data.getLv().getId();
+        tvBianSuFangShi.setText(data.getGearbox().getDictName());
+        speedType = data.getGearbox().getId();
+        tvRanYouType.setText(data.getFuel().getDictName());
+        fuelType = data.getFuel().getId();
+
+        //查封、锁定、违章
+        if (data.getCarLocking() == 1) {
+            tvTagSuoDing.setSelected(true);
+        } else {
+            tvTagSuoDing.setSelected(false);
+        }
+        if (data.getCarSeized() == 1) {
+            tvTagChaFeng.setSelected(true);
+        } else {
+            tvTagChaFeng.setSelected(false);
+        }
+        if (data.getCarPeccancy() == 1) {
+            tvTagWeiZhang.setSelected(true);
+        } else {
+            tvTagWeiZhang.setSelected(false);
+        }
+
+        if (data.getCarLabelType() == 128) {
+            rgOkNo.check(R.id.rb_ok);
+        } else {
+            rgOkNo.check(R.id.rb_no);
+        }
+
     }
 
     private void getTagData() {
@@ -230,6 +278,21 @@ public class SendCarActivity extends BaseActivity {
                         CarDictionaryEntity entity = new Gson().fromJson(noArray.opt(i).toString(), CarDictionaryEntity.class);
                         noList.add(entity.getDictName());
                         noTypeList.add(entity);
+                    }
+
+                    //这段代码用于回显标签
+                    Integer carLabel = data.getCarLabel();
+                    for (int i = 0; i < okTypeList.size(); i++) {
+                        if (okTypeList.get(i).getId() == carLabel) {
+                            sendCarWrap.setPosition(i);
+                            return;
+                        }
+                    }
+                    for (int i = 0; i < noTypeList.size(); i++) {
+                        if (noTypeList.get(i).getId() == carLabel) {
+                            sendCarWrapNo.setPosition(i);
+                            return;
+                        }
                     }
                     sendCarWrap.setData(okList, mActivity, 12, 10, 6, 10, 6, 6, 6, 6, 6);
                     sendCarWrapNo.setData(noList, mActivity, 12, 10, 6, 10, 6, 6, 6, 6, 6);
@@ -310,18 +373,6 @@ public class SendCarActivity extends BaseActivity {
                 }
             }
         });
-//        sendCarWrap.setMarkClickListener(new WrapLayout.MarkClickListener() {
-//            @Override
-//            public void clickMark(int position) {
-//                carDictionaryEntity = okTypeList.get(position);
-//            }
-//        });
-//        sendCarWrapNo.setMarkClickListener(new WrapLayout.MarkClickListener() {
-//            @Override
-//            public void clickMark(int position) {
-//                carDictionaryEntity = noTypeList.get(position);
-//            }
-//        });
     }
 
     @Override
@@ -371,8 +422,6 @@ public class SendCarActivity extends BaseActivity {
             }
         }).setType(new boolean[]{true, true, true, false, false, false}).build();
         pvTime.setDate(Calendar.getInstance());
-
-        rgOkNo.check(R.id.rb_ok);
     }
 
     @OnClick({R.id.iv_title_back, R.id.image_add, R.id.tv_car_type, R.id.iv_clear_car_type, R.id.tv_bian_su_fang_shi,
@@ -549,7 +598,6 @@ public class SendCarActivity extends BaseActivity {
         infoEntity.setUserPhone(userData.getUserPhone());
         infoEntity.setCarLv(carTypeList.get(this.carType).getId());
         infoEntity.setCarGearboxId(speedTypeList.get(speedType).getId());
-//        infoEntity.setCarLicensingDate(new SimpleDateFormat("yyyy-MM-dd").parse(upDate));
         infoEntity.setCarLicensingDateStr(upDate);
         infoEntity.setCarMileage(Double.parseDouble(carLiCheng));
         infoEntity.setCarDisplacement(Double.parseDouble(paiLiang));

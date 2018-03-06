@@ -95,13 +95,37 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.linear_yu_ding:
+                yuDing();
                 break;
             case R.id.linear_yi_shou:
+                yiShou();
                 break;
             case R.id.linear_xia_jia:
+                xiaJia();
                 break;
             case R.id.linear_fen_xiang:
+                share();
                 break;
         }
+    }
+
+    //分享
+    private void share() {
+
+    }
+
+    //下架
+    private void xiaJia() {
+
+    }
+
+    //已售
+    private void yiShou() {
+
+    }
+
+    //预定
+    private void yuDing() {
+
     }
 }

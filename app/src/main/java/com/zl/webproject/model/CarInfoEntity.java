@@ -171,6 +171,11 @@ public class CarInfoEntity implements java.io.Serializable {
     private String carDate;
 
     /**
+     * 用户手机号
+     */
+    private String userPhone;
+
+    /**
      * 信息刷新时间
      */
     private Date carRefreshDate;
@@ -736,5 +741,13 @@ public class CarInfoEntity implements java.io.Serializable {
 
     public void setNewCarImg(String newCarImg) {
         this.newCarImg = newCarImg;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

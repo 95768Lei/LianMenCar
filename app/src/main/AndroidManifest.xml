@@ -176,7 +176,8 @@
         <activity android:name=".ui.activity.DiscussActivity" />
         <activity android:name=".ui.activity.MyMotorsActivity" />
         <activity android:name=".ui.activity.CarSearchActivity" />
-        <activity android:name=".ui.activity.BindPhoneActivity"></activity>
+        <activity android:name=".ui.activity.BindPhoneActivity" />
+        <activity android:name=".ui.activity.EditCarActivity"></activity>
     </application>
 
 </manifest>
