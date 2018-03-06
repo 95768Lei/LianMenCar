@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -15,9 +14,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.foamtrace.photopicker.SelectModel;
+import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.google.gson.Gson;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zl.webproject.R;
@@ -42,7 +42,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +62,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT;
+import static com.zl.webproject.ui.dialog.PhotoDialog.REQUEST_CAMERA_CODE;
 
 /**
  * @author zhanglei
@@ -138,6 +140,8 @@ public class SendCarActivity extends BaseActivity {
     TextView tvTagChaFeng;
     @BindView(R.id.tv_tag_wei_zhang)
     TextView tvTagWeiZhang;
+    @BindView(R.id.iv_upload_car_icon)
+    ImageView ivUploadCarIcon;
     private AddressDialog addressDialog;
     private FragmentHelper helper;
     private ImageFragment imageFragment;
@@ -157,7 +161,6 @@ public class SendCarActivity extends BaseActivity {
     private String upDate;
     private int carType, speedType, fuelType = -1;
     private CityBean mCityBean;
-    private CarDictionaryEntity carDictionaryEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,13 +257,13 @@ public class SendCarActivity extends BaseActivity {
 
             @Override
             public void onHomeImage(String path) {
-                iconPath = path;
-                ImageLoader.loadImageFile(mActivity, path, imageAdd);
+
             }
 
             @Override
             public void onImageList(List<String> path) {
                 paths = path;
+                ImageLoader.loadImageFile(mActivity, path.get(0), imageAdd);
             }
         });
 
@@ -310,24 +313,21 @@ public class SendCarActivity extends BaseActivity {
                 }
             }
         });
-//        sendCarWrap.setMarkClickListener(new WrapLayout.MarkClickListener() {
-//            @Override
-//            public void clickMark(int position) {
-//                carDictionaryEntity = okTypeList.get(position);
-//            }
-//        });
-//        sendCarWrapNo.setMarkClickListener(new WrapLayout.MarkClickListener() {
-//            @Override
-//            public void clickMark(int position) {
-//                carDictionaryEntity = noTypeList.get(position);
-//            }
-//        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         imageFragment.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 66:
+                    ArrayList<String> pathList = data.getStringArrayListExtra(EXTRA_RESULT);
+                    iconPath = pathList.get(0);
+                    ImageLoader.loadImageFile(mActivity, iconPath, ivUploadCarIcon);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -355,7 +355,7 @@ public class SendCarActivity extends BaseActivity {
     private void initView() {
         addressDialog = new AddressDialog(mActivity);
         tvTitleName.setText("发布车源");
-        imageFragment = ImageFragment.newInstance(1);
+        imageFragment = ImageFragment.newInstance(0);
         helper = FragmentHelper.builder(mActivity).attach(R.id.send_car_rl).addFragment(imageFragment).commit();
 
         carTypeDialog = new ListDialog(mActivity, "车辆类型");
@@ -378,7 +378,7 @@ public class SendCarActivity extends BaseActivity {
     @OnClick({R.id.iv_title_back, R.id.image_add, R.id.tv_car_type, R.id.iv_clear_car_type, R.id.tv_bian_su_fang_shi,
             R.id.tv_choose_length, R.id.tv_choose_address, R.id.tv_ran_you_type, R.id.iv_clear_li_cheng, R.id.iv_clear_car_money,
             R.id.iv_clear_car_ding_jin, R.id.iv_clear_car_yong_jin, R.id.iv_clear_car_pai_liang, R.id.tv_send_car, R.id.tv_tag_suo_ding,
-            R.id.tv_tag_cha_feng, R.id.tv_tag_wei_zhang})
+            R.id.tv_tag_cha_feng, R.id.tv_tag_wei_zhang, R.id.iv_upload_car_icon})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //返回
@@ -388,6 +388,10 @@ public class SendCarActivity extends BaseActivity {
             //添加图片
             case R.id.image_add:
                 addImage();
+                break;
+            //添加车头像
+            case R.id.iv_upload_car_icon:
+                singleOpenAlbum();
                 break;
             //车辆类型
             case R.id.tv_car_type:
@@ -470,6 +474,17 @@ public class SendCarActivity extends BaseActivity {
         }
     }
 
+
+    /**
+     * 打开相册的方法(单选)
+     */
+    public void singleOpenAlbum() {
+        PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
+        intent.setSelectModel(SelectModel.SINGLE);
+        intent.setShowCarema(false); // 是否显示拍照， 默认false
+        mActivity.startActivityForResult(intent, 66);
+    }
+
     /**
      * 发布车辆
      */
@@ -549,7 +564,6 @@ public class SendCarActivity extends BaseActivity {
         infoEntity.setUserPhone(userData.getUserPhone());
         infoEntity.setCarLv(carTypeList.get(this.carType).getId());
         infoEntity.setCarGearboxId(speedTypeList.get(speedType).getId());
-//        infoEntity.setCarLicensingDate(new SimpleDateFormat("yyyy-MM-dd").parse(upDate));
         infoEntity.setCarLicensingDateStr(upDate);
         infoEntity.setCarMileage(Double.parseDouble(carLiCheng));
         infoEntity.setCarDisplacement(Double.parseDouble(paiLiang));

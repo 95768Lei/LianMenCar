@@ -22,7 +22,7 @@
             <com.bigkoo.convenientbanner.ConvenientBanner
                 android:id="@+id/car_hang_banner"
                 android:layout_width="match_parent"
-                android:layout_height="360px"
+                android:layout_height="420px"
                 app:canLoop="true" />
 
             <com.zhy.autolayout.AutoRelativeLayout

@@ -64,26 +64,34 @@
 
             <com.zhy.autolayout.AutoRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_48"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical">
 
-                <TextView
-                    style="@style/SendGoodsTextStyle"
-                    android:text="品牌型号" />
+                <ImageView
+                    android:id="@+id/iv_upload_car_icon"
+                    android:layout_width="160px"
+                    android:layout_height="130px"
+                    android:layout_marginBottom="@dimen/dp_6"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/xiangce" />
 
                 <ImageView
                     android:id="@+id/iv_clear_car_type"
                     android:layout_width="@dimen/dp_18"
                     android:layout_height="@dimen/dp_18"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_16"
                     app:srcCompat="@drawable/ic_clear" />
 
                 <EditText
                     android:id="@+id/et_car_type"
                     style="@style/EditTextSendCarType"
+                    android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/iv_clear_car_type"
-                    android:hint="例：奥迪A6L" />
+                    android:hint="品牌型号 例：奥迪A6L" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -224,9 +232,9 @@
                 <EditText
                     android:id="@+id/et_li_cheng"
                     style="@style/EditTextSendCarType"
-                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_li_cheng"
-                    android:hint="例：15.8 (单位万公里)" />
+                    android:hint="例：15.8 (单位万公里)"
+                    android:inputType="numberDecimal" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -256,9 +264,9 @@
                 <EditText
                     android:id="@+id/et_car_money"
                     style="@style/EditTextSendCarType"
-                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_money"
-                    android:hint="例：8.5 (单位万元)" />
+                    android:hint="例：8.5 (单位万元)"
+                    android:inputType="numberDecimal" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -288,9 +296,9 @@
                 <EditText
                     android:id="@+id/et_car_ding_jin"
                     style="@style/EditTextSendCarType"
-                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_ding_jin"
-                    android:hint="例：2000 (单位元)" />
+                    android:hint="例：2000 (单位元)"
+                    android:inputType="numberDecimal" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -320,9 +328,9 @@
                 <EditText
                     android:id="@+id/et_car_yong_jin"
                     style="@style/EditTextSendCarType"
-                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_yong_jin"
-                    android:hint="例：2000 (单位元)" />
+                    android:hint="例：2000 (单位元)"
+                    android:inputType="numberDecimal" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -352,9 +360,9 @@
                 <EditText
                     android:id="@+id/et_car_pai_liang"
                     style="@style/EditTextSendCarType"
-                    android:inputType="numberDecimal"
                     android:layout_toLeftOf="@id/iv_clear_car_pai_liang"
-                    android:hint="例：1.5 (单位L)" />
+                    android:hint="例：1.5 (单位L)"
+                    android:inputType="numberDecimal" />
 
             </com.zhy.autolayout.AutoRelativeLayout>
 

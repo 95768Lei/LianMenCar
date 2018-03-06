@@ -49,21 +49,20 @@ public class CarListFragment extends BaseFragment {
     private UniversalAdapter<CarInfoEntity> mAdapter;
     private List<CarInfoEntity> mList = new ArrayList<>();
     private int page = 1;
-    private int type;
-    private String url = API.carInfoList;
+    private String did;
 
     public CarListFragment() {
         // Required empty public constructor
     }
 
     /**
-     * @param type 0 车行下的车辆  1 我转发的车辆  2 搜索的车辆
+     * @param
      * @return
      */
-    public static CarListFragment newInstance(int type) {
+    public static CarListFragment newInstance(String did) {
 
         Bundle args = new Bundle();
-        args.putInt("type", type);
+        args.putString("did", did);
         CarListFragment fragment = new CarListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -101,30 +100,20 @@ public class CarListFragment extends BaseFragment {
     }
 
     private void initData() {
-        type = getArguments().getInt("type", -1);
-
+        did = getArguments().getString("did", "0");
         getListData();
     }
 
     private void getListData() {
 
         Map<String, String> params = new HashMap<>();
-        if (type == 0) {
-            url = API.getCarList;
-            params.put("page", page + "");
-            params.put("cityCode", "");
-            params.put("did", "");
-        } else if (type == 1) {
-            url = API.getForwardList;
-            params.put("page", page + "");
-            params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
-        }
-
-        HttpUtils.getInstance().Post(mActivity, params, url, new HttpUtils.OnOkHttpCallback() {
+        params.put("page", page + "");
+        params.put("cityCode", "");
+        params.put("did", did);
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarList, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {
-
                     if (page == 1) {
                         carShareTrl.finishRefreshing();
                         mList.clear();
@@ -138,9 +127,6 @@ public class CarListFragment extends BaseFragment {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
                     }
                     mAdapter.notifyDataSetChanged();
-                    if (page == 1) {
-                        carShareListView.setSelection(0);
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -16,17 +16,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.foamtrace.photopicker.SelectModel;
+import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.google.gson.Gson;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.model.CarDictionaryEntity;
 import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.model.CarResourceEntity;
 import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.dialog.ListDialog;
-import com.zl.webproject.ui.fragment.ImageFragment;
+import com.zl.webproject.ui.fragment.UpdateImageFragment;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.FragmentHelper;
 import com.zl.webproject.utils.HttpUtils;
@@ -40,7 +43,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +63,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT;
 
 /**
  * @author zhanglei
@@ -136,10 +140,12 @@ public class EditCarActivity extends BaseActivity {
     TextView tvTagChaFeng;
     @BindView(R.id.tv_tag_wei_zhang)
     TextView tvTagWeiZhang;
+    @BindView(R.id.iv_upload_car_icon)
+    ImageView ivUploadCarIcon;
     private AddressDialog addressDialog;
     private FragmentHelper helper;
-    private ImageFragment imageFragment;
     private List<String> paths = new ArrayList<>();
+    private List<String> deleteList = new ArrayList<>();
     private List<CarDictionaryEntity> carTypeList = new ArrayList<>();
     private List<CarDictionaryEntity> speedTypeList = new ArrayList<>();
     private List<CarDictionaryEntity> fuelTypeList = new ArrayList<>();
@@ -155,8 +161,8 @@ public class EditCarActivity extends BaseActivity {
     private String upDate;
     private int carType, speedType, fuelType = -1;
     private CityBean mCityBean;
-    private CarDictionaryEntity carDictionaryEntity;
     private CarInfoEntity data;
+    private UpdateImageFragment updateImageFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +225,14 @@ public class EditCarActivity extends BaseActivity {
         } else {
             rgOkNo.check(R.id.rb_no);
         }
-
+        List<CarResourceEntity> resources = data.getResources();
+        ArrayList<String> images = new ArrayList<>();
+        for (CarResourceEntity resource : resources) {
+            images.add(resource.getResUrl());
+        }
+        ImageLoader.loadImageUrl(mActivity, resources.get(0).getResUrl(), imageAdd);
+        ImageLoader.loadImageUrl(mActivity, data.getCarImg(), ivUploadCarIcon);
+        updateImageFragment = UpdateImageFragment.newInstance(images);
     }
 
     private void getTagData() {
@@ -309,21 +322,16 @@ public class EditCarActivity extends BaseActivity {
     }
 
     private void initListener() {
-        imageFragment.setOnImageFragmentListener(new ImageFragment.OnImageFragmentListener() {
+        updateImageFragment.setOnImageFragmentListener(new UpdateImageFragment.OnImageFragmentListener() {
             @Override
             public void onHide() {
-                helper.hideFragment(imageFragment);
+                helper.hideFragment(updateImageFragment);
             }
 
             @Override
-            public void onHomeImage(String path) {
-                iconPath = path;
-                ImageLoader.loadImageFile(mActivity, path, imageAdd);
-            }
-
-            @Override
-            public void onImageList(List<String> path) {
-                paths = path;
+            public void onImageList(List<String> newPath, List<String> deletePath) {
+                paths = newPath;
+                deleteList = deletePath;
             }
         });
 
@@ -378,13 +386,22 @@ public class EditCarActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageFragment.onActivityResult(requestCode, resultCode, data);
+        updateImageFragment.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 66:
+                    ArrayList<String> pathList = data.getStringArrayListExtra(EXTRA_RESULT);
+                    iconPath = pathList.get(0);
+                    ImageLoader.loadImageFile(mActivity, iconPath, ivUploadCarIcon);
+                    break;
+            }
+        }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (imageFragment.isHidden()) {
+            if (updateImageFragment.isHidden()) {
                 new AlertDialog.Builder(mActivity).setMessage("退出后信息将无法保存，是否退出").setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -397,7 +414,7 @@ public class EditCarActivity extends BaseActivity {
                     }
                 }).show();
             } else {
-                helper.hideFragment(imageFragment);
+                helper.hideFragment(updateImageFragment);
             }
         }
         return true;
@@ -406,8 +423,7 @@ public class EditCarActivity extends BaseActivity {
     private void initView() {
         addressDialog = new AddressDialog(mActivity);
         tvTitleName.setText("发布车源");
-        imageFragment = ImageFragment.newInstance(1);
-        helper = FragmentHelper.builder(mActivity).attach(R.id.send_car_rl).addFragment(imageFragment).commit();
+        helper = FragmentHelper.builder(mActivity).attach(R.id.send_car_rl).addFragment(updateImageFragment).commit();
 
         carTypeDialog = new ListDialog(mActivity, "车辆类型");
         speedTypeDialog = new ListDialog(mActivity, "变速方式");
@@ -437,6 +453,10 @@ public class EditCarActivity extends BaseActivity {
             //添加图片
             case R.id.image_add:
                 addImage();
+                break;
+            //添加车头像
+            case R.id.iv_upload_car_icon:
+                singleOpenAlbum();
                 break;
             //车辆类型
             case R.id.tv_car_type:
@@ -520,6 +540,16 @@ public class EditCarActivity extends BaseActivity {
     }
 
     /**
+     * 打开相册的方法(单选)
+     */
+    public void singleOpenAlbum() {
+        PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
+        intent.setSelectModel(SelectModel.SINGLE);
+        intent.setShowCarema(false); // 是否显示拍照， 默认false
+        mActivity.startActivityForResult(intent, 66);
+    }
+
+    /**
      * 发布车辆
      */
     private void sendCar() {
@@ -581,14 +611,14 @@ public class EditCarActivity extends BaseActivity {
             showToast("车辆描述不能为空");
             return;
         }
-        if (TextUtils.isEmpty(iconPath)) {
-            showToast("车辆首图不能为空");
-            return;
-        }
-        if (paths.size() <= 0) {
-            showToast("车辆轮播图不能为空");
-            return;
-        }
+//        if (TextUtils.isEmpty(iconPath)) {
+//            showToast("车辆首图不能为空");
+//            return;
+//        }
+//        if (paths.size() <= 0) {
+//            showToast("车辆轮播图不能为空");
+//            return;
+//        }
 
         CarUserEntity userData = SpUtlis.getUserData(mActivity);
         final CarInfoEntity infoEntity = new CarInfoEntity();
@@ -654,7 +684,23 @@ public class EditCarActivity extends BaseActivity {
                 //添加请求参数
                 Map<String, String> map = new HashMap<>();
                 map.put("jsonData", new Gson().toJson(infoEntity));
-                map.put("delResources", "");
+
+                //找到要删除的图片
+                StringBuilder sBuilder = new StringBuilder();
+                if (!TextUtils.isEmpty(iconPath)) {
+                    sBuilder.append(data.getCarImg())
+                            .append(",");
+                }
+                if (deleteList != null && deleteList.size() >= 0) {
+                    for (String s : deleteList) {
+                        sBuilder.append(s)
+                                .append(",");
+                    }
+                }
+                String str = sBuilder.toString();
+                String delResources = str.substring(0, (str.length() - 1));
+                map.put("delResources", delResources);
+
                 MultipartBody.Builder builder = new MultipartBody.Builder();
                 Set<Map.Entry<String, String>> entries = map.entrySet();
                 for (Map.Entry<String, String> entry : entries) {
@@ -719,6 +765,6 @@ public class EditCarActivity extends BaseActivity {
     }
 
     private void addImage() {
-        helper.showFragment(imageFragment);
+        helper.showFragment(updateImageFragment);
     }
 }

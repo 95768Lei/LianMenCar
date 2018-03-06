@@ -38,6 +38,7 @@ import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.LocationUtils;
 import com.zl.webproject.utils.SpUtlis;
@@ -289,45 +290,7 @@ public class HomeFragment extends BaseFragment {
         rAdapter = new RecyclerAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
             @Override
             protected void convert(ViewHolder holder, CarInfoEntity s, int position) {
-                Integer carSource = s.getCarSource();
-                TextView carTag = holder.getView(R.id.tv_car_tag);
-                TextView carTag1 = holder.getView(R.id.tv_car_tag1);
-                ImageView ivCarTag = holder.getView(R.id.iv_car_tag);
-                Integer carLocking = s.getCarLocking();
-                Integer carSeized = s.getCarSeized();
-                Integer carPeccancy = s.getCarPeccancy();
-                if (carSource == 0) {
-                    ivCarTag.setImageResource(R.mipmap.geren);
-                } else {
-                    ivCarTag.setImageResource(R.mipmap.hang);
-                }
-                if (carLocking == 1) {
-                    carTag1.setText("锁定");
-                    carTag1.setVisibility(View.VISIBLE);
-                } else {
-                    carTag1.setVisibility(View.GONE);
-                }
-                if (carSeized == 1) {
-                    carTag1.setText("查封");
-                    carTag1.setVisibility(View.VISIBLE);
-                } else {
-                    carTag1.setVisibility(View.GONE);
-                }
-                if (carPeccancy == 1) {
-                    carTag1.setText("违章");
-                    carTag1.setVisibility(View.VISIBLE);
-                } else {
-                    carTag1.setVisibility(View.GONE);
-                }
-                holder.setText(R.id.tv_car_name, s.getCarTitle());
-                holder.setText(R.id.tv_car_money, s.getCarPrice() + "万");
-                holder.setText(R.id.tv_car_city, s.getCarAreaCitysEntity().getCityName());
-//                holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
-                TagUtils.setTag(mActivity, s.getLabel().getId(), carTag);
-                holder.setText(R.id.tv_car_data, s.getCarLicensingDateStr() + "/" + s.getCarMileage() + "公里");
-                holder.setImageUrl(mActivity, R.id.iv_car_icon, s.getCarImg());
-                holder.setText(R.id.carForWard, s.getCarForWard() + "");
-                holder.setText(R.id.tv_carBrowse, s.getCarBrowse() + "");
+                BindDataUtils.bindCarData(mActivity, holder, s);
             }
         };
         homeRlv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));

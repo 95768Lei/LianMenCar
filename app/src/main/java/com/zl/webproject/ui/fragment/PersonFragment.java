@@ -175,6 +175,8 @@ public class PersonFragment extends BaseFragment {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         switch (imageList.get(i).getName()) {
                             case "发布车源":
+//                                Intent intent2 = new Intent(mActivity, SendCarActivity.class);
+//                                startActivity(intent2);
                                 SystemUtils.toActivity(mActivity, new Intent(mActivity, SendCarActivity.class));
                                 break;
                             case "我的车源":

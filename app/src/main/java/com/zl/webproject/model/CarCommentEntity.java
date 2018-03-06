@@ -25,7 +25,7 @@ public class CarCommentEntity implements java.io.Serializable {
 	private String commContext;
 
 	/** 评论日期 */
-	private String commDate;
+	private Date commDate;
 
 	/** 评分 */
 	private Integer commScore;
@@ -70,11 +70,11 @@ public class CarCommentEntity implements java.io.Serializable {
 		this.commContext = commContext;
 	}
 
-	public String getCommDate() {
+	public Date getCommDate() {
 		return commDate;
 	}
 
-	public void setCommDate(String commDate) {
+	public void setCommDate(Date commDate) {
 		this.commDate = commDate;
 	}
 

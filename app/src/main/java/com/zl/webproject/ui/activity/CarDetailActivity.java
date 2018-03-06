@@ -23,6 +23,7 @@ import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
 import com.zl.webproject.utils.StringUtils;
+import com.zl.webproject.view.LocalImageHolderView;
 import com.zl.webproject.view.MyListView;
 
 import java.util.ArrayList;
@@ -218,21 +219,5 @@ public class CarDetailActivity extends BaseActivity {
      */
     private void shouCang() {
 
-    }
-
-    public class LocalImageHolderView implements Holder<CarResourceEntity> {
-        private ImageView imageView;
-
-        @Override
-        public View createView(Context context) {
-            imageView = new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            return imageView;
-        }
-
-        @Override
-        public void UpdateUI(Context context, int position, CarResourceEntity data) {
-            ImageLoader.loadImageUrl(context, data.getResUrl(), imageView);
-        }
     }
 }

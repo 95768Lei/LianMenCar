@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.RegexUtils;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
+import com.google.gson.Gson;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.model.CarDealerEntity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.fragment.ImageFragment;
@@ -82,6 +84,7 @@ public class MyMotorsActivity extends BaseActivity {
     private FragmentHelper helper;
     private String carHangIconPath;
     private List<String> imagePaths;
+    private CarDealerEntity carDealerEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +99,12 @@ public class MyMotorsActivity extends BaseActivity {
     private void initData() {
         Map<String, String> params = new HashMap<>();
         params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
-        HttpUtils.getInstance().Post(mActivity, params, API.toMyCarDealer, new HttpUtils.OnOkHttpCallback() {
+        params.put("isSee", true + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarDealerById, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
-
+                carDealerEntity = new Gson().fromJson(body, CarDealerEntity.class);
+                updateUi();
             }
 
             @Override
@@ -107,6 +112,17 @@ public class MyMotorsActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     * 更新UI
+     */
+    private void updateUi() {
+        if (carDealerEntity == null) {
+            return;
+        }
+
+
     }
 
     private void initListener() {
@@ -249,8 +265,6 @@ public class MyMotorsActivity extends BaseActivity {
             showToast("请输入正确联系方式");
             return;
         }
-
-
 
 
     }

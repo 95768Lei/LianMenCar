@@ -123,5 +123,19 @@ public class API {
     public static final String refreshCarInfo = BASEURL + "/app/car/refreshCarInfo.do";
     //反馈意见
     public static final String saveFeedback = BASEURL + "/app/feedback/saveFeedback.do";
+    //我的车辆收藏列表
+    public static final String getCollectionList = BASEURL + "/app/collection/getCollectionList.do";
+    //关注/取消收藏车辆信息
+    public static final String collectionCar = BASEURL + "/app/collection/collectionCar.do";
+    //是否收藏车行信息
+    public static final String isCollectionCar = BASEURL + "/app/collection/isCollectionCar.do";
+    //查看车行评价
+    public static final String carDealerCommentShowList = BASEURL + "/app/comment/carDealerCommentShowList.do";
+    //发布车行评价
+    public static final String saveCarDealerComment = BASEURL + "/app/comment/saveCarDealerComment.do";
+    //查看车辆评价
+    public static final String carInfoCommentShowList = BASEURL + "/app/comment/carInfoCommentShowList.do";
+    //发布车辆评价
+    public static final String saveCarInfoComment = BASEURL + "/app/comment/saveCarInfoComment.do";
 
 }
