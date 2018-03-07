@@ -9,7 +9,7 @@
         android:id="@+id/image_icon"
         android:layout_width="120px"
         android:layout_height="120px"
-        android:padding="@dimen/dp_8"
+        android:padding="@dimen/dp_10"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -18,5 +18,5 @@
         android:layout_height="wrap_content"
         android:text="功能模块"
         android:textColor="@color/black"
-        android:textSize="@dimen/dp_14" />
+        android:textSize="26px" />
 </com.zhy.autolayout.AutoLinearLayout>

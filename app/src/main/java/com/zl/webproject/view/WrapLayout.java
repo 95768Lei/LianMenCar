@@ -128,6 +128,7 @@ public class WrapLayout extends ViewGroup {
 
     public void setPosition(int position) {
         this.position = position;
+        invalidate();
     }
 
     public int getPosition() {

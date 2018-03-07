@@ -17,14 +17,18 @@ import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarCommentEntity;
+import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.SpUtlis;
 import com.zl.webproject.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +61,7 @@ public class DiscussActivity extends BaseActivity {
     private List<CarCommentEntity> disList = new ArrayList<>();
     private UniversalAdapter<CarCommentEntity> disAdapter;
     private int page = 1;
+    private int did;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,19 +97,27 @@ public class DiscussActivity extends BaseActivity {
     }
 
     private void initData() {
+        did = getIntent().getIntExtra("did", 0);
         getListData();
     }
 
     //获取评论数据
     private void getListData() {
         Map<String, String> params = new HashMap<>();
-        params.put("did", "");
+        params.put("did", did + "");
         params.put("page", page + "");
         HttpUtils.getInstance().Post(mActivity, params, API.carDealerCommentShowList, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {
-                    JSONArray array = new JSONArray(body);
+                    if (page == 1) {
+                        disList.clear();
+                        discussTrl.finishRefreshing();
+                    } else {
+                        discussTrl.finishLoadmore();
+                    }
+                    JSONObject object = new JSONObject(body);
+                    JSONArray array = new JSONArray(object.optString("items"));
                     for (int i = 0; i < array.length(); i++) {
                         disList.add(new Gson().fromJson(array.optString(i), CarCommentEntity.class));
                     }
@@ -127,7 +140,8 @@ public class DiscussActivity extends BaseActivity {
             @Override
             public void convert(UniversalViewHolder holder, int position, CarCommentEntity s) {
                 holder.setText(R.id.tv_dis_data, s.getCommContext());
-                holder.setText(R.id.tv_person_name, s.getCarUserEntity().getUserName());
+                holder.setText(R.id.tv_person_name, TextUtils.isEmpty(s.getCarUserEntity().getUserName()) ?
+                        s.getCarUserEntity().getUserNikeName() : s.getCarUserEntity().getUserName());
                 holder.setText(R.id.tv_discuss_date, StringUtils.dateYYYY_MM_DD_HH_mm_ss(s.getCommDate()));
                 holder.setImageUrl(mActivity, R.id.iv_person_icon, s.getCarUserEntity().getUserImg());
             }
@@ -149,11 +163,35 @@ public class DiscussActivity extends BaseActivity {
     }
 
     private void sendDiscuss() {
-        String discuss = etDiscuss.getText().toString().trim();
+        final String discuss = etDiscuss.getText().toString().trim();
         if (TextUtils.isEmpty(discuss)) {
             showToast("内容不能为空");
             return;
         }
 
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("did", did + "");
+        params.put("commContext", discuss);
+
+        HttpUtils.getInstance().Post(mActivity, params, API.saveCarDealerComment, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                showToast("评论发布成功");
+                CarCommentEntity entity = new CarCommentEntity();
+                CarUserEntity userData = SpUtlis.getUserData(mActivity);
+                userData.setUserName(userData.getUserNikeName());
+                entity.setCommContext(discuss);
+                entity.setCommDate(new Date());
+                entity.setCarUserEntity(userData);
+                disList.add(entity);
+                disAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
     }
 }

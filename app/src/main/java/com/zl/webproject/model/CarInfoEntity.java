@@ -96,11 +96,6 @@ public class CarInfoEntity implements java.io.Serializable {
     private Integer carGearboxId;
 
     /**
-     * 初次上牌日期
-     */
-    private Date carLicensingDate;
-
-    /**
      * 里程数
      */
     private Double carMileage;
@@ -166,19 +161,10 @@ public class CarInfoEntity implements java.io.Serializable {
     private Integer carSource;
 
     /**
-     * 信息发布时间
-     */
-    private String carDate;
-
-    /**
      * 用户手机号
      */
     private String userPhone;
 
-    /**
-     * 信息刷新时间
-     */
-    private Date carRefreshDate;
 
     /**
      * 定金
@@ -455,14 +441,6 @@ public class CarInfoEntity implements java.io.Serializable {
         this.carGearboxId = carGearboxId;
     }
 
-    public Date getCarLicensingDate() {
-        return carLicensingDate;
-    }
-
-    public void setCarLicensingDate(Date carLicensingDate) {
-        this.carLicensingDate = carLicensingDate;
-    }
-
     public Double getCarMileage() {
         return carMileage;
     }
@@ -565,22 +543,6 @@ public class CarInfoEntity implements java.io.Serializable {
 
     public void setCarSource(Integer carSource) {
         this.carSource = carSource;
-    }
-
-    public String getCarDate() {
-        return carDate;
-    }
-
-    public void setCarDate(String carDate) {
-        this.carDate = carDate;
-    }
-
-    public Date getCarRefreshDate() {
-        return carRefreshDate;
-    }
-
-    public void setCarRefreshDate(Date carRefreshDate) {
-        this.carRefreshDate = carRefreshDate;
     }
 
     public Double getCarDeposit() {

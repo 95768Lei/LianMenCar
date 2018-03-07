@@ -93,8 +93,13 @@ public class CarListFragment extends BaseFragment {
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
-                page++;
-                getListData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page++;
+                        getListData();
+                    }
+                }, 800);
             }
         });
     }

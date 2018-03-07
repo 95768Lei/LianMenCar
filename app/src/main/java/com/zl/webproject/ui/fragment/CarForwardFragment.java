@@ -66,11 +66,11 @@ public class CarForwardFragment extends BaseFragment {
     /**
      * @return
      */
-    public static CarListFragment newInstance() {
+    public static CarForwardFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        CarListFragment fragment = new CarListFragment();
+        CarForwardFragment fragment = new CarForwardFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,15 +93,25 @@ public class CarForwardFragment extends BaseFragment {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                page = 1;
-                getListData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        getListData();
+                    }
+                }, 600);
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
-                page++;
-                getListData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page++;
+                        getListData();
+                    }
+                }, 800);
             }
         });
 
@@ -116,7 +126,7 @@ public class CarForwardFragment extends BaseFragment {
     }
 
     private void initData() {
-        getListData();
+        carShareTrl.startRefresh();
     }
 
     private void getListData() {

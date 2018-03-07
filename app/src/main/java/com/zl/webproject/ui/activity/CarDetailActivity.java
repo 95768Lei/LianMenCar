@@ -1,6 +1,6 @@
 package com.zl.webproject.ui.activity;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +9,9 @@ import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
-import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
@@ -18,23 +19,35 @@ import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CarResourceEntity;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
-import com.zl.webproject.utils.ImageLoader;
-import com.zl.webproject.utils.StringUtils;
+import com.zl.webproject.utils.ShareUtils;
+import com.zl.webproject.utils.SpUtlis;
+import com.zl.webproject.utils.SystemUtils;
+import com.zl.webproject.utils.TagUtils;
 import com.zl.webproject.view.LocalImageHolderView;
 import com.zl.webproject.view.MyListView;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author zhanglei
@@ -74,6 +87,10 @@ public class CarDetailActivity extends BaseActivity {
     TextView tvCarContent;
     @BindView(R.id.tv_carCollectionCount)
     TextView tvCarCollectionCount;
+    @BindView(R.id.iv_isCollectionCar)
+    ImageView ivIsCollectionCar;
+    @BindView(R.id.tv_car_tag1)
+    TextView tvCarTag1;
 
     private List<String> dList = new ArrayList<>();
     private List<CarResourceEntity> ivList = new ArrayList<>();
@@ -82,6 +99,8 @@ public class CarDetailActivity extends BaseActivity {
     private UniversalAdapter<CarResourceEntity> ivAdapter;
     private CarInfoEntity carInfoEntity;
     private ImagePreviewDialog previewDialog;
+    private boolean isCollectionCar = false;
+    private Integer carCollectionCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +110,12 @@ public class CarDetailActivity extends BaseActivity {
         initView();
         initData();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -116,28 +141,48 @@ public class CarDetailActivity extends BaseActivity {
         bList.addAll(carInfoEntity.getResources());
         homeBanner.notifyDataSetChanged();
         /** 修改了布局显示 */
-//        ivList.addAll(carInfoEntity.getResources());
-//        ivAdapter.notifyDataSetChanged();
         dList.add("品牌型号：" + carInfoEntity.getCarBrandName());
         dList.add("车辆类型：" + carInfoEntity.getLv().getDictName());
         dList.add("变速器：" + carInfoEntity.getGearbox().getDictName());
-        dList.add("上牌日期：" + StringUtils.dateYYYY_MM_DD(carInfoEntity.getCarLicensingDate()));
+        dList.add("上牌日期：" + carInfoEntity.getCarLicensingDateStr());
         dList.add("行驶里程：" + carInfoEntity.getCarMileage() + "万公里");
         dList.add("所在地区：" + carInfoEntity.getCarAreaCitysEntity().getCityName());
         dList.add("销售价格：" + carInfoEntity.getCarPrice() + "万元");
         dList.add("订车定金：" + carInfoEntity.getCarDeposit());
         dList.add("车辆排量：" + carInfoEntity.getCarDisplacement());
         dList.add("燃油类型：" + carInfoEntity.getFuel().getDictName());
-
+        carCollectionCount = carInfoEntity.getCarCollectionCount();
         tvCarContent.setText("*" + carInfoEntity.getCarContext());
-        tvCarCollectionCount.setText("热度  " + carInfoEntity.getCarCollectionCount() + "");
+        tvCarCollectionCount.setText("热度  " + carCollectionCount + "");
         dAdapter.notifyDataSetChanged();
+        TagUtils.setTag(mActivity, carInfoEntity.getCarLabel(), tvCarTag);
+        Integer carLocking = carInfoEntity.getCarLocking();
+        Integer carSeized = carInfoEntity.getCarSeized();
+        Integer carPeccancy = carInfoEntity.getCarPeccancy();
+        if (carLocking == 1) {
+            tvCarTag1.setText("锁定");
+            tvCarTag1.setVisibility(View.VISIBLE);
+        } else {
+            tvCarTag1.setVisibility(View.GONE);
+        }
+        if (carSeized == 1) {
+            tvCarTag1.setText("查封");
+            tvCarTag1.setVisibility(View.VISIBLE);
+        } else {
+            tvCarTag1.setVisibility(View.GONE);
+        }
+        if (carPeccancy == 1) {
+            tvCarTag1.setText("违章");
+            tvCarTag1.setVisibility(View.VISIBLE);
+        } else {
+            tvCarTag1.setVisibility(View.GONE);
+        }
 
         //插入浏览记录
         Map<String, String> params = new HashMap<>();
         params.put("cid", carInfoEntity.getId() + "");
-        params.put("isUpDate", "false");
-        HttpUtils.getInstance().Post(mActivity, params, API.getCarInfo, new HttpUtils.OnOkHttpCallback() {
+        params.put("isSee", "true");
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarInfoById, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 Log.e("body", body);
@@ -146,6 +191,57 @@ public class CarDetailActivity extends BaseActivity {
             @Override
             public void onError(Request error, Exception e) {
                 Log.e("body", "");
+            }
+        });
+
+        //是否关注该车辆
+        isCollectionCar();
+    }
+
+    private void isCollectionCar() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("cid", carInfoEntity.getId() + "");
+
+        FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.isCollectionCar).post(builder.build()).build();
+
+        //加入任务调度
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                final String string = response.body().string();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            isCollectionCar = jsonObject.optBoolean("result");
+                            if (isCollectionCar) {
+                                ivIsCollectionCar.setImageResource(R.drawable.ic_favorite_pink);
+                            } else {
+                                ivIsCollectionCar.setImageResource(R.drawable.ic_favorite_border_black);
+                            }
+                        } catch (Exception e) {
+                            showToast("发生了未知错误");
+                        }
+                    }
+                });
             }
         });
     }
@@ -196,6 +292,7 @@ public class CarDetailActivity extends BaseActivity {
                 break;
             //分享车辆
             case R.id.into_share_car:
+                share();
                 break;
             //收藏车辆
             case R.id.info_shou_cang_car:
@@ -203,21 +300,112 @@ public class CarDetailActivity extends BaseActivity {
                 break;
             //打电话
             case R.id.info_call:
+                SystemUtils.call(mActivity, carInfoEntity.getUserPhone());
                 break;
         }
+    }
+
+    /**
+     * 分享
+     */
+    private void share() {
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carInfoEntity.getCarTitle());
+        shareBean.setImgUrl(carInfoEntity.getCarImg());
+        shareBean.setShareContent(carInfoEntity.getCarContext());
+        shareBean.setUrl(API.toCarDetails + "?cid=" + carInfoEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("cid", carInfoEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarInfo, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
     }
 
     /**
      * 进入车行
      */
     private void intoCarHang() {
-
+        Intent intent = new Intent(mActivity, CarHangDetailActivity.class);
+        intent.putExtra("did", carInfoEntity.getCarUserEntity().getCarDealerId());
+        startActivity(intent);
     }
 
     /**
-     * 收藏车辆
+     * 收藏车辆(关注)
      */
     private void shouCang() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("cid", carInfoEntity.getId() + "");
 
+        FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.collectionCar).post(builder.build()).build();
+
+        //加入任务调度
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                final String string = response.body().string();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            if (jsonObject.optString("msg").equals("已收藏")) {
+                                carCollectionCount += 1;
+                                tvCarCollectionCount.setText("热度  " + carCollectionCount + "");
+                                isCollectionCar = true;
+                            } else {
+                                carCollectionCount -= 1;
+                                tvCarCollectionCount.setText("热度  " + carCollectionCount + "");
+                                isCollectionCar = false;
+                            }
+                            if (isCollectionCar) {
+                                ivIsCollectionCar.setImageResource(R.drawable.ic_favorite_pink);
+                            } else {
+                                ivIsCollectionCar.setImageResource(R.drawable.ic_favorite_border_black);
+                            }
+                        } catch (Exception e) {
+                            showToast("发生了未知错误");
+                        }
+                    }
+                });
+            }
+        });
     }
 }

@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
@@ -78,10 +79,35 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
+        carCollectTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        getDataList();
+                    }
+                }, 600);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page++;
+                        getDataList();
+                    }
+                }, 800);
+            }
+        });
     }
 
     private void initData() {
-        getDataList();
+        carCollectTrl.startRefresh();
     }
 
     private void getDataList() {
@@ -108,7 +134,8 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
                         return;
                     }
                     for (int i = 0; i < array.length(); i++) {
-                        mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
+                        JSONObject jsonObject = array.optJSONObject(i);
+                        mList.add(new Gson().fromJson(jsonObject.optString("carInfoEntity"), CarInfoEntity.class));
                     }
                     adapter.notifyDataSetChanged();
 

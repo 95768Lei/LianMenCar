@@ -62,6 +62,7 @@ public class TagDialog {
                         onReturnDataListener.returnData(mList.get(mPostion));
                     }
                 }
+                dismiss();
             }
         });
 

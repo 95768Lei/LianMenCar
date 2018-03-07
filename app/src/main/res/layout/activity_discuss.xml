@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:focusableInTouchMode="true"
     android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context="com.zl.webproject.ui.activity.DiscussActivity">
 
     <include layout="@layout/base_title_layout" />
@@ -34,11 +34,11 @@
                 android:id="@+id/tv_send_discuss"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/green_round_shape"
                 android:gravity="center"
-                android:layout_gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 android:text="发送"
@@ -47,16 +47,15 @@
         </com.zhy.autolayout.AutoLinearLayout>
 
         <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-            android:layout_width="match_parent"
             android:id="@+id/discuss_trl"
-            android:layout_above="@id/linear_discuss"
-            android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/linear_discuss">
 
             <ListView
                 android:id="@+id/discuss_listView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-              ></ListView>
+                android:layout_height="match_parent"></ListView>
 
         </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 

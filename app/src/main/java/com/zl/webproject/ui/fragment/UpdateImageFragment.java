@@ -5,6 +5,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +22,10 @@ import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
+import com.zl.webproject.base.RecyclerAdapter;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.base.ViewHolder;
 import com.zl.webproject.utils.ImageLoader;
 import com.zl.webproject.view.MyGridView;
 
@@ -55,6 +60,10 @@ public class UpdateImageFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.image_new_grid)
     MyGridView imageNewGrid;
+    @BindView(R.id.tv_reset)
+    TextView tvReset;
+    @BindView(R.id.tab_add_image)
+    FloatingActionButton tabAddImage;
 
     //原始图片
     private List<String> mList = new ArrayList<>();
@@ -111,8 +120,9 @@ public class UpdateImageFragment extends BaseFragment {
     }
 
     private void updateData(ArrayList<String> paths) {
-        photoList = paths;
-        adapter.notifyDataSetChanged();
+        photoList.clear();
+        photoList.addAll(paths);
+        newAdapter.notifyDataSetChanged();
     }
 
     private void initListener() {
@@ -133,6 +143,7 @@ public class UpdateImageFragment extends BaseFragment {
                 holder.getView(R.id.iv_clear_item).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        deleteList.add(mList.get(position));
                         mList.remove(position);
                         adapter.notifyDataSetChanged();
                     }
@@ -149,7 +160,7 @@ public class UpdateImageFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         photoList.remove(position);
-                        adapter.notifyDataSetChanged();
+                        newAdapter.notifyDataSetChanged();
                     }
                 });
             }

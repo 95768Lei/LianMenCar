@@ -11,9 +11,21 @@
         android:id="@+id/image_title"
         layout="@layout/base_title_layout" />
 
+    <TextView
+        android:id="@+id/tv_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_line_bg"
+        android:gravity="center"
+        android:text="点击选择首页展示图，建议上传16:9的图片，最多上传9张"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_12" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/tv_bottom"
         android:layout_below="@id/image_title"
         android:layout_marginTop="@dimen/dp_8">
 
@@ -90,15 +102,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120px"
         app:srcCompat="@drawable/ic_add_white" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/top_line_bg"
-        android:gravity="center"
-        android:text="点击选择首页展示图，建议上传16:9的图片，最多上传9张"
-        android:textColor="@color/black"
-        android:textSize="@dimen/dp_12" />
 
 </com.zhy.autolayout.AutoRelativeLayout>

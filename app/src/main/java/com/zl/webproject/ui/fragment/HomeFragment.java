@@ -196,7 +196,6 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void addressData(CityBean cityBean) {
                 tvCity.setText(cityBean.getCityName());
-                addressDialog.dismissDialog();
                 getListData();
             }
         });

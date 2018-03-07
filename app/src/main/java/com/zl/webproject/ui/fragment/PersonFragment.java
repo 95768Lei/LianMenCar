@@ -23,7 +23,6 @@ import com.zl.webproject.ui.activity.CarHangCollectActivity;
 import com.zl.webproject.ui.activity.CarShareListActivity;
 import com.zl.webproject.ui.activity.FeedBackActivity;
 import com.zl.webproject.ui.activity.LoginActivity;
-import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.activity.MyCarActivity;
 import com.zl.webproject.ui.activity.MyMotorsActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
@@ -34,6 +33,7 @@ import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
 import com.zl.webproject.utils.SpUtlis;
 import com.zl.webproject.utils.SystemUtils;
+import com.zl.webproject.view.ImageTagView;
 import com.zl.webproject.view.MyGridView;
 import com.zl.webproject.view.MyListView;
 
@@ -58,8 +58,6 @@ public class PersonFragment extends BaseFragment {
 
     @BindView(R.id.iv_setting)
     ImageView ivSetting;
-    @BindView(R.id.iv_message)
-    ImageView ivMessage;
     @BindView(R.id.iv_person_icon)
     CircleImageView ivPersonIcon;
     @BindView(R.id.tv_person_name)
@@ -67,6 +65,8 @@ public class PersonFragment extends BaseFragment {
     @BindView(R.id.person_listView)
     MyListView personListView;
     Unbinder unbinder;
+    @BindView(R.id.tagView_person)
+    ImageTagView tagViewPerson;
     private UniversalAdapter<PersonGridBean> mAdapter;
     private List<PersonGridBean> mList = new ArrayList<>();
     private String[] cars = {"发布车源", "我的车源", "赚取佣金", "车辆关注"};
@@ -271,16 +271,12 @@ public class PersonFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.iv_setting, R.id.iv_message, R.id.iv_person_icon, R.id.tv_sign_out})
+    @OnClick({R.id.iv_setting, R.id.iv_person_icon, R.id.tv_sign_out})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //进入设置
             case R.id.iv_setting:
                 SystemUtils.toActivity(mActivity, new Intent(mActivity, SettingsActivity.class));
-                break;
-            //进入消息中心
-            case R.id.iv_message:
-                SystemUtils.toActivity(mActivity, new Intent(mActivity, MessageActivity.class));
                 break;
             //点击头像（若是未登录状态则进入登录页）
             case R.id.iv_person_icon:

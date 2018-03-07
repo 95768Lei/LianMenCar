@@ -132,6 +132,8 @@ public class AddressDialog extends BaseDialog {
                 if (onAddressDataListener != null) {
                     onAddressDataListener.addressData(cityBean);
                 }
+
+                dismissDialog();
             }
         });
 

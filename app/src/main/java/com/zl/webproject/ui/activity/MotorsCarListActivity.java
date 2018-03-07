@@ -33,7 +33,8 @@ public class MotorsCarListActivity extends BaseActivity {
         setContentView(R.layout.activity_motors_car_list);
         ButterKnife.bind(this);
         tvTitleName.setText("车行车源");
-        openFragment(CarListFragment.newInstance(0), R.id.motors_car_rl);
+        int did = getIntent().getIntExtra("did", 0);
+        openFragmentNoTask(CarListFragment.newInstance(did + ""), R.id.motors_car_rl);
     }
 
     @OnClick(R.id.iv_title_back)

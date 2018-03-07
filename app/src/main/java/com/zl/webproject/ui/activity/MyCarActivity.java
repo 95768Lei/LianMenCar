@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
@@ -75,14 +76,40 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(mActivity, EditCarActivity.class);
-                intent.putExtra("data", mList.get(i));
+                intent.putExtra("cid", mList.get(i).getId());
+                intent.putExtra("carLabel", mList.get(i).getCarLabel());
                 startActivity(intent);
+            }
+        });
+        myCarTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        getDataList();
+                    }
+                }, 600);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page++;
+                        getDataList();
+                    }
+                }, 800);
             }
         });
     }
 
     private void initData() {
-        getDataList();
+        myCarTrl.startRefresh();
     }
 
     private void getDataList() {
@@ -151,7 +178,7 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
         holder.getView(R.id.linear_yi_shou).setOnClickListener(this);
         holder.getView(R.id.linear_xia_jia).setOnClickListener(this);
         holder.getView(R.id.linear_fen_xiang).setOnClickListener(this);
-        BindDataUtils.bindCarData(mActivity, holder, s);
+        BindDataUtils.bindCarData(mActivity, holder, s, false);
     }
 
     @OnClick(R.id.iv_title_back)
@@ -195,7 +222,7 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
-        });
+        }).show();
 
     }
 
@@ -212,7 +239,7 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
-        });
+        }).show();
     }
 
     //预定
@@ -228,7 +255,7 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
-        });
+        }).show();
     }
 
     private void updateState(final int type) {

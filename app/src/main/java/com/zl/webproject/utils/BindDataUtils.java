@@ -17,6 +17,10 @@ import com.zl.webproject.model.CarInfoEntity;
 public class BindDataUtils {
 
     public static void bindCarData(Activity mActivity, UniversalViewHolder holder, CarInfoEntity s) {
+        bindCarData(mActivity, holder, s, true);
+    }
+
+    public static void bindCarData(Activity mActivity, UniversalViewHolder holder, CarInfoEntity s, boolean isShowTag) {
         Integer carSource = s.getCarSource();
         TextView carTag = holder.getView(R.id.tv_car_tag);
         TextView carTag1 = holder.getView(R.id.tv_car_tag1);
@@ -24,10 +28,14 @@ public class BindDataUtils {
         Integer carLocking = s.getCarLocking();
         Integer carSeized = s.getCarSeized();
         Integer carPeccancy = s.getCarPeccancy();
-        if (carSource == 0) {
-            ivCarTag.setImageResource(R.mipmap.geren);
+        if (isShowTag) {
+            if (carSource == 0) {
+                ivCarTag.setImageResource(R.mipmap.geren);
+            } else {
+                ivCarTag.setImageResource(R.mipmap.hang);
+            }
         } else {
-            ivCarTag.setImageResource(R.mipmap.hang);
+            ivCarTag.setVisibility(View.GONE);
         }
         if (carLocking == 1) {
             carTag1.setText("锁定");

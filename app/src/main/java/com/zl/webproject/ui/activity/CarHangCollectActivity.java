@@ -84,8 +84,13 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                page = 1;
-                getListData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        getListData();
+                    }
+                }, 600);
             }
 
             @Override
@@ -104,7 +109,7 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
 
 
     private void initData() {
-        getListData();
+        carHangCollectTrl.startRefresh();
     }
 
     private void getListData() {

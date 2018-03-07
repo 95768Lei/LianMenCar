@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -55,6 +56,12 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -161,8 +168,9 @@ public class EditCarActivity extends BaseActivity {
     private String upDate;
     private int carType, speedType, fuelType = -1;
     private CityBean mCityBean;
-    private CarInfoEntity data;
-    private UpdateImageFragment updateImageFragment;
+    private UpdateImageFragment updateImageFragment = new UpdateImageFragment();
+    private CarInfoEntity infoEntity;
+    private int carLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,57 +190,82 @@ public class EditCarActivity extends BaseActivity {
     }
 
     private void getUiData() {
-        data = (CarInfoEntity) getIntent().getSerializableExtra("data");
-        etCarPaiLiang.setText(data.getCarDisplacement() + "");
-        etCarType.setText(data.getCarBrandName());
-        etCarMoney.setText(data.getCarPrice() + "");
-        etCarDingJin.setText(data.getCarDeposit() + "");
-        etCarYongJin.setText(data.getCarCommission() + "");
-        etCarContent.setText(data.getCarContext() + "");
-        etLiCheng.setText(data.getCarMileage() + "");
-        tvChooseAddress.setText(data.getCarLocation());
-        mCityBean = new CityBean();
-        mCityBean.setCityCode(data.getCarLocationCitys() + "");
-        mCityBean.setCityName(data.getCarLocation());
-        tvChooseLength.setText(data.getCarDate());
-        upDate = data.getCarDate();
-        tvCarType.setText(data.getLv().getDictName());
-        carType = data.getLv().getId();
-        tvBianSuFangShi.setText(data.getGearbox().getDictName());
-        speedType = data.getGearbox().getId();
-        tvRanYouType.setText(data.getFuel().getDictName());
-        fuelType = data.getFuel().getId();
+        int cid = getIntent().getIntExtra("cid", 0);
+        carLabel = getIntent().getIntExtra("carLabel", 0);
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", cid + "");
+        params.put("isSee", "true");
+        HttpUtils.getInstance().Post(mActivity, params, API.getCarInfoById, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                infoEntity = new Gson().fromJson(body, CarInfoEntity.class);
+                etCarPaiLiang.setText(infoEntity.getCarDisplacement() + "");
+                etCarType.setText(infoEntity.getCarBrandName());
+                etCarMoney.setText(infoEntity.getCarPrice() + "");
+                etCarDingJin.setText(infoEntity.getCarDeposit() + "");
+                etCarYongJin.setText(infoEntity.getCarCommission() + "");
+                etCarContent.setText(infoEntity.getCarContext() + "");
+                etLiCheng.setText(infoEntity.getCarMileage() + "");
+                tvChooseAddress.setText(infoEntity.getCarLocation());
+                mCityBean = new CityBean();
+                mCityBean.setCityCode(infoEntity.getCarLocationCitys() + "");
+                mCityBean.setCityName(infoEntity.getCarLocation());
+                tvChooseLength.setText(infoEntity.getCarLicensingDateStr());
+                upDate = infoEntity.getCarLicensingDateStr();
+                tvCarType.setText(infoEntity.getLv().getDictName());
+                tvBianSuFangShi.setText(infoEntity.getGearbox().getDictName());
+                tvRanYouType.setText(infoEntity.getFuel().getDictName());
 
-        //查封、锁定、违章
-        if (data.getCarLocking() == 1) {
-            tvTagSuoDing.setSelected(true);
-        } else {
-            tvTagSuoDing.setSelected(false);
-        }
-        if (data.getCarSeized() == 1) {
-            tvTagChaFeng.setSelected(true);
-        } else {
-            tvTagChaFeng.setSelected(false);
-        }
-        if (data.getCarPeccancy() == 1) {
-            tvTagWeiZhang.setSelected(true);
-        } else {
-            tvTagWeiZhang.setSelected(false);
-        }
+                //查封、锁定、违章
+                if (infoEntity.getCarLocking() == 1) {
+                    tvTagSuoDing.setSelected(true);
+                } else {
+                    tvTagSuoDing.setSelected(false);
+                }
+                if (infoEntity.getCarSeized() == 1) {
+                    tvTagChaFeng.setSelected(true);
+                } else {
+                    tvTagChaFeng.setSelected(false);
+                }
+                if (infoEntity.getCarPeccancy() == 1) {
+                    tvTagWeiZhang.setSelected(true);
+                } else {
+                    tvTagWeiZhang.setSelected(false);
+                }
 
-        if (data.getCarLabelType() == 128) {
-            rgOkNo.check(R.id.rb_ok);
-        } else {
-            rgOkNo.check(R.id.rb_no);
-        }
-        List<CarResourceEntity> resources = data.getResources();
-        ArrayList<String> images = new ArrayList<>();
-        for (CarResourceEntity resource : resources) {
-            images.add(resource.getResUrl());
-        }
-        ImageLoader.loadImageUrl(mActivity, resources.get(0).getResUrl(), imageAdd);
-        ImageLoader.loadImageUrl(mActivity, data.getCarImg(), ivUploadCarIcon);
-        updateImageFragment = UpdateImageFragment.newInstance(images);
+                if (infoEntity.getCarLabelType() == 128) {
+                    rgOkNo.check(R.id.rb_ok);
+                } else {
+                    rgOkNo.check(R.id.rb_no);
+                }
+                List<CarResourceEntity> resources = infoEntity.getResources();
+                ArrayList<String> images = new ArrayList<>();
+                for (CarResourceEntity resource : resources) {
+                    images.add(resource.getResUrl());
+                }
+                ImageLoader.loadImageUrl(mActivity, resources.get(0).getResUrl(), imageAdd);
+                ImageLoader.loadImageUrl(mActivity, infoEntity.getCarImg(), ivUploadCarIcon);
+                updateImageFragment = UpdateImageFragment.newInstance(images);
+                helper = FragmentHelper.builder(mActivity).attach(R.id.send_car_rl).addFragment(updateImageFragment).commit();
+                updateImageFragment.setOnImageFragmentListener(new UpdateImageFragment.OnImageFragmentListener() {
+                    @Override
+                    public void onHide() {
+                        helper.hideFragment(updateImageFragment);
+                    }
+
+                    @Override
+                    public void onImageList(List<String> newPath, List<String> deletePath) {
+                        paths = newPath;
+                        deleteList = deletePath;
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
+            }
+        });
     }
 
     private void getTagData() {
@@ -245,34 +278,78 @@ public class EditCarActivity extends BaseActivity {
                     JSONArray array = new JSONArray(body);
                     //变速方式
                     JSONObject object = array.optJSONObject(0);
-                    JSONArray speedType = object.optJSONArray("value");
-                    List<String> speedList = new ArrayList<String>();
-                    for (int i = 0; i < speedType.length(); i++) {
-                        CarDictionaryEntity entity = new Gson().fromJson(speedType.opt(i).toString(), CarDictionaryEntity.class);
-                        speedTypeList.add(entity);
-                        speedList.add(entity.getDictName());
-                    }
-                    speedTypeDialog.setData(speedList);
+                    Observable.just(object)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .map(new Function<JSONObject, List<String>>() {
+                                @Override
+                                public List<String> apply(@NonNull JSONObject jsonObject) throws Exception {
+                                    JSONArray speedType = jsonObject.optJSONArray("value");
+                                    List<String> speedList = new ArrayList<String>();
+                                    for (int i = 0; i < speedType.length(); i++) {
+                                        CarDictionaryEntity entity = new Gson().fromJson(speedType.opt(i).toString(), CarDictionaryEntity.class);
+                                        speedTypeList.add(entity);
+                                        speedList.add(entity.getDictName());
+                                    }
+                                    return speedList;
+                                }
+                            })
+                            .subscribe(new Consumer<List<String>>() {
+                                @Override
+                                public void accept(@NonNull List<String> list) throws Exception {
+                                    speedTypeDialog.setData(list);
+                                }
+                            });
                     //汽车类型
                     JSONObject object1 = array.optJSONObject(1);
-                    JSONArray carType = object1.optJSONArray("value");
-                    List<String> carList = new ArrayList<String>();
-                    for (int i = 0; i < carType.length(); i++) {
-                        CarDictionaryEntity entity = new Gson().fromJson(carType.opt(i).toString(), CarDictionaryEntity.class);
-                        carTypeList.add(entity);
-                        carList.add(entity.getDictName());
-                    }
-                    carTypeDialog.setData(carList);
+                    Observable.just(object1)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .map(new Function<JSONObject, List<String>>() {
+                                @Override
+                                public List<String> apply(@NonNull JSONObject jsonObject) throws Exception {
+                                    JSONArray carType = jsonObject.optJSONArray("value");
+                                    List<String> carList = new ArrayList<String>();
+                                    for (int i = 0; i < carType.length(); i++) {
+                                        CarDictionaryEntity entity = new Gson().fromJson(carType.opt(i).toString(), CarDictionaryEntity.class);
+                                        carTypeList.add(entity);
+                                        carList.add(entity.getDictName());
+                                    }
+                                    return carList;
+                                }
+                            })
+                            .subscribe(new Consumer<List<String>>() {
+                                @Override
+                                public void accept(@NonNull List<String> list) throws Exception {
+                                    carTypeDialog.setData(list);
+                                }
+                            });
+
                     //燃油类型
                     JSONObject object2 = array.optJSONObject(6);
-                    JSONArray fuelType = object2.optJSONArray("value");
-                    List<String> fuelList = new ArrayList<String>();
-                    for (int i = 0; i < fuelType.length(); i++) {
-                        CarDictionaryEntity entity = new Gson().fromJson(fuelType.opt(i).toString(), CarDictionaryEntity.class);
-                        fuelTypeList.add(entity);
-                        fuelList.add(entity.getDictName());
-                    }
-                    fuelTypeDialog.setData(fuelList);
+                    Observable.just(object2)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .map(new Function<JSONObject, List<String>>() {
+                                @Override
+                                public List<String> apply(@NonNull JSONObject jsonObject) throws Exception {
+                                    JSONArray fuelType = jsonObject.optJSONArray("value");
+                                    List<String> fuelList = new ArrayList<String>();
+                                    for (int i = 0; i < fuelType.length(); i++) {
+                                        CarDictionaryEntity entity = new Gson().fromJson(fuelType.opt(i).toString(), CarDictionaryEntity.class);
+                                        fuelTypeList.add(entity);
+                                        fuelList.add(entity.getDictName());
+                                    }
+                                    return fuelList;
+                                }
+                            })
+                            .subscribe(new Consumer<List<String>>() {
+                                @Override
+                                public void accept(@NonNull List<String> list) throws Exception {
+                                    fuelTypeDialog.setData(list);
+                                }
+                            });
+
                     //可不可过户数据
                     JSONObject object3 = array.optJSONObject(2);
                     JSONArray huType = object3.optJSONArray("value");
@@ -294,17 +371,16 @@ public class EditCarActivity extends BaseActivity {
                     }
 
                     //这段代码用于回显标签
-                    Integer carLabel = data.getCarLabel();
                     for (int i = 0; i < okTypeList.size(); i++) {
                         if (okTypeList.get(i).getId() == carLabel) {
                             sendCarWrap.setPosition(i);
-                            return;
+                            break;
                         }
                     }
                     for (int i = 0; i < noTypeList.size(); i++) {
                         if (noTypeList.get(i).getId() == carLabel) {
                             sendCarWrapNo.setPosition(i);
-                            return;
+                            break;
                         }
                     }
                     sendCarWrap.setData(okList, mActivity, 12, 10, 6, 10, 6, 6, 6, 6, 6);
@@ -322,18 +398,6 @@ public class EditCarActivity extends BaseActivity {
     }
 
     private void initListener() {
-        updateImageFragment.setOnImageFragmentListener(new UpdateImageFragment.OnImageFragmentListener() {
-            @Override
-            public void onHide() {
-                helper.hideFragment(updateImageFragment);
-            }
-
-            @Override
-            public void onImageList(List<String> newPath, List<String> deletePath) {
-                paths = newPath;
-                deleteList = deletePath;
-            }
-        });
 
         carTypeDialog.setOnSelectorDataListener(new ListDialog.OnSelectorDataListener() {
             @Override
@@ -361,7 +425,6 @@ public class EditCarActivity extends BaseActivity {
             public void addressData(CityBean cityBean) {
                 mCityBean = cityBean;
                 tvChooseAddress.setText(cityBean.getCityName());
-                addressDialog.dismissDialog();
             }
         });
 
@@ -386,7 +449,9 @@ public class EditCarActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        updateImageFragment.onActivityResult(requestCode, resultCode, data);
+        if (updateImageFragment != null) {
+            updateImageFragment.onActivityResult(requestCode, resultCode, data);
+        }
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 66:
@@ -423,7 +488,6 @@ public class EditCarActivity extends BaseActivity {
     private void initView() {
         addressDialog = new AddressDialog(mActivity);
         tvTitleName.setText("发布车源");
-        helper = FragmentHelper.builder(mActivity).attach(R.id.send_car_rl).addFragment(updateImageFragment).commit();
 
         carTypeDialog = new ListDialog(mActivity, "车辆类型");
         speedTypeDialog = new ListDialog(mActivity, "变速方式");
@@ -438,9 +502,10 @@ public class EditCarActivity extends BaseActivity {
             }
         }).setType(new boolean[]{true, true, true, false, false, false}).build();
         pvTime.setDate(Calendar.getInstance());
+        tvSendCar.setText("确认修改");
     }
 
-    @OnClick({R.id.iv_title_back, R.id.image_add, R.id.tv_car_type, R.id.iv_clear_car_type, R.id.tv_bian_su_fang_shi,
+    @OnClick({R.id.iv_title_back, R.id.image_add, R.id.iv_upload_car_icon, R.id.tv_car_type, R.id.iv_clear_car_type, R.id.tv_bian_su_fang_shi,
             R.id.tv_choose_length, R.id.tv_choose_address, R.id.tv_ran_you_type, R.id.iv_clear_li_cheng, R.id.iv_clear_car_money,
             R.id.iv_clear_car_ding_jin, R.id.iv_clear_car_yong_jin, R.id.iv_clear_car_pai_liang, R.id.tv_send_car, R.id.tv_tag_suo_ding,
             R.id.tv_tag_cha_feng, R.id.tv_tag_wei_zhang})
@@ -565,24 +630,13 @@ public class EditCarActivity extends BaseActivity {
             showToast("车辆型号不能为空");
             return;
         }
-        if (this.carType == -1) {
-            showToast("请选择车辆类型");
-            return;
-        }
-        if (speedType == -1) {
-            showToast("请选择变速方式");
-            return;
-        }
+
         if (TextUtils.isEmpty(upDate)) {
             showToast("请选择上牌日期");
             return;
         }
         if (mCityBean == null) {
             showToast("请选择城市");
-            return;
-        }
-        if (fuelType == -1) {
-            showToast("请选择燃油类型");
             return;
         }
         if (TextUtils.isEmpty(carLiCheng)) {
@@ -611,27 +665,31 @@ public class EditCarActivity extends BaseActivity {
             showToast("车辆描述不能为空");
             return;
         }
-//        if (TextUtils.isEmpty(iconPath)) {
-//            showToast("车辆首图不能为空");
-//            return;
-//        }
-//        if (paths.size() <= 0) {
-//            showToast("车辆轮播图不能为空");
-//            return;
-//        }
 
         CarUserEntity userData = SpUtlis.getUserData(mActivity);
-        final CarInfoEntity infoEntity = new CarInfoEntity();
         infoEntity.setCarBrandName(carType);
         infoEntity.setCarUserId(userData.getId());
         infoEntity.setCarSource(userData.getCarDealerId() == -1 ? 0 : userData.getCarDealerId());
         infoEntity.setUserPhone(userData.getUserPhone());
-        infoEntity.setCarLv(carTypeList.get(this.carType).getId());
-        infoEntity.setCarGearboxId(speedTypeList.get(speedType).getId());
+        if (this.carType != -1) {
+            infoEntity.setCarLv(carTypeList.get(this.carType).getId());
+        } else {
+            infoEntity.setCarLv(infoEntity.getLv().getId());
+        }
+        if (speedType != -1) {
+            infoEntity.setCarGearboxId(speedTypeList.get(speedType).getId());
+        } else {
+            infoEntity.setCarGearboxId(infoEntity.getGearbox().getId());
+        }
+        if (fuelType != -1) {
+            infoEntity.setCarFuel(fuelTypeList.get(fuelType).getId());
+        } else {
+            infoEntity.setCarFuel(infoEntity.getFuel().getId());
+        }
+        infoEntity.setCarUserEntity(null);
         infoEntity.setCarLicensingDateStr(upDate);
         infoEntity.setCarMileage(Double.parseDouble(carLiCheng));
         infoEntity.setCarDisplacement(Double.parseDouble(paiLiang));
-        infoEntity.setCarFuel(fuelTypeList.get(fuelType).getId());
         infoEntity.setCarLocation(mCityBean.getCityName());
         infoEntity.setCarLocationCitys(Integer.parseInt(mCityBean.getCityCode()));
         infoEntity.setCarPrice(Double.parseDouble(carMoney));
@@ -688,7 +746,7 @@ public class EditCarActivity extends BaseActivity {
                 //找到要删除的图片
                 StringBuilder sBuilder = new StringBuilder();
                 if (!TextUtils.isEmpty(iconPath)) {
-                    sBuilder.append(data.getCarImg())
+                    sBuilder.append(infoEntity.getCarImg())
                             .append(",");
                 }
                 if (deleteList != null && deleteList.size() >= 0) {
@@ -698,8 +756,12 @@ public class EditCarActivity extends BaseActivity {
                     }
                 }
                 String str = sBuilder.toString();
-                String delResources = str.substring(0, (str.length() - 1));
-                map.put("delResources", delResources);
+                if (TextUtils.isEmpty(str)) {
+                    map.put("delResources", "");
+                } else {
+                    String delResources = str.substring(0, (str.length() - 1));
+                    map.put("delResources", delResources);
+                }
 
                 MultipartBody.Builder builder = new MultipartBody.Builder();
                 Set<Map.Entry<String, String>> entries = map.entrySet();
@@ -707,17 +769,22 @@ public class EditCarActivity extends BaseActivity {
                     builder.addFormDataPart(entry.getKey(), entry.getValue());
                 }
                 //轮播图
-                for (String s : paths) {
-                    byte[] getimage = ImageFactory.getimage(s);
-                    final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
-                    String fileName = s.substring(s.lastIndexOf("/"));
-                    builder.addFormDataPart("file", fileName, body);
+                if (paths.size() > 0) {
+                    for (String s : paths) {
+                        byte[] getimage = ImageFactory.getimage(s);
+                        final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
+                        String fileName = s.substring(s.lastIndexOf("/"));
+                        builder.addFormDataPart("file", fileName, body);
+                    }
                 }
+
                 //列表展示图
-                byte[] getimage = ImageFactory.getimage(iconPath);
-                final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
-                String fileName = iconPath.substring(iconPath.lastIndexOf("/"));
-                builder.addFormDataPart("fileImg", fileName, body);
+                if (!TextUtils.isEmpty(iconPath)) {
+                    byte[] getimage = ImageFactory.getimage(iconPath);
+                    final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
+                    String fileName = iconPath.substring(iconPath.lastIndexOf("/"));
+                    builder.addFormDataPart("fileImg", fileName, body);
+                }
 
                 //创建请求体
                 Request request = new Request.Builder().url(API.saveOrUpdateCarInfo).post(builder.build()).build();

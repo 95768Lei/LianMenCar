@@ -198,4 +198,8 @@ public class BaseActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().addToBackStack("tag").add(layoutId, fragment).commit();
     }
 
+    protected void openFragmentNoTask(Fragment fragment, int layoutId) {
+        getSupportFragmentManager().beginTransaction().add(layoutId, fragment).commit();
+    }
+
 }

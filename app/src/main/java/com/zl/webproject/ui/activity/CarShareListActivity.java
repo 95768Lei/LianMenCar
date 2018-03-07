@@ -33,7 +33,7 @@ public class CarShareListActivity extends BaseActivity {
         setContentView(R.layout.activity_car_share_list);
         ButterKnife.bind(this);
         tvTitleName.setText("赚取佣金");
-        openFragment(CarForwardFragment.newInstance(), R.id.car_share_rl);
+        openFragmentNoTask(CarForwardFragment.newInstance(), R.id.car_share_rl);
     }
 
     @OnClick(R.id.iv_title_back)

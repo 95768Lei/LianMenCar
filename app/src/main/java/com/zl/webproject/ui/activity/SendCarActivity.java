@@ -293,7 +293,6 @@ public class SendCarActivity extends BaseActivity {
             public void addressData(CityBean cityBean) {
                 mCityBean = cityBean;
                 tvChooseAddress.setText(cityBean.getCityName());
-                addressDialog.dismissDialog();
             }
         });
 

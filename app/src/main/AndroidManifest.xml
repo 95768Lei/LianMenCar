@@ -178,6 +178,7 @@
         <activity android:name=".ui.activity.CarSearchActivity" />
         <activity android:name=".ui.activity.BindPhoneActivity" />
         <activity android:name=".ui.activity.EditCarActivity"></activity>
+        <activity android:name=".ui.activity.EditMotorsActivity"></activity>
     </application>
 
 </manifest>

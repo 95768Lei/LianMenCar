@@ -32,6 +32,7 @@ import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.dialog.MoreTagDialog;
 import com.zl.webproject.ui.dialog.TagDialog;
 import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.SpUtlis;
 
@@ -139,7 +140,6 @@ public class CarFragment extends BaseFragment {
             @Override
             public void addressData(CityBean cityBean) {
                 tvCity.setText(cityBean.getCityName());
-                addressDialog.dismissDialog();
                 page = 1;
                 getDataList();
             }
@@ -186,6 +186,7 @@ public class CarFragment extends BaseFragment {
                 }
                 params.put("priceStart", priceStart);
                 params.put("priceEnd", priceEnd);
+                tvQuJianMoney.setText(data);
                 getDataList();
             }
         });
@@ -209,6 +210,7 @@ public class CarFragment extends BaseFragment {
                 }
                 params.put("ageStart", ageStart);
                 params.put("ageEnd", ageEnd);
+                tvCarNianXian.setText(data);
                 getDataList();
             }
         });
@@ -232,6 +234,7 @@ public class CarFragment extends BaseFragment {
                 }
                 params.put("mileageStart", mileageStart);
                 params.put("mileageEnd", mileageEnd);
+                carRunRange.setText(data);
                 getDataList();
             }
         });
@@ -390,12 +393,7 @@ public class CarFragment extends BaseFragment {
         mAdapter = new UniversalAdapter<CarInfoEntity>(mActivity, mList, R.layout.home_list_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, CarInfoEntity s) {
-                holder.setText(R.id.tv_car_name, s.getCarTitle());
-                holder.setText(R.id.tv_car_money, s.getCarPrice() + "万");
-                holder.setText(R.id.tv_car_city, s.getCarAreaCitysEntity().getCityName());
-                holder.setText(R.id.tv_car_tag, s.getLabel().getDictName());
-                holder.setText(R.id.tv_car_data, s.getCarLicensingDateStr() + "/" + s.getCarMileage() + "公里");
-                holder.setImageUrl(mActivity, R.id.iv_car_icon, s.getCarImg());
+                BindDataUtils.bindCarData(mActivity, holder, s);
             }
         };
         carListView.setAdapter(mAdapter);

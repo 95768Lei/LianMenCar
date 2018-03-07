@@ -3,6 +3,7 @@ package com.zl.webproject.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.google.gson.Gson;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
@@ -21,10 +23,12 @@ import com.zl.webproject.model.CarCommentEntity;
 import com.zl.webproject.model.CarDealerEntity;
 import com.zl.webproject.model.CarDealerResourceEntity;
 import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.ui.dialog.ImagePreviewDialog;
 import com.zl.webproject.utils.API;
+import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
-import com.zl.webproject.utils.SpUtlis;
+import com.zl.webproject.utils.StringUtils;
 import com.zl.webproject.utils.SystemUtils;
 import com.zl.webproject.view.MyListView;
 
@@ -79,6 +83,8 @@ public class CarHangDetailActivity extends BaseActivity {
     TextView tvToDiscuss;
     @BindView(R.id.tv_no_car)
     TextView tvNoCar;
+    @BindView(R.id.tv_car_hang_person)
+    TextView tvCarHangPerson;
 
     private List<CarCommentEntity> disList = new ArrayList<>();
     private List<CarInfoEntity> carList = new ArrayList<>();
@@ -86,6 +92,8 @@ public class CarHangDetailActivity extends BaseActivity {
     private UniversalAdapter<CarCommentEntity> disAdapter;
     private UniversalAdapter<CarInfoEntity> carAdapter;
     private CarDealerEntity carDealerEntity;
+    private int did;
+    private ImagePreviewDialog previewDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +114,26 @@ public class CarHangDetailActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        carHangBanner.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (carDealerEntity == null) {
+                    return;
+                }
+                List<CarDealerResourceEntity> resources = carDealerEntity.getResources();
+                List<String> list = new ArrayList<String>();
+                for (CarDealerResourceEntity resource : resources) {
+                    list.add(resource.getResDealerUrl());
+                }
+                previewDialog.setData(list);
+                previewDialog.showDialog(carHangBanner);
+            }
+        });
     }
 
     private void initData() {
+        did = getIntent().getIntExtra("did", 0);
         getData();
         disAdapter.notifyDataSetChanged();
         carAdapter.notifyDataSetChanged();
@@ -116,7 +141,7 @@ public class CarHangDetailActivity extends BaseActivity {
 
     private void getData() {
         Map<String, String> params = new HashMap<>();
-        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("did", did + "");
         params.put("isSee", true + "");
         HttpUtils.getInstance().Post(mActivity, params, API.getCarDealerById, new HttpUtils.OnOkHttpCallback() {
             @Override
@@ -145,7 +170,8 @@ public class CarHangDetailActivity extends BaseActivity {
 
         ImageLoader.loadImageUrl(mActivity, carDealerEntity.getDealerImg(), ivCarHangIcon);
         tvCarHangName.setText(carDealerEntity.getDealerName());
-        tvCarHangPersonPhone.setText("联系人：无    联系电话：" + carDealerEntity.getDealerPhone());
+        tvCarHangPersonPhone.setText("联系电话：" + carDealerEntity.getDealerPhone());
+        tvCarHangPerson.setText("联系人：");
         tvCarData.setText("地址：" + carDealerEntity.getCity().getCityName());
 
         //评论数据
@@ -159,10 +185,9 @@ public class CarHangDetailActivity extends BaseActivity {
         }
 
         //车源数据
-        String cityCode = SpUtlis.getLocationData(mActivity).getCityCode();
         Map<String, String> params = new HashMap<>();
-        params.put("did", "");
-        params.put("cityCode", cityCode);
+        params.put("did", did + "");
+        params.put("cityCode", "");
         params.put("page", "1");
 
         HttpUtils.getInstance().Post(mActivity, params, API.getCarList, new HttpUtils.OnOkHttpCallback() {
@@ -198,14 +223,18 @@ public class CarHangDetailActivity extends BaseActivity {
         disAdapter = new UniversalAdapter<CarCommentEntity>(mActivity, disList, R.layout.discuss_list_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, CarCommentEntity s) {
-
+                holder.setText(R.id.tv_dis_data, s.getCommContext());
+                holder.setText(R.id.tv_person_name, TextUtils.isEmpty(s.getCarUserEntity().getUserName()) ?
+                        s.getCarUserEntity().getUserNikeName() : s.getCarUserEntity().getUserName());
+                holder.setText(R.id.tv_discuss_date, StringUtils.dateYYYY_MM_DD_HH_mm_ss(s.getCommDate()));
+                holder.setImageUrl(mActivity, R.id.iv_person_icon, s.getCarUserEntity().getUserImg());
             }
         };
 
         carAdapter = new UniversalAdapter<CarInfoEntity>(mActivity, carList, R.layout.home_list_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, CarInfoEntity s) {
-
+                BindDataUtils.bindCarData(mActivity, holder, s);
             }
         };
 
@@ -225,6 +254,8 @@ public class CarHangDetailActivity extends BaseActivity {
                 }, bList);
 
         initBanner(carHangBanner);
+
+        previewDialog = new ImagePreviewDialog(mActivity);
     }
 
     public class ImageHolderView implements Holder<CarDealerResourceEntity> {
@@ -252,7 +283,7 @@ public class CarHangDetailActivity extends BaseActivity {
             case R.id.iv_title_share:
                 break;
             case R.id.iv_call:
-                SystemUtils.call(mActivity, "15075993917");
+                SystemUtils.call(mActivity, carDealerEntity.getDealerPhone());
                 break;
             case R.id.tv_to_discuss:
                 toDiscuss();

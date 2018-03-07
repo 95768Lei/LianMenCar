@@ -17,6 +17,8 @@
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <com.bigkoo.convenientbanner.ConvenientBanner
@@ -35,8 +37,8 @@
 
                 <ImageView
                     android:id="@+id/iv_car_hang_icon"
-                    android:layout_width="240px"
-                    android:layout_height="165px"
+                    android:layout_width="260px"
+                    android:layout_height="175px"
                     android:layout_marginRight="@dimen/dp_8"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/icon1" />
@@ -45,10 +47,10 @@
                     android:id="@+id/tv_car_hang_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_4"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:layout_toRightOf="@id/iv_car_hang_icon"
                     android:singleLine="true"
-                    android:text="凯迪拉克车行"
+                    android:text="XXXX车行"
                     android:textColor="@color/black"
                     android:textSize="@dimen/dp_14" />
 
@@ -57,27 +59,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_car_hang_name"
-                    android:layout_marginTop="@dimen/dp_24"
+                    android:layout_marginTop="@dimen/dp_8"
                     android:layout_toRightOf="@id/iv_car_hang_icon"
-                    android:text="地址：邢台市"
+                    android:text="地址："
+                    android:textSize="@dimen/dp_12" />
+
+                <TextView
+                    android:id="@+id/tv_car_hang_person"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_car_data"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_toRightOf="@id/iv_car_hang_icon"
+                    android:text="联系人："
                     android:textSize="@dimen/dp_12" />
 
                 <TextView
                     android:id="@+id/tv_car_hang_person_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_car_hang_icon"
+                    android:layout_alignBottom="@id/iv_car_hang_icon"
+                    android:layout_marginBottom="@dimen/dp_2"
                     android:layout_marginTop="@dimen/dp_6"
-                    android:text="联系人：张磊    联系电话：15075993946"
-                    android:textSize="@dimen/dp_14" />
+                    android:layout_toRightOf="@id/iv_car_hang_icon"
+                    android:text="联系电话："
+                    android:textSize="@dimen/dp_12" />
 
                 <ImageView
                     android:id="@+id/iv_call"
                     android:layout_width="@dimen/dp_32"
                     android:layout_height="@dimen/dp_32"
-                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_toRightOf="@id/tv_car_hang_person_phone"
                     android:background="@drawable/pink_round_bg"
                     android:padding="@dimen/dp_6"
                     app:srcCompat="@drawable/ic_call_white" />
@@ -134,10 +148,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:drawablePadding="@dimen/dp_6"
                 android:drawableRight="@mipmap/send"
                 android:gravity="center_vertical"
                 android:paddingBottom="@dimen/dp_8"
-                android:drawablePadding="@dimen/dp_6"
                 android:paddingTop="@dimen/dp_8"
                 android:text="还没有人来评论，点击去评论" />
 

@@ -112,7 +112,7 @@ public class API {
     //查看所有车辆，查询(分页)
     public static final String carInfoList = BASEURL + "/app/car/carInfoList.do";
     //查看车辆详情
-    public static final String getCarInfo = BASEURL + "/app/car/getCarInfo.do";
+    public static final String getCarInfoById = BASEURL + "/app/car/getCarInfoById.do";
     //查看我发布的车辆
     public static final String carInfoListToMy = BASEURL + "/app/car/carInfoListToMy.do";
     //添加/修改车辆信息
@@ -137,5 +137,9 @@ public class API {
     public static final String carInfoCommentShowList = BASEURL + "/app/comment/carInfoCommentShowList.do";
     //发布车辆评价
     public static final String saveCarInfoComment = BASEURL + "/app/comment/saveCarInfoComment.do";
+    //转发车辆信息
+    public static final String toForwardCarInfo = BASEURL + "/app/forward/toForwardCarInfo.do";
+    //转发车行信息
+    public static final String toForwardCarDealer = BASEURL + "/app/forward/toForwardCarDealer.do";
 
 }

@@ -23,6 +23,7 @@ import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
 import com.zl.webproject.ui.fragment.ImageFragment;
+import com.zl.webproject.ui.fragment.UpdateImageFragment;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.FragmentHelper;
 import com.zl.webproject.utils.HttpUtils;
@@ -55,11 +56,10 @@ import okhttp3.Response;
 import static com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT;
 
 /**
- * @author zhanglei
- * @date 18/2/28
+ * Created by Administrator on 2018/3/7.
  */
-public class MyMotorsActivity extends BaseActivity {
 
+public class EditMotorsActivity extends BaseActivity {
     public static final int REQUEST_CAMERA_CODE = 12;
     @BindView(R.id.iv_title_back)
     ImageView ivTitleBack;
@@ -97,12 +97,12 @@ public class MyMotorsActivity extends BaseActivity {
     RelativeLayout motorsCarRl;
     private AddressDialog addressDialog;
     private CityBean mCityBean;
-    private ImageFragment imageFragment;
+    private UpdateImageFragment updateImageFragment = new UpdateImageFragment();
     private FragmentHelper helper;
     private String carHangIconPath;
-    private List<String> imagePaths;
+    private List<String> imagePaths = new ArrayList<>();
+    private List<String> deleteList = new ArrayList<>();
     private CarDealerEntity carDealerEntity;
-    private ImagePreviewDialog previewDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,8 +150,29 @@ public class MyMotorsActivity extends BaseActivity {
         tvChooseAddress.setText(carDealerEntity.getCity().getCityName());
         etCarContent.setText(carDealerEntity.getDealerContext());
 
-        tvTitleRight.setText("编辑车行");
+        List<CarDealerResourceEntity> resources = carDealerEntity.getResources();
+        ArrayList<String> images = new ArrayList<>();
+        for (CarDealerResourceEntity resource : resources) {
+            images.add(resource.getResDealerUrl());
+        }
+        updateImageFragment = UpdateImageFragment.newInstance(images);
+        helper = FragmentHelper.builder(mActivity).attach(R.id.motors_car_rl).addFragment(updateImageFragment).commit();
+        updateImageFragment.setOnImageFragmentListener(new UpdateImageFragment.OnImageFragmentListener() {
+            @Override
+            public void onHide() {
+                helper.hideFragment(updateImageFragment);
+            }
 
+            @Override
+            public void onImageList(List<String> newPath, List<String> deletePath) {
+                imagePaths = newPath;
+                deleteList = deletePath;
+            }
+        });
+
+        mCityBean = new CityBean();
+        mCityBean.setCityCode(carDealerEntity.getCity().getCityCode());
+        mCityBean.setCityName(carDealerEntity.getCity().getCityName());
     }
 
     private void initListener() {
@@ -162,39 +183,19 @@ public class MyMotorsActivity extends BaseActivity {
                 tvChooseAddress.setText(cityBean.getCityName());
             }
         });
-        imageFragment.setOnImageFragmentListener(new ImageFragment.OnImageFragmentListener() {
-            @Override
-            public void onHide() {
-                helper.hideFragment(imageFragment);
-            }
-
-            @Override
-            public void onHomeImage(String path) {
-                ImageLoader.loadImageFile(mActivity, path, imageAdd);
-            }
-
-            @Override
-            public void onImageList(List<String> path) {
-                imagePaths = path;
-            }
-        });
     }
 
     private void initView() {
         addressDialog = new AddressDialog(mActivity);
         tvTitleName.setText("我的车行");
-        imageFragment = ImageFragment.newInstance(0);
         tvTitleRight.setVisibility(View.VISIBLE);
-        tvTitleRight.setText("保存");
-        helper = FragmentHelper.builder(mActivity).attach(R.id.motors_car_rl).addFragment(imageFragment).commit();
-
-        previewDialog = new ImagePreviewDialog(mActivity);
+        tvTitleRight.setText("保存编辑");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageFragment.onActivityResult(requestCode, resultCode, data);
+        updateImageFragment.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CAMERA_CODE:
@@ -217,11 +218,7 @@ public class MyMotorsActivity extends BaseActivity {
                 addImage();
                 break;
             case R.id.tv_title_right:
-                if (carDealerEntity != null) {
-                    edit();
-                } else {
-                    commit();
-                }
+                commit();
                 break;
             case R.id.iv_clear_motor_name:
                 etMotorsName.setText("");
@@ -244,27 +241,8 @@ public class MyMotorsActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 编辑车行
-     */
-    private void edit() {
-        startActivity(new Intent(mActivity, EditMotorsActivity.class));
-    }
-
     private void addImage() {
-
-        if (carDealerEntity != null) {
-            List<CarDealerResourceEntity> resources = carDealerEntity.getResources();
-            List<String> list = new ArrayList<String>();
-            for (CarDealerResourceEntity resource : resources) {
-                list.add(resource.getResDealerUrl());
-            }
-            previewDialog.setData(list);
-            previewDialog.showDialog(etMotorsName);
-            return;
-        }
-
-        helper.showFragment(imageFragment);
+        helper.showFragment(updateImageFragment);
     }
 
     private void commit() {
@@ -273,16 +251,6 @@ public class MyMotorsActivity extends BaseActivity {
         String motorsName = etMotorsName.getText().toString().trim();
         String address = etCarAddress.getText().toString().trim();
         String content = etCarContent.getText().toString().trim();
-
-        if (imagePaths == null || imagePaths.size() <= 0) {
-            showToast("车行轮播图不能为空");
-            return;
-        }
-
-        if (TextUtils.isEmpty(carHangIconPath)) {
-            showToast("车行头像不能为空");
-            return;
-        }
 
         if (mCityBean == null) {
             showToast("车行所在区域不能为空");
@@ -325,7 +293,7 @@ public class MyMotorsActivity extends BaseActivity {
         CarUserEntity userData = SpUtlis.getUserData(mActivity);
         params.put("uid", userData.getId() + "");
         params.put("userPhone", userData.getUserPhone() + "");
-        params.put("did", "");
+        params.put("did", userData.getCarDealerId() + "");
         params.put("dealerName", motorsName);
         params.put("userName", name);
         params.put("phone", phone);
@@ -337,7 +305,25 @@ public class MyMotorsActivity extends BaseActivity {
             @Override
             public void run() {
                 //添加请求参数
-                params.put("delResources", "");
+                //找到要删除的图片
+                StringBuilder sBuilder = new StringBuilder();
+                if (!TextUtils.isEmpty(carHangIconPath)) {
+                    sBuilder.append(carDealerEntity.getDealerImg())
+                            .append(",");
+                }
+                if (deleteList != null && deleteList.size() >= 0) {
+                    for (String s : deleteList) {
+                        sBuilder.append(s)
+                                .append(",");
+                    }
+                }
+                String str = sBuilder.toString();
+                if (TextUtils.isEmpty(str)) {
+                    params.put("delResources", "");
+                } else {
+                    String delResources = str.substring(0, (str.length() - 1));
+                    params.put("delResources", delResources);
+                }
                 MultipartBody.Builder builder = new MultipartBody.Builder();
                 Set<Map.Entry<String, String>> entries = params.entrySet();
                 for (Map.Entry<String, String> entry : entries) {
@@ -351,10 +337,12 @@ public class MyMotorsActivity extends BaseActivity {
                     builder.addFormDataPart("file", fileName, body);
                 }
                 //列表展示图
-                byte[] getimage = ImageFactory.getimage(carHangIconPath);
-                final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
-                String fileName = carHangIconPath.substring(carHangIconPath.lastIndexOf("/"));
-                builder.addFormDataPart("fileImg", fileName, body);
+                if (!TextUtils.isEmpty(carHangIconPath)){
+                    byte[] getimage = ImageFactory.getimage(carHangIconPath);
+                    final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
+                    String fileName = carHangIconPath.substring(carHangIconPath.lastIndexOf("/"));
+                    builder.addFormDataPart("fileImg", fileName, body);
+                }
 
                 //创建请求体
                 Request request = new Request.Builder().url(API.saveOrUpdateCarDealer).post(builder.build()).build();
@@ -383,7 +371,7 @@ public class MyMotorsActivity extends BaseActivity {
                                     JSONObject jsonObject = new JSONObject(string);
                                     boolean result = jsonObject.optBoolean("result");
                                     if (result) {
-                                        showToast("成功发布车行");
+                                        showToast("成功修改车行");
                                         finish();
                                     } else {
                                         showToast(jsonObject.optString("msg"));
