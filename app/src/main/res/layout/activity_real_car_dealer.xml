@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.activity.RealCarDealerActivity">
+
+    <include layout="@layout/base_title_layout" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@drawable/tab_item_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="身份证正反面照片" />
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="234px"
+        android:layout_margin="@dimen/dp_8">
+
+        <ImageView
+            android:id="@+id/iv_person_front"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@mipmap/s1" />
+
+        <ImageView
+            android:id="@+id/iv_person_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@mipmap/s2" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@drawable/tab_item_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="营业执照照片" />
+
+
+    <ImageView
+        android:id="@+id/iv_license"
+        android:layout_width="384px"
+        android:layout_height="480px"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:src="@mipmap/yyzz" />
+
+</com.zhy.autolayout.AutoLinearLayout>

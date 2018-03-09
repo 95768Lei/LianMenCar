@@ -211,6 +211,7 @@ public class AddressDialog extends BaseDialog {
             cityTv2.setText("无");
         }
 
+        //当前定位城市
         CityBean cityBean = SpUtlis.getCuLocationData(mActivity);
         String cityName = cityBean.getCityName();
         if (!TextUtils.isEmpty(cityName)) {

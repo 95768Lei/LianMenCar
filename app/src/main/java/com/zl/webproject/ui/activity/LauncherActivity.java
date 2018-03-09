@@ -31,6 +31,8 @@ public class LauncherActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launcher);
 
+        SpUtlis.setLocationData(mActivity, "", "全国城市", "全国城市");
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

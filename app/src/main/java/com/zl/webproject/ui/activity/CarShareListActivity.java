@@ -1,5 +1,6 @@
 package com.zl.webproject.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class CarShareListActivity extends BaseActivity {
     ImageView ivTitleShare;
     @BindView(R.id.tv_title_right)
     TextView tvTitleRight;
+    private CarForwardFragment carForwardFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,21 @@ public class CarShareListActivity extends BaseActivity {
         setContentView(R.layout.activity_car_share_list);
         ButterKnife.bind(this);
         tvTitleName.setText("赚取佣金");
-        openFragmentNoTask(CarForwardFragment.newInstance(), R.id.car_share_rl);
+        carForwardFragment = CarForwardFragment.newInstance();
+        carForwardFragment.setOnToFinishListener(new CarForwardFragment.OnToFinishListener() {
+            @Override
+            public void onFinish() {
+                setResult(RESULT_OK, new Intent());
+                finish();
+            }
+        });
+        openFragmentNoTask(carForwardFragment, R.id.car_share_rl);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        carForwardFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.iv_title_back)

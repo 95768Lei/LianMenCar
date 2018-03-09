@@ -75,10 +75,6 @@ public class API {
     public static final String getCarDealerList = BASEURL + "/app/dealer/getCarDealerList.do";
     //查看车行信息，包括车行评论信息
     public static final String getCarDealerById = BASEURL + "/app/dealer/getCarDealerById.do";
-    //查看我车行
-    public static final String toMyCarDealer = BASEURL + "/app/dealer/toMyCarDealer.do";
-    //刷新车行信息,变更刷新时间
-    public static final String resCarDealer = BASEURL + "/app/dealer/resCarDealer.do";
     //添加/修改车行信息
     public static final String saveOrUpdateCarDealer = BASEURL + "/app/dealer/saveOrUpdateCarDealer.do";
     //完善车行信息、营业执照、正反照片
@@ -95,8 +91,6 @@ public class API {
     public static final String isFollowDetails = BASEURL + "/app/follow/isFollowDetails.do";
     //我的转发列表
     public static final String getForwardList = BASEURL + "/app/forward/getForwardList.do";
-    //转发车辆信息
-    public static final String forwardCar = BASEURL + "/app/forward/forwardCar.do";
     //微信转发后的车行信息
     public static final String toCarShop = BASEURL + "/app/forward/toCarShop.do";
     //微信转发后的车辆信息
@@ -105,8 +99,6 @@ public class API {
     public static final String forwardCarInfo = BASEURL + "/app/forward/forwardCarInfo.do";
     //保存临时图片
     public static final String saveTempImg = BASEURL + "/app/file/saveTempImg.do";
-    //删除临时图片
-    public static final String delTempImg = BASEURL + "/app/file/delTempImg.do";
     //查看车行或首页下车辆信息
     public static final String getCarList = BASEURL + "/app/car/getCarList.do";
     //查看所有车辆，查询(分页)
@@ -119,8 +111,6 @@ public class API {
     public static final String saveOrUpdateCarInfo = BASEURL + "/app/car/saveOrUpdateCarInfo.do";
     //车辆信息变更：下架/已售/锁定
     public static final String editCarStateInfo = BASEURL + "/app/car/editCarStateInfo.do";
-    //刷新车辆信息
-    public static final String refreshCarInfo = BASEURL + "/app/car/refreshCarInfo.do";
     //反馈意见
     public static final String saveFeedback = BASEURL + "/app/feedback/saveFeedback.do";
     //我的车辆收藏列表
@@ -137,9 +127,9 @@ public class API {
     public static final String carInfoCommentShowList = BASEURL + "/app/comment/carInfoCommentShowList.do";
     //发布车辆评价
     public static final String saveCarInfoComment = BASEURL + "/app/comment/saveCarInfoComment.do";
-    //转发车辆信息
+    //转发车辆信息(页面)
     public static final String toForwardCarInfo = BASEURL + "/app/forward/toForwardCarInfo.do";
-    //转发车行信息
+    //转发车行信息（接口）
     public static final String toForwardCarDealer = BASEURL + "/app/forward/toForwardCarDealer.do";
 
 }

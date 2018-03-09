@@ -16,7 +16,7 @@ import com.zl.webproject.model.ShareBean;
 public class ShareUtils {
 
     public static void share(final Activity context, ShareBean shareBean, final OnShareListener onShareListener) {
-        UMImage thumb = new UMImage(context, shareBean.getImgUrl());
+        UMImage thumb = new UMImage(context, API.BASEURL + "/" + shareBean.getImgUrl());
         UMWeb web = new UMWeb(shareBean.getUrl());
         web.setTitle(shareBean.getShareTitle());//标题
         web.setThumb(thumb);  //缩略图

@@ -133,6 +133,7 @@
             <com.zhy.autolayout.AutoRelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:paddingBottom="@dimen/dp_12"
                 android:paddingTop="@dimen/dp_12">
 
@@ -154,12 +155,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0.8dp"
+                android:visibility="gone"
                 android:background="@color/light_grey" />
 
             <com.zhy.autolayout.AutoRelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/dp_12"
+                android:visibility="gone"
                 android:paddingTop="@dimen/dp_12">
 
                 <TextView

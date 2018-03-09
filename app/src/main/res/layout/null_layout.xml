@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/null_arl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="256px"
+            android:layout_height="256px"
+            android:src="@mipmap/weep" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:text="这里空空如也"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_24" />
+
+        <TextView
+            android:id="@+id/tv_action"
+            android:layout_width="254px"
+            android:layout_height="@dimen/dp_42"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@drawable/green_30_round_shape"
+            android:gravity="center"
+            android:text="去关注"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_16" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoRelativeLayout>

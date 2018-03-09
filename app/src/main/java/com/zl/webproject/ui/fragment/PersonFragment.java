@@ -25,8 +25,10 @@ import com.zl.webproject.ui.activity.FeedBackActivity;
 import com.zl.webproject.ui.activity.LoginActivity;
 import com.zl.webproject.ui.activity.MyCarActivity;
 import com.zl.webproject.ui.activity.MyMotorsActivity;
+import com.zl.webproject.ui.activity.RealPersonActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
+import com.zl.webproject.ui.activity.UpdatePasswordActivity;
 import com.zl.webproject.ui.activity.WebActivity;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
@@ -70,13 +72,16 @@ public class PersonFragment extends BaseFragment {
     private UniversalAdapter<PersonGridBean> mAdapter;
     private List<PersonGridBean> mList = new ArrayList<>();
     private String[] cars = {"发布车源", "我的车源", "赚取佣金", "车辆关注"};
-    private String[] carHangs = {"车行收藏", "我的车行", "中介认证",};
+    private String[] carHangs = {"车行关注", "我的车行", "中介认证",};
     private String[] womens = {"客服电话", "免责声明", "意见反馈", "关于我们"};
+    private String[] centers = {"用户信息", "密码修改", "实名认证", "车行认证"};
 
 
     private Integer[] iconCars = {R.mipmap.fbcy, R.mipmap.wdcy, R.mipmap.zjcl, R.mipmap.wdsc};
     private Integer[] iconCarhangs = {R.mipmap.wdgz, R.mipmap.wdch, R.mipmap.zj};
     private Integer[] iconWoMens = {R.mipmap.kfdh, R.mipmap.mzsm, R.mipmap.yjfk, R.mipmap.gy};
+    private Integer[] iconCenters = {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
+            R.mipmap.ic_launcher};
 
     public PersonFragment() {
         // Required empty public constructor
@@ -147,9 +152,21 @@ public class PersonFragment extends BaseFragment {
         }
         carWoMenBean.setImageList(carWoMenList);
 
+        PersonGridBean centerBean = new PersonGridBean();
+        centerBean.setTitle("个人中心");
+        List<PersonGridBean.ImageList> centerList = new ArrayList<>();
+        for (int i = 0; i < centers.length; i++) {
+            PersonGridBean.ImageList bean = new PersonGridBean.ImageList();
+            bean.setName(centers[i]);
+            bean.setImagePath(iconCenters[i]);
+            centerList.add(bean);
+        }
+        centerBean.setImageList(centerList);
+
         mList.add(carBean);
         mList.add(carHangBean);
         mList.add(carWoMenBean);
+        mList.add(centerBean);
 
         mAdapter.notifyDataSetChanged();
     }
@@ -175,8 +192,6 @@ public class PersonFragment extends BaseFragment {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         switch (imageList.get(i).getName()) {
                             case "发布车源":
-//                                Intent intent2 = new Intent(mActivity, SendCarActivity.class);
-//                                startActivity(intent2);
                                 SystemUtils.toActivity(mActivity, new Intent(mActivity, SendCarActivity.class));
                                 break;
                             case "我的车源":
@@ -185,20 +200,20 @@ public class PersonFragment extends BaseFragment {
                             case "我的车行":
                                 intoMyMotors();
                                 break;
-                            case "车行收藏":
-                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarHangCollectActivity.class));
+                            case "车行关注":
+                                SystemUtils.toActivityForResult(mActivity, new Intent(mActivity, CarHangCollectActivity.class), 0);
                                 break;
                             //车辆关注
                             case "车辆关注":
-                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarCollectActivity.class));
+                                SystemUtils.toActivityForResult(mActivity, new Intent(mActivity, CarCollectActivity.class), 1);
                                 break;
                             //赚取佣金
                             case "赚取佣金":
-                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarShareListActivity.class));
+                                SystemUtils.toActivityForResult(mActivity, new Intent(mActivity, CarShareListActivity.class), 1);
                                 break;
                             //中介认证
                             case "中介认证":
-
+                                applyInfo();
                                 break;
                             //客服电话
                             case "客服电话":
@@ -220,6 +235,22 @@ public class PersonFragment extends BaseFragment {
                                 intent1.putExtra("url", API.GYWM_URL);
                                 startActivity(intent1);
                                 break;
+                            //用户信息
+                            case "用户信息":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, SettingsActivity.class));
+                                break;
+                            //密码修改
+                            case "密码修改":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, UpdatePasswordActivity.class));
+                                break;
+                            //实名认证
+                            case "实名认证":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, RealPersonActivity.class));
+                                break;
+                            //车行认证
+                            case "车行认证":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarShareListActivity.class));
+                                break;
                         }
                     }
                 });
@@ -228,6 +259,37 @@ public class PersonFragment extends BaseFragment {
         personListView.setAdapter(mAdapter);
 
         updatePerson();
+    }
+
+    /**
+     * 申请中介
+     */
+    private void applyInfo() {
+
+        if (!SpUtlis.getLoginData(mActivity).isLogin()) {
+            startActivity(new Intent(mActivity, LoginActivity.class));
+            return;
+        }
+
+        CarUserEntity userData = SpUtlis.getUserData(mActivity);
+        if (userData.getUserApply() == 1) {
+            showToast("您已经进行了中介认证");
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", userData.getId() + "");
+        HttpUtils.getInstance().Post(mActivity, params, API.applyInfo, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                tagViewPerson.addImage(R.mipmap.rzzj);
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
     }
 
     private void intoMyMotors() {
@@ -258,10 +320,13 @@ public class PersonFragment extends BaseFragment {
         if (login) {
             CarUserEntity userData = SpUtlis.getUserData(mActivity);
             tvPersonName.setText(userData.getUserNikeName());
-            if (TextUtils.isEmpty(userData.getUserImg())) {
-                return;
+            if (!TextUtils.isEmpty(userData.getUserImg())) {
+                ImageLoader.loadImageUrl(mActivity, userData.getUserImg(), ivPersonIcon);
             }
-            ImageLoader.loadImageUrl(mActivity, userData.getUserImg(), ivPersonIcon);
+            if (userData.getUserApply() == 1) {
+                tagViewPerson.addImage(R.mipmap.rzzj);
+            }
+
         }
     }
 

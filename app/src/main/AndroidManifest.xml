@@ -177,8 +177,11 @@
         <activity android:name=".ui.activity.MyMotorsActivity" />
         <activity android:name=".ui.activity.CarSearchActivity" />
         <activity android:name=".ui.activity.BindPhoneActivity" />
-        <activity android:name=".ui.activity.EditCarActivity"></activity>
-        <activity android:name=".ui.activity.EditMotorsActivity"></activity>
+        <activity android:name=".ui.activity.EditCarActivity" />
+        <activity android:name=".ui.activity.EditMotorsActivity" />
+        <activity android:name=".ui.activity.UpdatePasswordActivity" />
+        <activity android:name=".ui.activity.RealPersonActivity" />
+        <activity android:name=".ui.activity.RealCarDealerActivity"></activity>
     </application>
 
 </manifest>

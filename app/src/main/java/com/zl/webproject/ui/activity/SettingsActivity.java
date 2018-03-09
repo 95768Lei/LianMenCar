@@ -294,6 +294,10 @@ public class SettingsActivity extends BaseActivity {
         LoginBean loginData = SpUtlis.getLoginData(mActivity);
         loginData.setLogin(false);
         SpUtlis.setLoginData(mActivity, loginData);
+        CarUserEntity userData = SpUtlis.getUserData(mActivity);
+        userData.setUserNikeName("");
+        userData.setUserImg("");
+        SpUtlis.setUserData(mActivity, userData);
         startActivity(new Intent(mActivity, LoginActivity.class));
         finish();
     }

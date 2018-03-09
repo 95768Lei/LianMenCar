@@ -171,15 +171,24 @@ public class EditCarActivity extends BaseActivity {
     private UpdateImageFragment updateImageFragment = new UpdateImageFragment();
     private CarInfoEntity infoEntity;
     private int carLabel;
+    private boolean isHasFocus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_car);
         ButterKnife.bind(this);
-        initView();
-        initData();
-        initListener();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!isHasFocus) {
+            isHasFocus = true;
+            initView();
+            initData();
+            initListener();
+        }
     }
 
     private void initData() {
@@ -444,6 +453,7 @@ public class EditCarActivity extends BaseActivity {
                 }
             }
         });
+
     }
 
     @Override
@@ -521,30 +531,36 @@ public class EditCarActivity extends BaseActivity {
                 break;
             //添加车头像
             case R.id.iv_upload_car_icon:
-                singleOpenAlbum();
+                openSingleAlbum(66);
                 break;
             //车辆类型
             case R.id.tv_car_type:
+                if (carTypeDialog == null) return;
                 carTypeDialog.showDialog(view);
                 break;
             //删除车辆型号
             case R.id.iv_clear_car_type:
+                if (etCarType == null) return;
                 etCarType.setText("");
                 break;
             //选择变速方式
             case R.id.tv_bian_su_fang_shi:
+                if (speedTypeDialog == null) return;
                 speedTypeDialog.showDialog(view);
                 break;
             //选择上牌日期
             case R.id.tv_choose_length:
+                if (pvTime == null) return;
                 pvTime.show();
                 break;
             //选择所在地区
             case R.id.tv_choose_address:
+                if (addressDialog == null) return;
                 addressDialog.showDialog(view);
                 break;
             //选择燃油类型
             case R.id.tv_ran_you_type:
+                if (fuelTypeDialog == null) return;
                 fuelTypeDialog.showDialog(view);
                 break;
             //删除行驶里程
@@ -602,16 +618,6 @@ public class EditCarActivity extends BaseActivity {
                 tvTagChaFeng.setSelected(false);
                 break;
         }
-    }
-
-    /**
-     * 打开相册的方法(单选)
-     */
-    public void singleOpenAlbum() {
-        PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
-        intent.setSelectModel(SelectModel.SINGLE);
-        intent.setShowCarema(false); // 是否显示拍照， 默认false
-        mActivity.startActivityForResult(intent, 66);
     }
 
     /**

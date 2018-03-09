@@ -24,7 +24,6 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.main_nv)
     BottomNavigationView mainNv;
-    private String imagePath;
     private HomeFragment homeFragment;
     private CarFragment carFragment;
     private CarHangFragment carHangFragment;
@@ -40,6 +39,23 @@ public class MainActivity extends BaseActivity {
         mainActivity = this;
         initView();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    mainNv.setSelectedItemId(mainNv.getMenu().getItem(2).getItemId());
+                    helper.showFragment(carHangFragment);
+                    break;
+                case 1:
+                    mainNv.setSelectedItemId(mainNv.getMenu().getItem(1).getItemId());
+                    helper.showFragment(carFragment);
+                    break;
+            }
+        }
     }
 
     private void initListener() {

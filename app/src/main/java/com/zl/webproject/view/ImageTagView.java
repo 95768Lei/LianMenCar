@@ -27,9 +27,12 @@ public class ImageTagView extends LinearLayout {
     }
 
     public void addImage(int drawableId) {
+        for (int i = 0; i < this.getChildCount(); i++) {
+            removeView(this.getChildAt(i));
+        }
         ImageView imageView = new ImageView(getContext());
         imageView.setImageResource(drawableId);
-        LayoutParams params = new LayoutParams(30, 30);
+        LayoutParams params = new LayoutParams(60, 60);
         params.setMargins(8, 0, 0, 0);
         addView(imageView, params);
     }

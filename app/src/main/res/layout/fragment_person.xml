@@ -53,9 +53,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_person_icon"
-                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_12"
+                android:layout_alignLeft="@id/iv_person_icon"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dp_18"
                 android:paddingRight="@dimen/dp_18" />
 
         </com.zhy.autolayout.AutoRelativeLayout>

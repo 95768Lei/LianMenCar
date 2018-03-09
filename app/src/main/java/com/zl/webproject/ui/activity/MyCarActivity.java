@@ -14,14 +14,18 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.ShareUtils;
 import com.zl.webproject.utils.SpUtlis;
 
 import org.json.JSONArray;
@@ -69,6 +73,12 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
         initView();
         initData();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -171,13 +181,35 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
      * @param position
      * @param s
      */
-    private void bindData(UniversalViewHolder holder, int position, CarInfoEntity s) {
-        mPosition = position;
+    private void bindData(UniversalViewHolder holder, final int position, CarInfoEntity s) {
         holder.getView(R.id.linear_bottom).setVisibility(View.VISIBLE);
-        holder.getView(R.id.linear_yu_ding).setOnClickListener(this);
-        holder.getView(R.id.linear_yi_shou).setOnClickListener(this);
-        holder.getView(R.id.linear_xia_jia).setOnClickListener(this);
-        holder.getView(R.id.linear_fen_xiang).setOnClickListener(this);
+        holder.getView(R.id.linear_yu_ding).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                yuDing();
+            }
+        });
+        holder.getView(R.id.linear_yi_shou).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                yiShou();
+            }
+        });
+        holder.getView(R.id.linear_xia_jia).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                xiaJia();
+            }
+        });
+        holder.getView(R.id.linear_fen_xiang).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share();
+            }
+        });
         BindDataUtils.bindCarData(mActivity, holder, s, false);
     }
 
@@ -190,23 +222,53 @@ public class MyCarActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.linear_yu_ding:
-                yuDing();
+
                 break;
             case R.id.linear_yi_shou:
-                yiShou();
+
                 break;
             case R.id.linear_xia_jia:
-                xiaJia();
+
                 break;
             case R.id.linear_fen_xiang:
-                share();
+
                 break;
         }
     }
 
     //分享
     private void share() {
+        final CarInfoEntity carInfoEntity = mList.get(mPosition);
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carInfoEntity.getCarTitle());
+        shareBean.setImgUrl(carInfoEntity.getCarImg());
+        shareBean.setShareContent(carInfoEntity.getCarContext());
+        shareBean.setUrl(API.toCarDetails + "?cid=" + carInfoEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("cid", carInfoEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarInfo, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
 
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
     }
 
     //下架

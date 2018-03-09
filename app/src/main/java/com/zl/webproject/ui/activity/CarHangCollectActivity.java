@@ -12,14 +12,18 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.zhy.autolayout.AutoRelativeLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarDealerEntity;
-import com.zl.webproject.model.CityBean;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.ShareUtils;
 import com.zl.webproject.utils.SpUtlis;
 
 import org.json.JSONArray;
@@ -35,7 +39,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Request;
-import retrofit2.http.HTTP;
 
 /**
  * @author zhanglei
@@ -56,6 +59,8 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
     ListView carHangCollectListView;
     @BindView(R.id.car_hang_collect_trl)
     TwinklingRefreshLayout carHangCollectTrl;
+    @BindView(R.id.null_arl)
+    AutoRelativeLayout nullArl;
     private List<CarDealerEntity> mList = new ArrayList<>();
     private UniversalAdapter<CarDealerEntity> adapter;
     private int page = 1;
@@ -69,6 +74,12 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
         initView();
         initData();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -129,18 +140,27 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
                     }
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
-                    if (array.length() <= 0) {
-                        showToast("没有更多了");
-                        return;
-                    }
+
                     for (int i = 0; i < array.length(); i++) {
-                        CarDealerEntity carDealerEntity = new Gson().fromJson(array.optString(i), CarDealerEntity.class);
+                        JSONObject jsonObject = array.optJSONObject(i);
+                        CarDealerEntity carDealerEntity = new Gson().fromJson(jsonObject.optString("carDealerEntity"), CarDealerEntity.class);
                         mList.add(carDealerEntity);
                     }
                     adapter.notifyDataSetChanged();
 
                     if (page == 1) {
                         carHangCollectListView.setSelection(0);
+                    }
+
+                    if (mList.size() <= 0) {
+                        nullArl.setVisibility(View.VISIBLE);
+                    } else {
+                        nullArl.setVisibility(View.GONE);
+                    }
+
+                    if (array.length() <= 0) {
+                        showToast("没有更多了");
+                        return;
                     }
 
                 } catch (JSONException e) {
@@ -156,7 +176,7 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
     }
 
     private void initView() {
-        tvTitleName.setText("车行收藏");
+        tvTitleName.setText("车行关注");
 
         adapter = new UniversalAdapter<CarDealerEntity>(mActivity, mList, R.layout.car_hang_list_item) {
             @Override
@@ -175,11 +195,23 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
      * @param position
      * @param s
      */
-    private void bindData(UniversalViewHolder holder, int position, CarDealerEntity s) {
-        mPosition = position;
+    private void bindData(UniversalViewHolder holder, final int position, CarDealerEntity s) {
+
         holder.getView(R.id.linear_bottom_two).setVisibility(View.VISIBLE);
-        holder.getView(R.id.linear_share).setOnClickListener(this);
-        holder.getView(R.id.linear_delete).setOnClickListener(this);
+        holder.getView(R.id.linear_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                share();
+            }
+        });
+        holder.getView(R.id.linear_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                delete();
+            }
+        });
         holder.setText(R.id.tv_car_hang_name, s.getDealerName());
         holder.setText(R.id.tv_car_data, s.getCity().getCityName());
         holder.setText(R.id.tv_car_hang_phone, "联系电话：" + s.getDealerPhone());
@@ -187,21 +219,16 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
         holder.setImageUrl(mActivity, R.id.iv_car_hang_icon, s.getDealerImg());
     }
 
-    @OnClick(R.id.iv_title_back)
-    public void onViewClicked() {
-        finish();
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             //分享
             case R.id.linear_share:
-                share();
+
                 break;
             //删除
             case R.id.linear_delete:
-                delete();
+
                 break;
         }
     }
@@ -232,6 +259,56 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
      * 分享车行
      */
     private void share() {
+        final CarDealerEntity carDealerEntity = mList.get(mPosition);
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carDealerEntity.getDealerName());
+        shareBean.setImgUrl(carDealerEntity.getDealerImg());
+        shareBean.setShareContent(carDealerEntity.getDealerContext());
+        shareBean.setUrl(API.toCarShop + "?did=" + carDealerEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("did", carDealerEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarDealer, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
 
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
+    }
+
+    @OnClick({R.id.iv_title_back, R.id.tv_action})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_title_back:
+                finish();
+                break;
+            case R.id.tv_action:
+                toGuanZhu();
+                break;
+        }
+    }
+
+    /**
+     * 去关注车行
+     */
+    private void toGuanZhu() {
+        setResult(RESULT_OK, new Intent());
+        finish();
     }
 }

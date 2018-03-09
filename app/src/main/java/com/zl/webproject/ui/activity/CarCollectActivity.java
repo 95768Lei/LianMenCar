@@ -12,16 +12,20 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.zhy.autolayout.AutoRelativeLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
 import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.ShareUtils;
 import com.zl.webproject.utils.SpUtlis;
-import com.zl.webproject.utils.TagUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -55,6 +59,8 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
     ListView carCollectListView;
     @BindView(R.id.car_collect_trl)
     TwinklingRefreshLayout carCollectTrl;
+    @BindView(R.id.null_arl)
+    AutoRelativeLayout nullArl;
     private int page = 1;
     private List<CarInfoEntity> mList = new ArrayList<>();
     private UniversalAdapter<CarInfoEntity> adapter;
@@ -68,6 +74,12 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
         initView();
         initData();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -129,16 +141,22 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
 
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
-                    if (array.length() <= 0) {
-                        showToast("没有更多了");
-                        return;
-                    }
+
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject jsonObject = array.optJSONObject(i);
                         mList.add(new Gson().fromJson(jsonObject.optString("carInfoEntity"), CarInfoEntity.class));
                     }
                     adapter.notifyDataSetChanged();
 
+                    if (mList.size() <= 0) {
+                        nullArl.setVisibility(View.VISIBLE);
+                    } else {
+                        nullArl.setVisibility(View.GONE);
+                    }
+                    if (array.length() <= 0) {
+                        showToast("没有更多了");
+                        return;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -171,17 +189,24 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
      * @param position
      * @param s
      */
-    private void bindData(UniversalViewHolder holder, int position, CarInfoEntity s) {
-        mPosition = position;
-        holder.getView(R.id.linear_bottom_two).setVisibility(View.VISIBLE);
-        holder.getView(R.id.linear_share).setOnClickListener(this);
-        holder.getView(R.id.linear_delete).setOnClickListener(this);
-        BindDataUtils.bindCarData(mActivity, holder, s);
-    }
+    private void bindData(UniversalViewHolder holder, final int position, CarInfoEntity s) {
 
-    @OnClick(R.id.iv_title_back)
-    public void onViewClicked() {
-        finish();
+        holder.getView(R.id.linear_bottom_two).setVisibility(View.VISIBLE);
+        holder.getView(R.id.linear_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                share();
+            }
+        });
+        holder.getView(R.id.linear_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPosition = position;
+                delete();
+            }
+        });
+        BindDataUtils.bindCarData(mActivity, holder, s);
     }
 
     @Override
@@ -189,11 +214,11 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
         switch (view.getId()) {
             //分享
             case R.id.linear_share:
-                share();
+
                 break;
             //删除
             case R.id.linear_delete:
-                delete();
+
                 break;
         }
     }
@@ -224,7 +249,56 @@ public class CarCollectActivity extends BaseActivity implements View.OnClickList
      * 分享车辆
      */
     private void share() {
+        final CarInfoEntity carInfoEntity = mList.get(mPosition);
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carInfoEntity.getCarTitle());
+        shareBean.setImgUrl(carInfoEntity.getCarImg());
+        shareBean.setShareContent(carInfoEntity.getCarContext());
+        shareBean.setUrl(API.toCarDetails + "?cid=" + carInfoEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("cid", carInfoEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarInfo, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
 
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
     }
 
+    @OnClick({R.id.iv_title_back, R.id.tv_action})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_title_back:
+                finish();
+                break;
+            case R.id.tv_action:
+                toGuanZhu();
+                break;
+        }
+    }
+
+    /**
+     * 去关注车辆
+     */
+    private void toGuanZhu() {
+        setResult(RESULT_OK, new Intent());
+        finish();
+    }
 }

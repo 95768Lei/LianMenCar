@@ -101,6 +101,14 @@ public class SystemUtils {
         mActivity.startActivity(intent);
     }
 
+    public static void toActivityForResult(Activity mActivity, Intent intent, int requestId) {
+        if (!SpUtlis.getLoginData(mActivity).isLogin()) {
+            mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+            return;
+        }
+        mActivity.startActivityForResult(intent, requestId);
+    }
+
     public static void siganOut(Activity mActivity) {
 
     }

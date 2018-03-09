@@ -233,7 +233,7 @@ public class EditMotorsActivity extends BaseActivity {
                 addressDialog.showDialog(view);
                 break;
             case R.id.iv_car_hang_icon:
-                singleOpenAlbum();
+                openSingleAlbum(REQUEST_CAMERA_CODE);
                 break;
             case R.id.iv_clear_car_address:
                 etCarAddress.setText("");
@@ -337,7 +337,7 @@ public class EditMotorsActivity extends BaseActivity {
                     builder.addFormDataPart("file", fileName, body);
                 }
                 //列表展示图
-                if (!TextUtils.isEmpty(carHangIconPath)){
+                if (!TextUtils.isEmpty(carHangIconPath)) {
                     byte[] getimage = ImageFactory.getimage(carHangIconPath);
                     final RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), getimage);
                     String fileName = carHangIconPath.substring(carHangIconPath.lastIndexOf("/"));
@@ -386,15 +386,5 @@ public class EditMotorsActivity extends BaseActivity {
                 });
             }
         }.start();
-    }
-
-    /**
-     * 打开相册的方法(单选)
-     */
-    public void singleOpenAlbum() {
-        PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
-        intent.setSelectModel(SelectModel.SINGLE);
-        intent.setShowCarema(false); // 是否显示拍照， 默认false
-        mActivity.startActivityForResult(intent, REQUEST_CAMERA_CODE);
     }
 }

@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.umeng.socialize.UMShareAPI;
+import com.zhy.autolayout.AutoRelativeLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.base.UniversalAdapter;
@@ -34,6 +37,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Request;
 
@@ -54,10 +58,13 @@ public class CarForwardFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.car_share_trl)
     TwinklingRefreshLayout carShareTrl;
+    @BindView(R.id.null_arl)
+    AutoRelativeLayout nullArl;
+    @BindView(R.id.tv_action)
+    TextView tvAction;
     private UniversalAdapter<CarForwardEntity> mAdapter;
     private List<CarForwardEntity> mList = new ArrayList<>();
     private int page = 1;
-    private String url = API.carInfoList;
 
     public CarForwardFragment() {
         // Required empty public constructor
@@ -86,6 +93,12 @@ public class CarForwardFragment extends BaseFragment {
         initData();
         initListener();
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -156,6 +169,13 @@ public class CarForwardFragment extends BaseFragment {
                     if (page == 1) {
                         carShareListView.setSelection(0);
                     }
+
+                    if (mList.size() <= 0) {
+                        nullArl.setVisibility(View.VISIBLE);
+                    } else {
+                        nullArl.setVisibility(View.GONE);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -192,11 +212,30 @@ public class CarForwardFragment extends BaseFragment {
         };
         carShareListView.setAdapter(mAdapter);
         initProgress(carShareTrl);
+
+        tvAction.setText("去分享");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.tv_action)
+    public void onViewClicked() {
+        if (onToFinishListener != null) {
+            onToFinishListener.onFinish();
+        }
+    }
+
+    private OnToFinishListener onToFinishListener;
+
+    public void setOnToFinishListener(OnToFinishListener onToFinishListener) {
+        this.onToFinishListener = onToFinishListener;
+    }
+
+    public interface OnToFinishListener {
+        void onFinish();
     }
 }

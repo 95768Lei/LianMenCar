@@ -195,7 +195,7 @@ public class LoginActivity extends BaseActivity {
 
     private void wxLogin(String openid) {
         String regId = SpUtlis.getRegId(mActivity);
-        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        CityBean locationData = SpUtlis.getCuLocationData(mActivity);
         Map<String, String> params = new HashMap<>();
         params.put("unionType", "WECHAT");
         params.put("loginQq", "");
@@ -269,7 +269,7 @@ public class LoginActivity extends BaseActivity {
 
     private void qqLogin(String openid) {
         String regId = SpUtlis.getRegId(mActivity);
-        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        CityBean locationData = SpUtlis.getCuLocationData(mActivity);
         Map<String, String> params = new HashMap<>();
         params.put("unionType", "QQ");
         params.put("loginQq", openid);
@@ -346,7 +346,7 @@ public class LoginActivity extends BaseActivity {
         final String phone = etInputPhone.getText().toString().trim();
         final String password = etInputPassword.getText().toString().trim();
         String regId = SpUtlis.getRegId(mActivity);
-        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        CityBean locationData = SpUtlis.getCuLocationData(mActivity);
 
         if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");

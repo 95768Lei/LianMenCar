@@ -1,5 +1,6 @@
 package com.zl.webproject.base;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,9 +21,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.foamtrace.photopicker.SelectModel;
+import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
 import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zl.webproject.R;
 
@@ -200,6 +205,50 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void openFragmentNoTask(Fragment fragment, int layoutId) {
         getSupportFragmentManager().beginTransaction().add(layoutId, fragment).commit();
+    }
+
+    /**
+     * 打开相册的方法(单选)
+     */
+    public void openSingleAlbum(int requestCode) {
+
+        //动态申请相机权限
+        if (!isPermission(Manifest.permission.CAMERA)) {
+            applyPermission(Permission.CAMERA, new PermissionListener() {
+                @Override
+                public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                    openSingleAlbum(requestCode);
+                }
+
+                @Override
+                public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                    showToast("您拒绝了相机权限，无法进行拍照");
+                    finish();
+                }
+            });
+            return;
+        }
+        //动态申请文件读写权限
+        if (!isPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            applyPermission(Permission.STORAGE, new PermissionListener() {
+                @Override
+                public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                    openSingleAlbum(requestCode);
+                }
+
+                @Override
+                public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                    showToast("您拒绝了文件储存权限，无法进行拍照");
+                    finish();
+                }
+            });
+            return;
+        }
+
+        PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
+        intent.setSelectModel(SelectModel.SINGLE);
+        intent.setShowCarema(false); // 是否显示拍照， 默认false
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
 }

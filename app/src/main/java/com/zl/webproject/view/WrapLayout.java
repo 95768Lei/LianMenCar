@@ -124,10 +124,18 @@ public class WrapLayout extends ViewGroup {
 
             this.addView(btn);
         }
+
+        if (position != -1) {
+            TextView childAt = (TextView) getChildAt(position);
+            childAt.setSelected(true);
+            childAt.setTextColor(getResources().getColor(R.color.white));
+        }
+
     }
 
     public void setPosition(int position) {
         this.position = position;
+        requestLayout();
         invalidate();
     }
 

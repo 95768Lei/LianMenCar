@@ -61,7 +61,7 @@ public class SpUtlis {
         return cityBean;
     }
 
-    //储存定位的城市信息
+    //储存当前定位的城市信息
     public static void setCuLocationData(Context context, String cityCode, String data, String city) {
         SharedPreferences sp = context.getSharedPreferences("cuLocation", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();

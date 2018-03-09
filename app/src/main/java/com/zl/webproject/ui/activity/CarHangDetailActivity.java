@@ -15,6 +15,8 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.google.gson.Gson;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
@@ -23,11 +25,14 @@ import com.zl.webproject.model.CarCommentEntity;
 import com.zl.webproject.model.CarDealerEntity;
 import com.zl.webproject.model.CarDealerResourceEntity;
 import com.zl.webproject.model.CarInfoEntity;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.ShareUtils;
+import com.zl.webproject.utils.SpUtlis;
 import com.zl.webproject.utils.StringUtils;
 import com.zl.webproject.utils.SystemUtils;
 import com.zl.webproject.view.MyListView;
@@ -35,15 +40,22 @@ import com.zl.webproject.view.MyListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author zhanglei
@@ -85,6 +97,10 @@ public class CarHangDetailActivity extends BaseActivity {
     TextView tvNoCar;
     @BindView(R.id.tv_car_hang_person)
     TextView tvCarHangPerson;
+    @BindView(R.id.tv_carCollectionCount)
+    TextView tvCarCollectionCount;
+    @BindView(R.id.iv_isFollowDetails)
+    ImageView ivIsFollowDetails;
 
     private List<CarCommentEntity> disList = new ArrayList<>();
     private List<CarInfoEntity> carList = new ArrayList<>();
@@ -94,6 +110,8 @@ public class CarHangDetailActivity extends BaseActivity {
     private CarDealerEntity carDealerEntity;
     private int did;
     private ImagePreviewDialog previewDialog;
+    private boolean isFollowDetails;
+    private Integer followCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +121,12 @@ public class CarHangDetailActivity extends BaseActivity {
         initView();
         initData();
         initListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
@@ -162,6 +186,8 @@ public class CarHangDetailActivity extends BaseActivity {
             return;
         }
 
+        followCount = carDealerEntity.getFollowCount();
+        tvCarCollectionCount.setText("热度  " + followCount + "");
         //轮播图
         bList.clear();
         List<CarDealerResourceEntity> resources = carDealerEntity.getResources();
@@ -216,6 +242,9 @@ public class CarHangDetailActivity extends BaseActivity {
                 Log.e("body", "");
             }
         });
+
+        //是否关注了该车行
+        isFollowDetails();
 
     }
 
@@ -274,13 +303,14 @@ public class CarHangDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call, R.id.tv_to_discuss, R.id.tv_info_more_discuss, R.id.tv_info_more_car})
+    @OnClick({R.id.iv_title_back, R.id.iv_title_share, R.id.iv_call, R.id.tv_to_discuss, R.id.tv_info_more_discuss, R.id.iv_isFollowDetails, R.id.tv_info_more_car})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:
                 finish();
                 break;
             case R.id.iv_title_share:
+                share();
                 break;
             case R.id.iv_call:
                 SystemUtils.call(mActivity, carDealerEntity.getDealerPhone());
@@ -294,7 +324,155 @@ public class CarHangDetailActivity extends BaseActivity {
             case R.id.tv_info_more_car:
                 toMoreCar();
                 break;
+            case R.id.iv_isFollowDetails:
+                shouCang();
+                break;
         }
+    }
+
+    /**
+     * 收藏车辆(关注)
+     */
+    private void shouCang() {
+        if (carDealerEntity == null) return;
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("did", carDealerEntity.getId() + "");
+
+        FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.followDetails).post(builder.build()).build();
+
+        //加入任务调度
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                final String string = response.body().string();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            if (jsonObject.optString("msg").equals("已关注")) {
+                                followCount += 1;
+                                tvCarCollectionCount.setText("热度  " + followCount + "");
+                                isFollowDetails = true;
+                            } else {
+                                followCount -= 1;
+                                tvCarCollectionCount.setText("热度  " + followCount + "");
+                                isFollowDetails = false;
+                            }
+                            if (isFollowDetails) {
+                                ivIsFollowDetails.setImageResource(R.drawable.ic_favorite_white);
+                            } else {
+                                ivIsFollowDetails.setImageResource(R.drawable.ic_favorite_border_white);
+                            }
+                        } catch (Exception e) {
+                            showToast("发生了未知错误");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void isFollowDetails() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("did", carDealerEntity.getId() + "");
+
+        FormBody.Builder builder = new FormBody.Builder();
+        Set<Map.Entry<String, String>> entries = params.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        //创建请求体
+        Request request = new Request.Builder().url(API.isFollowDetails).post(builder.build()).build();
+
+        //加入任务调度
+        new OkHttpClient.Builder().build().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                final String string = response.body().string();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            isFollowDetails = jsonObject.optBoolean("result");
+                            if (isFollowDetails) {
+                                ivIsFollowDetails.setImageResource(R.drawable.ic_favorite_white);
+                            } else {
+                                ivIsFollowDetails.setImageResource(R.drawable.ic_favorite_border_white);
+                            }
+                        } catch (Exception e) {
+                            showToast("发生了未知错误");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @OnClick(R.id.iv_isFollowDetails)
+    public void onViewClicked() {
+    }
+
+    private void share() {
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carDealerEntity.getDealerName());
+        shareBean.setImgUrl(carDealerEntity.getDealerImg());
+        shareBean.setShareContent(carDealerEntity.getDealerContext());
+        shareBean.setUrl(API.toCarShop + "?did=" + carDealerEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("did", carDealerEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarDealer, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
     }
 
     private void toMoreCar() {

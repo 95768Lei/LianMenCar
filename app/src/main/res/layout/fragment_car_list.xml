@@ -5,17 +5,25 @@
     android:background="@color/white"
     tools:context="com.zl.webproject.ui.fragment.CarListFragment">
 
-    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-        android:id="@+id/car_share_trl"
+    <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/car_share_listView"
+        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+            android:id="@+id/car_share_trl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/white"></ListView>
+            android:layout_height="match_parent">
 
-    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+            <ListView
+                android:id="@+id/car_share_listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/white"></ListView>
+
+        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+        <include layout="@layout/null_layout"/>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
 
 </FrameLayout>

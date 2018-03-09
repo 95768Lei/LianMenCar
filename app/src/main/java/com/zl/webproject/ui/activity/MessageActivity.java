@@ -160,7 +160,8 @@ public class MessageActivity extends BaseActivity {
                 holder.setText(R.id.message_tv_title, s.getMessTitle());
                 holder.setText(R.id.message_tv_date, StringUtils.dateYYYY_MM_DD_HH_mm_ss(s.getMessDate()));
                 holder.setText(R.id.message_data, s.getMessContext());
-                View view = holder.getView(R.id.message_iv_tag);
+                ImageView view = holder.getView(R.id.message_iv_tag);
+                ImageView ivMessage = holder.getView(R.id.message_icon);
                 Integer messUnread = s.getMessUnread();
                 Integer messType = s.getMessType();
                 if (messUnread == 0) {
@@ -173,7 +174,18 @@ public class MessageActivity extends BaseActivity {
 
                 //根据消息类型显示不同的图标
                 switch (messType) {
-
+                    //车行
+                    case 1:
+                        ivMessage.setImageResource(R.mipmap.action1);
+                        break;
+                    //车辆
+                    case 2:
+                        ivMessage.setImageResource(R.mipmap.action2);
+                        break;
+                    //系统
+                    default:
+                        ivMessage.setImageResource(R.mipmap.action0);
+                        break;
                 }
             }
         };

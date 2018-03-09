@@ -120,7 +120,7 @@ public class CarDealerEntity implements java.io.Serializable {
 
     private String dealerVipDateStr;
 
-    private Integer followCount;
+    private Integer followCount = 0;
 
     private String dealerRefreshDateStr;
 

@@ -139,9 +139,8 @@ public class HomeFragment extends BaseFragment {
             public void onReceiveLocation(BDLocation location) {
                 final String data = location.getProvince() + location.getCity() + location.getStreet();
                 final String cityCode = location.getCityCode();
-                tvCity.setText(location.getCity());
-                showToast("已切换到：" + location.getCity());
-                SpUtlis.setLocationData(mActivity, cityCode, data, location.getCity());
+//                tvCity.setText(location.getCity());
+//                showToast("已切换到：" + location.getCity());
                 SpUtlis.setCuLocationData(mActivity, cityCode, data, location.getCity());
                 getListData();
             }

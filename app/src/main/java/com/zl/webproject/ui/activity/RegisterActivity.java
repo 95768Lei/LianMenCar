@@ -110,7 +110,7 @@ public class RegisterActivity extends BaseActivity {
 //        if (!SmsUtils.checkSmsCode(mActivity, phone, code)) {
 //            return;
 //        }
-        CityBean locationData = SpUtlis.getLocationData(mActivity);
+        CityBean locationData = SpUtlis.getCuLocationData(mActivity);
         Map<String, String> params = new HashMap<>();
         params.put("phone", phone);
         params.put("pass", password);
@@ -135,8 +135,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void sendCode() {
-        String phone = etInputPhone.getText().toString();
-
+        final String phone = etInputPhone.getText().toString();
         if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
             return;
@@ -146,7 +145,20 @@ public class RegisterActivity extends BaseActivity {
             showToast("手机号格式不对");
             return;
         }
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        HttpUtils.getInstance().Post(mActivity, params, API.checkPhone, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                SmsUtils.sendCode(mActivity, phone, tvSendCode);
+            }
 
-        SmsUtils.sendCode(mActivity, phone, tvSendCode);
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
+
+
     }
 }
