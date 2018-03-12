@@ -17,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -247,8 +250,27 @@ public class BaseActivity extends AppCompatActivity {
 
         PhotoPickerIntent intent = new PhotoPickerIntent(mActivity);
         intent.setSelectModel(SelectModel.SINGLE);
-        intent.setShowCarema(false); // 是否显示拍照， 默认false
+        intent.setShowCarema(true); // 是否显示拍照， 默认false
         mActivity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 开始旋转
+     */
+    protected void startLoop(View view) {
+        Animation operatingAnim = AnimationUtils.loadAnimation(mActivity, R.anim.rotate_anim);
+        LinearInterpolator lin = new LinearInterpolator();
+        operatingAnim.setInterpolator(lin);
+        if (operatingAnim != null) {
+            view.startAnimation(operatingAnim);
+        }
+    }
+
+    /**
+     * 停止旋转
+     */
+    protected void stopLoop(View view) {
+        view.clearAnimation();
     }
 
 }

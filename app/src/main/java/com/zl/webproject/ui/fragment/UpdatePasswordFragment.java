@@ -96,7 +96,7 @@ public class UpdatePasswordFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:
-                getFragmentManager().popBackStack();
+                mActivity.finish();
                 break;
             case R.id.tv_send_code:
                 sendCode();
@@ -155,7 +155,8 @@ public class UpdatePasswordFragment extends BaseFragment {
                     @Override
                     public void onSuccess(String body) {
                         showToast("密码修改成功");
-                        getFragmentManager().popBackStack();
+//                        getFragmentManager().popBackStack();
+                        mActivity.finish();
                     }
 
                     @Override

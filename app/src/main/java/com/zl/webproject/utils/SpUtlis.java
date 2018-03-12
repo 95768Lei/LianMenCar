@@ -92,6 +92,7 @@ public class SpUtlis {
         edit.putInt("userApply", userEntity.getUserApply());
         edit.putString("userNikeName", userEntity.getUserNikeName());
         edit.putInt("carDealerId", userEntity.getCarDealerId());
+        edit.putInt("userDealerApply", userEntity.getUserDealerApply());
         edit.putString("userPhone", userEntity.getUserPhone());
         edit.commit();
     }
@@ -99,13 +100,14 @@ public class SpUtlis {
     public static CarUserEntity getUserData(Context context) {
         SharedPreferences sp = context.getSharedPreferences("userEntity", Context.MODE_PRIVATE);
         CarUserEntity entity = new CarUserEntity();
-        entity.setId(sp.getInt("userId",0));
+        entity.setId(sp.getInt("userId", 0));
         entity.setUserImg(sp.getString("userImg", ""));
         entity.setUserApply(sp.getInt("userApply", 0));
         entity.setUserPustCode(sp.getString("userPustCode", ""));
         entity.setUserNikeName(sp.getString("userNikeName", ""));
-        entity.setCarDealerId(sp.getInt("carDealerId",-1));
-        entity.setUserPhone(sp.getString("userPhone",""));
+        entity.setCarDealerId(sp.getInt("carDealerId", -1));
+        entity.setUserDealerApply(sp.getInt("userDealerApply", 0));
+        entity.setUserPhone(sp.getString("userPhone", ""));
         return entity;
     }
 

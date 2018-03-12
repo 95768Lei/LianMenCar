@@ -16,9 +16,9 @@ public class APP extends Application {
 
     {
         //正式的
-//        PlatformConfig.setWeixin("wx632fe3bffde07bb8", "a9bbdfd2087dabf7e0ab83b88b7de7b4");
+        PlatformConfig.setWeixin("wx632fe3bffde07bb8", "a9bbdfd2087dabf7e0ab83b88b7de7b4");
         //张磊测试
-        PlatformConfig.setWeixin("wx4c2275d459244353", "e0f0a91eaf88ccb6fb2d1f551ab3e2f7");
+//        PlatformConfig.setWeixin("wx4c2275d459244353", "e0f0a91eaf88ccb6fb2d1f551ab3e2f7");
         PlatformConfig.setQQZone("1106281667", "hm7mqiwacyT1Ywzb");
     }
 

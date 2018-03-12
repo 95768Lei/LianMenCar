@@ -2,6 +2,8 @@ package com.zl.webproject.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.autolayout.AutoLinearLayout;
@@ -17,6 +21,7 @@ import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.model.CarCommentEntity;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CarResourceEntity;
 import com.zl.webproject.model.ShareBean;
@@ -25,11 +30,14 @@ import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ShareUtils;
 import com.zl.webproject.utils.SpUtlis;
+import com.zl.webproject.utils.StringUtils;
 import com.zl.webproject.utils.SystemUtils;
 import com.zl.webproject.utils.TagUtils;
 import com.zl.webproject.view.LocalImageHolderView;
 import com.zl.webproject.view.MyListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -75,8 +83,6 @@ public class CarDetailActivity extends BaseActivity {
     ConvenientBanner homeBanner;
     @BindView(R.id.car_detail_data_listView)
     MyListView carDetailDataListView;
-    @BindView(R.id.carDetail_iv_listView)
-    MyListView carDetailIvListView;
     @BindView(R.id.iv_title_share)
     ImageView ivTitleShare;
     @BindView(R.id.tv_title_right)
@@ -91,12 +97,26 @@ public class CarDetailActivity extends BaseActivity {
     ImageView ivIsCollectionCar;
     @BindView(R.id.tv_car_tag1)
     TextView tvCarTag1;
+    @BindView(R.id.linear_more_data)
+    AutoLinearLayout linearMoreData;
+    @BindView(R.id.discuss_listView)
+    MyListView discussListView;
+    @BindView(R.id.tv_info_more_discuss)
+    TextView tvInfoMoreDiscuss;
+    @BindView(R.id.linear_car_dis)
+    AutoLinearLayout linearCarDis;
+    @BindView(R.id.tv_to_discuss)
+    TextView tvToDiscuss;
+    @BindView(R.id.car_tab)
+    TabLayout carTab;
+    @BindView(R.id.car_detail_trl)
+    TwinklingRefreshLayout carDetailTrl;
 
     private List<String> dList = new ArrayList<>();
-    private List<CarResourceEntity> ivList = new ArrayList<>();
+    private List<CarCommentEntity> disList = new ArrayList<>();
     private List<CarResourceEntity> bList = new ArrayList<>();
     private UniversalAdapter<String> dAdapter;
-    private UniversalAdapter<CarResourceEntity> ivAdapter;
+    private UniversalAdapter<CarCommentEntity> disAdapter;
     private CarInfoEntity carInfoEntity;
     private ImagePreviewDialog previewDialog;
     private boolean isCollectionCar = false;
@@ -118,6 +138,13 @@ public class CarDetailActivity extends BaseActivity {
         UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //获取车辆评论
+        getCarDisData();
+    }
+
     private void initListener() {
         homeBanner.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -132,6 +159,32 @@ public class CarDetailActivity extends BaseActivity {
                 }
                 previewDialog.setData(list);
                 previewDialog.showDialog(intoShareCar);
+            }
+        });
+
+        carTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        linearCarDis.setVisibility(View.GONE);
+                        linearMoreData.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        linearCarDis.setVisibility(View.VISIBLE);
+                        linearMoreData.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
@@ -196,6 +249,45 @@ public class CarDetailActivity extends BaseActivity {
 
         //是否关注该车辆
         isCollectionCar();
+
+        carTab.addTab(carTab.newTab().setText("其他信息"));
+        carTab.addTab(carTab.newTab().setText("车辆评论"));
+    }
+
+    /**
+     * 获取车辆评论
+     */
+    private void getCarDisData() {
+        if (carInfoEntity == null) return;
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", carInfoEntity.getId() + "");
+        params.put("page", "1");
+        HttpUtils.getInstance().Post(mActivity, params, API.carInfoCommentShowList, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                try {
+                    disList.clear();
+                    JSONObject object = new JSONObject(body);
+                    JSONArray array = new JSONArray(object.optString("items"));
+                    for (int i = 0; i < (array.length() > 5 ? 5 : array.length()); i++) {
+                        disList.add(new Gson().fromJson(array.optString(i), CarCommentEntity.class));
+                    }
+                    if (array.length() <= 0) {
+                        tvToDiscuss.setVisibility(View.VISIBLE);
+                    } else {
+                        tvToDiscuss.setVisibility(View.GONE);
+                    }
+                    disAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Request error, Exception e) {
+
+            }
+        });
     }
 
     private void isCollectionCar() {
@@ -250,19 +342,22 @@ public class CarDetailActivity extends BaseActivity {
         dAdapter = new UniversalAdapter<String>(mActivity, dList, R.layout.car_data_item) {
             @Override
             public void convert(UniversalViewHolder holder, int position, String s) {
-                holder.setText(R.id.car_item_key, s);
+                String[] split = s.split("：");
+                holder.setText(R.id.car_item_key, split[0]);
+                holder.setText(R.id.car_item_value, split[1]);
             }
         };
-        ivAdapter = new UniversalAdapter<CarResourceEntity>(mActivity, ivList, R.layout.car_iv_item) {
+        disAdapter = new UniversalAdapter<CarCommentEntity>(mActivity, disList, R.layout.discuss_list_item) {
             @Override
-            public void convert(UniversalViewHolder holder, int position, CarResourceEntity s) {
-                holder.setImageUrl(mActivity, R.id.car_item_image, s.getResUrl());
+            public void convert(UniversalViewHolder holder, int position, CarCommentEntity s) {
+                holder.setText(R.id.tv_dis_data, s.getCommContext());
+                holder.setText(R.id.tv_person_name, TextUtils.isEmpty(s.getCarUserEntity().getUserName()) ?
+                        s.getCarUserEntity().getUserNikeName() : s.getCarUserEntity().getUserName());
+                holder.setText(R.id.tv_discuss_date, StringUtils.dateYYYY_MM_DD_HH_mm_ss(s.getCommDate()));
+                holder.setImageUrl(mActivity, R.id.iv_person_icon, s.getCarUserEntity().getUserImg());
             }
         };
-
         carDetailDataListView.setAdapter(dAdapter);
-        carDetailIvListView.setAdapter(ivAdapter);
-
         //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
         homeBanner.setPages(
                 new CBViewHolderCreator<LocalImageHolderView>() {
@@ -275,11 +370,15 @@ public class CarDetailActivity extends BaseActivity {
         initBanner(homeBanner);
 
         tvTitleName.setText("车辆详情");
+        discussListView.setAdapter(disAdapter);
 
         previewDialog = new ImagePreviewDialog(mActivity);
+        carDetailTrl.setEnableLoadmore(false);
+        carDetailTrl.setEnableRefresh(false);
     }
 
-    @OnClick({R.id.iv_title_back, R.id.into_car_hang, R.id.into_share_car, R.id.info_shou_cang_car, R.id.info_call})
+    @OnClick({R.id.iv_title_back, R.id.into_car_hang, R.id.into_share_car, R.id.info_shou_cang_car,
+            R.id.info_call, R.id.tv_info_more_discuss, R.id.tv_to_discuss})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //返回
@@ -302,7 +401,23 @@ public class CarDetailActivity extends BaseActivity {
             case R.id.info_call:
                 SystemUtils.call(mActivity, carInfoEntity.getUserPhone());
                 break;
+            case R.id.tv_info_more_discuss:
+                intoDis();
+                break;
+            case R.id.tv_to_discuss:
+                intoDis();
+                break;
         }
+    }
+
+    /**
+     * 进入评价页
+     */
+    private void intoDis() {
+        if (carInfoEntity == null) return;
+        Intent intent = new Intent(mActivity, CarDiscussActivity.class);
+        intent.putExtra("cid", carInfoEntity.getId());
+        startActivity(intent);
     }
 
     /**
@@ -345,8 +460,13 @@ public class CarDetailActivity extends BaseActivity {
      * 进入车行
      */
     private void intoCarHang() {
+        Integer carDealerId = carInfoEntity.getCarUserEntity().getCarDealerId();
+        if (carDealerId == -1) {
+            showToast("该车为个人车源，无法进入车行");
+            return;
+        }
         Intent intent = new Intent(mActivity, CarHangDetailActivity.class);
-        intent.putExtra("did", carInfoEntity.getCarUserEntity().getCarDealerId());
+        intent.putExtra("did", carDealerId);
         startActivity(intent);
     }
 

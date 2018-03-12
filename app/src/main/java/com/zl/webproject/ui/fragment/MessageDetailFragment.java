@@ -31,7 +31,6 @@ import okhttp3.Request;
  */
 public class MessageDetailFragment extends BaseFragment {
 
-
     @BindView(R.id.iv_title_back)
     ImageView ivTitleBack;
     @BindView(R.id.tv_title_name)

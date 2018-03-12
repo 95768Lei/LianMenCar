@@ -42,7 +42,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
@@ -181,7 +180,9 @@
         <activity android:name=".ui.activity.EditMotorsActivity" />
         <activity android:name=".ui.activity.UpdatePasswordActivity" />
         <activity android:name=".ui.activity.RealPersonActivity" />
-        <activity android:name=".ui.activity.RealCarDealerActivity"></activity>
+        <activity android:name=".ui.activity.RealCarDealerActivity" />
+        <activity android:name=".ui.activity.CarDiscussActivity" />
+        <activity android:name=".ui.activity.CarSearchDataActivity"></activity>
     </application>
 
 </manifest>

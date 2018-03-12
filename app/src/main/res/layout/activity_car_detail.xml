@@ -95,150 +95,219 @@
         android:layout_above="@id/car_detail_bottom"
         android:background="@color/light_grey" />
 
-    <ScrollView
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/car_detail_trl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/car_detail_line"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/car_detail_title"
-        android:fillViewport="true">
+        android:layout_below="@+id/car_detail_title">
 
-        <com.zhy.autolayout.AutoLinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
-
-            <com.zhy.autolayout.AutoRelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="420px">
-
-                <com.bigkoo.convenientbanner.ConvenientBanner
-                    android:id="@+id/home_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="420px"
-                    app:canLoop="true" />
-
-                <TextView
-                    android:id="@+id/tv_carCollectionCount"
-                    android:layout_width="160px"
-                    android:layout_height="@dimen/dp_36"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/black_round_bg"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/dp_8"
-                    android:paddingRight="@dimen/dp_8"
-                    android:text="热度 12"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/dp_14" />
-
-            </com.zhy.autolayout.AutoRelativeLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_38"
-                android:layout_marginTop="@dimen/dp_8"
-                android:background="@drawable/tab_item_bg"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:text="车辆基础信息"
-                android:textColor="@color/black" />
-
-            <com.zl.webproject.view.MyListView
-                android:id="@+id/car_detail_data_listView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/dp_16"
-                android:paddingRight="@dimen/dp_16" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_38"
-                android:background="@drawable/tab_item_bg"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:text="车辆其他信息"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:text="车辆状态："
-                android:textColor="@color/black"
-                android:textSize="@dimen/dp_16"
-                android:textStyle="bold" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:fillViewport="true">
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
 
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="420px">
+
+                    <com.bigkoo.convenientbanner.ConvenientBanner
+                        android:id="@+id/home_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="420px"
+                        app:canLoop="true" />
+
+                    <TextView
+                        android:id="@+id/tv_carCollectionCount"
+                        android:layout_width="160px"
+                        android:layout_height="@dimen/dp_36"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/black_round_bg"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/dp_8"
+                        android:paddingRight="@dimen/dp_8"
+                        android:text="热度 12"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dp_14" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
 
                 <TextView
-                    android:id="@+id/tv_car_tag"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_38"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:background="@drawable/tab_item_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="车辆基础信息"
+                    android:textColor="@color/black" />
+
+                <com.zl.webproject.view.MyListView
+                    android:id="@+id/car_detail_data_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/car_tab"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/line_orange_round"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:paddingTop="1dp"
-                    android:text="过户车"
-                    android:textColor="@color/orange"
-                    android:textSize="@dimen/dp_14" />
+                    android:layout_marginBottom="@dimen/dp_4"
+                    android:background="@color/bg_color"
+                    app:tabIndicatorColor="@color/colorPrimary"
+                    app:tabSelectedTextColor="@color/colorPrimary"
+                    app:tabTextColor="@color/text_grey"></android.support.design.widget.TabLayout>
 
 
-                <TextView
-                    android:id="@+id/tv_car_tag1"
-                    android:layout_width="wrap_content"
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_more_data"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_6"
-                    android:background="@drawable/line_color5_round"
-                    android:paddingBottom="1dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:paddingTop="1dp"
-                    android:text="过户车"
-                    android:textColor="@color/color5"
-                    android:textSize="@dimen/dp_12"
-                    android:visibility="gone" />
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_38"
+                        android:background="@drawable/tab_item_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:text="车辆其他信息"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:text="车辆状态："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dp_16"
+                        android:textStyle="bold" />
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_8">
+
+
+                        <TextView
+                            android:id="@+id/tv_car_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/line_orange_round"
+                            android:paddingBottom="1dp"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:paddingTop="1dp"
+                            android:text="过户车"
+                            android:textColor="@color/orange"
+                            android:textSize="@dimen/dp_14" />
+
+
+                        <TextView
+                            android:id="@+id/tv_car_tag1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_6"
+                            android:background="@drawable/line_color5_round"
+                            android:paddingBottom="1dp"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:paddingTop="1dp"
+                            android:text="过户车"
+                            android:textColor="@color/color5"
+                            android:textSize="@dimen/dp_12"
+                            android:visibility="gone" />
+
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:text="车辆描述："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dp_16"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_car_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:paddingBottom="@dimen/dp_6"
+                        android:text="* 这车贼好，开了三年了没有出过任何交通事故，车辆也没发生过任何毛病" />
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_car_dis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_38"
+                            android:background="@drawable/tab_item_bg"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="16dp"
+                            android:text="车辆评论"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/tv_info_more_discuss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_marginRight="@dimen/dp_8"
+                            android:text="查看更多>>"
+                            android:textSize="@dimen/dp_14" />
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+                    <com.zl.webproject.view.MyListView
+                        android:id="@+id/discuss_listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></com.zl.webproject.view.MyListView>
+
+                    <TextView
+                        android:id="@+id/tv_to_discuss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:drawablePadding="@dimen/dp_6"
+                        android:drawableRight="@mipmap/send"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/dp_8"
+                        android:paddingTop="@dimen/dp_8"
+                        android:text="还没有人来评论，点击去评论"
+                        android:visibility="gone" />
+                </com.zhy.autolayout.AutoLinearLayout>
             </com.zhy.autolayout.AutoLinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:text="车辆描述："
-                android:textColor="@color/black"
-                android:textSize="@dimen/dp_16"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_car_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginRight="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_6"
-                android:paddingBottom="@dimen/dp_6"
-                android:text="* 这车贼好，开了三年了没有出过任何交通事故，车辆也没发生过任何毛病" />
-
-            <com.zl.webproject.view.MyListView
-                android:id="@+id/carDetail_iv_listView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-    </ScrollView>
-
+        </ScrollView>
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </com.zhy.autolayout.AutoRelativeLayout>

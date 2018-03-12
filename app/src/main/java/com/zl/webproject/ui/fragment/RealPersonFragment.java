@@ -169,7 +169,7 @@ public class RealPersonFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_title_back:
-                getFragmentManager().popBackStack();
+                mActivity.finish();
                 break;
             case R.id.tv_person_date:
                 pvTime.show();
@@ -232,7 +232,8 @@ public class RealPersonFragment extends BaseFragment {
             public void onSuccess(String body) {
                 pDialog.hide();
                 showToast("实名认证成功");
-                getFragmentManager().popBackStack();
+//                getFragmentManager().popBackStack();
+                mActivity.finish();
             }
 
             @Override

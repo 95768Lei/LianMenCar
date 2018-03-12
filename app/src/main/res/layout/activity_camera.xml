@@ -63,4 +63,11 @@
         android:visibility="visible"
         app:srcCompat="@drawable/ic_camera_white" />
 
+    <ImageView
+        android:id="@+id/iv_flashlight"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="8dp"
+        app:srcCompat="@drawable/ic_flash_on_white" />
+
 </com.zhy.autolayout.AutoRelativeLayout>

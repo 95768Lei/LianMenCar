@@ -22,8 +22,8 @@ public class API {
     public static final String GYWM_URL = "http://app.tzlm.cc/app/main/toAboutUs.do";
 
 //    public static final String BASEURL = "http://app.tzlm.cc";
-//    public static final String BASEURL = "http://60.6.202.157:8889/CARS";
-    public static final String BASEURL = "http://172.16.18.20:8888/CARS";
+    public static final String BASEURL = "http://60.6.202.157:8889/CARS";
+//    public static final String BASEURL = "http://172.16.18.20:8888/CARS";
 
     //用户登录
     public static final String login = BASEURL + "/app/user/login.do";

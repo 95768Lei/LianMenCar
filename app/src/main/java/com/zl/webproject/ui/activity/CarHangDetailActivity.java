@@ -3,8 +3,11 @@ package com.zl.webproject.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -15,8 +18,11 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.zhy.autolayout.AutoLinearLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.base.UniversalAdapter;
@@ -101,6 +107,15 @@ public class CarHangDetailActivity extends BaseActivity {
     TextView tvCarCollectionCount;
     @BindView(R.id.iv_isFollowDetails)
     ImageView ivIsFollowDetails;
+    @BindView(R.id.car_hang_tab)
+    TabLayout carHangTab;
+    @BindView(R.id.linear_dis)
+    AutoLinearLayout linearDis;
+    @BindView(R.id.linear_car_list)
+    AutoLinearLayout linearCarList;
+    @BindView(R.id.car_scroll_trl)
+    TwinklingRefreshLayout carScrollTrl;
+    private int page = 1;
 
     private List<CarCommentEntity> disList = new ArrayList<>();
     private List<CarInfoEntity> carList = new ArrayList<>();
@@ -112,6 +127,8 @@ public class CarHangDetailActivity extends BaseActivity {
     private ImagePreviewDialog previewDialog;
     private boolean isFollowDetails;
     private Integer followCount;
+    private View viewBottom;
+    private TextView tvBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +156,20 @@ public class CarHangDetailActivity extends BaseActivity {
             }
         });
 
+        carScrollTrl.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page++;
+                        getDataList();
+                    }
+                }, 800);
+            }
+        });
+
         carHangBanner.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -154,6 +185,34 @@ public class CarHangDetailActivity extends BaseActivity {
                 previewDialog.showDialog(carHangBanner);
             }
         });
+
+        carHangTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        linearDis.setVisibility(View.VISIBLE);
+                        linearCarList.setVisibility(View.GONE);
+                        carScrollTrl.setEnableLoadmore(false);
+                        break;
+                    case 1:
+                        linearDis.setVisibility(View.GONE);
+                        linearCarList.setVisibility(View.VISIBLE);
+                        carScrollTrl.setEnableLoadmore(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void initData() {
@@ -161,6 +220,9 @@ public class CarHangDetailActivity extends BaseActivity {
         getData();
         disAdapter.notifyDataSetChanged();
         carAdapter.notifyDataSetChanged();
+
+        carHangTab.addTab(carHangTab.newTab().setText("车行评论"));
+        carHangTab.addTab(carHangTab.newTab().setText("车行车辆"));
     }
 
     private void getData() {
@@ -211,25 +273,52 @@ public class CarHangDetailActivity extends BaseActivity {
         }
 
         //车源数据
+        getDataList();
+        //是否关注了该车行
+        isFollowDetails();
+
+    }
+
+    /**
+     * 获取车源数据
+     */
+    private void getDataList() {
         Map<String, String> params = new HashMap<>();
         params.put("did", did + "");
         params.put("cityCode", "");
-        params.put("page", "1");
+        params.put("page", page + "");
 
         HttpUtils.getInstance().Post(mActivity, params, API.getCarList, new HttpUtils.OnOkHttpCallback() {
             @Override
             public void onSuccess(String body) {
                 try {
-                    carList.clear();
+                    if (page == 1) {
+                        carList.clear();
+                    } else {
+                        carScrollTrl.finishLoadmore();
+                    }
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
-                    if (array.length() <= 0) {
+
+                    for (int i = 0; i < array.length(); i++) {
+                        carList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
+                    }
+
+                    if (carList.size() <= 0) {
                         tvNoCar.setVisibility(View.VISIBLE);
                     } else {
                         tvNoCar.setVisibility(View.GONE);
                     }
-                    for (int i = 0; i < (array.length() >= 5 ? 5 : array.length()); i++) {
-                        carList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
+
+                    if (array.length() <= 0) {
+                        if (carListView.getFooterViewsCount() <= 0) {
+                            tvBottom.setText("共" + carList.size() + "条车辆信息");
+                            carListView.addFooterView(viewBottom);
+                        }
+                    } else {
+                        if (carListView.getFooterViewsCount() > 0) {
+                            carListView.removeFooterView(viewBottom);
+                        }
                     }
                     carAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
@@ -242,10 +331,6 @@ public class CarHangDetailActivity extends BaseActivity {
                 Log.e("body", "");
             }
         });
-
-        //是否关注了该车行
-        isFollowDetails();
-
     }
 
     private void initView() {
@@ -285,6 +370,12 @@ public class CarHangDetailActivity extends BaseActivity {
         initBanner(carHangBanner);
 
         previewDialog = new ImagePreviewDialog(mActivity);
+
+        viewBottom = LayoutInflater.from(mActivity).inflate(R.layout.tv_bottom_layout, null);
+        tvBottom = viewBottom.findViewById(R.id.tv_bottom);
+
+        carScrollTrl.setEnableRefresh(false);
+        carScrollTrl.setEnableLoadmore(false);
     }
 
     public class ImageHolderView implements Holder<CarDealerResourceEntity> {

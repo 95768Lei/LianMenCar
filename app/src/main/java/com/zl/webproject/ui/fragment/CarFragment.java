@@ -27,6 +27,7 @@ import com.zl.webproject.model.CarDictionaryEntity;
 import com.zl.webproject.model.CarInfoEntity;
 import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.activity.CarDetailActivity;
+import com.zl.webproject.ui.activity.CarSearchActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.ui.dialog.MoreTagDialog;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,6 +96,8 @@ public class CarFragment extends BaseFragment {
     private List<CarDictionaryEntity> carYearList = new ArrayList<>();
     private List<CarDictionaryEntity> carRunList = new ArrayList<>();
     private Map<String, String> params = new HashMap<>();
+    private View viewBottom;
+    private TextView tvBottom;
 
     public CarFragment() {
         // Required empty public constructor
@@ -366,10 +370,7 @@ public class CarFragment extends BaseFragment {
 
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
-                    if (array.length() <= 0) {
-                        showToast("没有更多了");
-                        return;
-                    }
+
                     for (int i = 0; i < array.length(); i++) {
                         mList.add(new Gson().fromJson(array.optString(i), CarInfoEntity.class));
                     }
@@ -377,6 +378,18 @@ public class CarFragment extends BaseFragment {
                     if (page == 1) {
                         carListView.setSelection(0);
                     }
+
+                    if (array.length() <= 0) {
+                        if (carListView.getFooterViewsCount() <= 0) {
+                            tvBottom.setText("共" + mList.size() + "条车辆信息");
+                            carListView.addFooterView(viewBottom);
+                        }
+                    } else {
+                        if (carListView.getFooterViewsCount() > 0) {
+                            carListView.removeFooterView(viewBottom);
+                        }
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -406,6 +419,9 @@ public class CarFragment extends BaseFragment {
         moreTagDialog = new MoreTagDialog(mActivity);
 
         addressDialog = new AddressDialog(mActivity);
+
+        viewBottom = LayoutInflater.from(mActivity).inflate(R.layout.tv_bottom_layout, null);
+        tvBottom = viewBottom.findViewById(R.id.tv_bottom);
     }
 
     @Override
@@ -414,7 +430,8 @@ public class CarFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_city, R.id.fab_loop, R.id.iv_message, R.id.linear_qu_jian_money, R.id.linear_car_nian_xian, R.id.linear_run_range, R.id.linear_more})
+    @OnClick({R.id.tv_city, R.id.fab_loop, R.id.iv_message, R.id.linear_qu_jian_money, R.id.linear_car_nian_xian,
+            R.id.linear_run_range, R.id.et_search_data, R.id.linear_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //选择城市
@@ -444,6 +461,10 @@ public class CarFragment extends BaseFragment {
             //更多检索
             case R.id.linear_more:
                 showMoreWindow();
+                break;
+            //进入车辆搜索
+            case R.id.et_search_data:
+                startActivity(new Intent(mActivity, CarSearchActivity.class));
                 break;
         }
     }

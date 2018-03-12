@@ -184,7 +184,7 @@ public class DiscussActivity extends BaseActivity {
                 entity.setCommContext(discuss);
                 entity.setCommDate(new Date());
                 entity.setCarUserEntity(userData);
-                disList.add(entity);
+                disList.add(0, entity);
                 disAdapter.notifyDataSetChanged();
             }
 

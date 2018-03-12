@@ -9,11 +9,17 @@ import android.widget.LinearLayout;
 import com.zl.webproject.R;
 import com.zl.webproject.utils.ImageLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/3/7.
  */
 
 public class ImageTagView extends LinearLayout {
+
+    private List<Integer> images = new ArrayList<>();
+
     public ImageTagView(Context context) {
         super(context);
     }
@@ -35,6 +41,19 @@ public class ImageTagView extends LinearLayout {
         LayoutParams params = new LayoutParams(60, 60);
         params.setMargins(8, 0, 0, 0);
         addView(imageView, params);
+    }
+
+    public void addImage(List<Integer> images) {
+        for (int i = 0; i < this.getChildCount(); i++) {
+            removeView(this.getChildAt(i));
+        }
+        for (Integer image : images) {
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageResource(image);
+            LayoutParams params = new LayoutParams(60, 60);
+            params.setMargins(8, 0, 0, 0);
+            addView(imageView, params);
+        }
     }
 
     public void addUrl(String imageUrl) {

@@ -14,7 +14,6 @@ public class CarAdvertEntity implements java.io.Serializable {
 	
 	/** 版本号 */
 	private static final long serialVersionUID = 2390998271609184898L;
-	
     
     /** 主键自增ID */
 

@@ -115,21 +115,23 @@ public class EditMotorsActivity extends BaseActivity {
     }
 
     private void initData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("did", SpUtlis.getUserData(mActivity).getCarDealerId() + "");
-        params.put("isSee", true + "");
-        HttpUtils.getInstance().Post(mActivity, params, API.getCarDealerById, new HttpUtils.OnOkHttpCallback() {
-            @Override
-            public void onSuccess(String body) {
-                carDealerEntity = new Gson().fromJson(body, CarDealerEntity.class);
-                updateUi();
-            }
-
-            @Override
-            public void onError(Request error, Exception e) {
-
-            }
-        });
+        carDealerEntity = (CarDealerEntity) getIntent().getSerializableExtra("data");
+        updateUi();
+//        Map<String, String> params = new HashMap<>();
+//        params.put("did", SpUtlis.getUserData(mActivity).getCarDealerId() + "");
+//        params.put("isSee", true + "");
+//        HttpUtils.getInstance().Post(mActivity, params, API.getCarDealerById, new HttpUtils.OnOkHttpCallback() {
+//            @Override
+//            public void onSuccess(String body) {
+//                carDealerEntity = new Gson().fromJson(body, CarDealerEntity.class);
+//                updateUi();
+//            }
+//
+//            @Override
+//            public void onError(Request error, Exception e) {
+//
+//            }
+//        });
     }
 
     /**

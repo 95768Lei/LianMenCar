@@ -58,7 +58,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     private SurfaceHolder holder;
     private Camera.AutoFocusCallback focusCallback;
     private Camera.PreviewCallback previewCallback;
-    private ImageView km;
+    private ImageView km, ivFlashlight;
 
     public static final int CAMERA_CODE = 4;
     private Handler handler = new Handler() {
@@ -71,6 +71,8 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
             }
         }
     };
+    private boolean isOpen;
+    private Camera.Parameters parameter;
 
 
     @Override
@@ -114,7 +116,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
             return;
         }
         //动态申请文件读写权限
-        if (!isPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if (!isPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             applyPermission(Permission.STORAGE, new PermissionListener() {
                 @Override
                 public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
@@ -158,6 +160,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
      */
     private void initListener() {
         km.setOnClickListener(this);
+        ivFlashlight.setOnClickListener(this);
         activity_camera.setOnClickListener(this);
     }
 
@@ -194,6 +197,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         activity_camera = (AutoRelativeLayout) findViewById(R.id.activity_camera);
         sv = (SurfaceView) findViewById(R.id.camera_sv);
         km = (ImageView) findViewById(R.id.camera_km);
+        ivFlashlight = (ImageView) findViewById(R.id.iv_flashlight);
 
         if (mCamera == null) {
             showToast("无法打开相机");
@@ -353,6 +357,14 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
                     }
                 }
             });
+        } else if (i == R.id.iv_flashlight) {
+            //开启闪光灯
+            if (!isOpen) {
+                OpenLightOn();
+            } else {
+                //关闭闪光灯
+                CloseLightOff();
+            }
         }
 //        else if (i == R.id.activity_camera) {
 //            mCamera.autoFocus(new Camera.AutoFocusCallback() {
@@ -366,4 +378,32 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
 //
 //        }
     }
+
+    /**
+     * 开启闪光灯
+     */
+    private void OpenLightOn() {
+        if (mCamera == null) return;
+        if (mCamera != null) {
+            parameter = mCamera.getParameters();
+            parameter.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            mCamera.setParameters(parameter);
+            ivFlashlight.setImageResource(R.drawable.ic_flash_off_white);
+            isOpen = true;
+        }
+    }
+
+    /**
+     * 关闭闪光灯
+     */
+    private void CloseLightOff() {
+        if (mCamera != null) {
+            parameter = mCamera.getParameters();
+            parameter.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            mCamera.setParameters(parameter);
+            ivFlashlight.setImageResource(R.drawable.ic_flash_on_white);
+            isOpen = false;
+        }
+    }
+
 }

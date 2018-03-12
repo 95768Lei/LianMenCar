@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.RegexUtils;
+import com.google.gson.Gson;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
+import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.LoginBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
@@ -90,52 +92,69 @@ public class BindPhoneActivity extends BaseActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(code)) {
-            showToast("验证码不能为空");
-            return;
-        }
+//        if (TextUtils.isEmpty(code)) {
+//            showToast("验证码不能为空");
+//            return;
+//        }
 
         if (TextUtils.isEmpty(password)) {
             showToast("密码不能为空");
             return;
         }
-
-        if (!SpUtlis.getLoginData(mActivity).getPassword().equals(password)) {
-            showToast("密码不正确");
-            return;
-        }
-
-        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+        params.put("phone", phone);
+        params.put("pass", password);
+        HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
             @Override
-            public void checkCodeSuccess(String s) {
-                Map<String, String> params = new HashMap<>();
-                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
-                params.put("phone", phone);
-                params.put("pass", password);
-
-                HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
-                    @Override
-                    public void onSuccess(String body) {
-                        showToast("手机号绑定成功");
-                        LoginBean loginData = SpUtlis.getLoginData(mActivity);
-                        loginData.setPhone(phone);
-                        SpUtlis.setLoginData(mActivity, loginData);
-                        LoginActivity.loginActivity.finish();
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Request error, Exception e) {
-                        Log.e("body", "");
-                    }
-                });
+            public void onSuccess(String body) {
+                showToast("手机号绑定成功");
+                SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
+                LoginBean loginData = SpUtlis.getLoginData(mActivity);
+                loginData.setPhone(phone);
+                SpUtlis.setLoginData(mActivity, loginData);
+                LoginActivity.loginActivity.finish();
+                finish();
             }
 
             @Override
-            public void checkCodeFail(int i, String s) {
-
+            public void onError(Request error, Exception e) {
+                Log.e("body", "");
             }
         });
+
+//        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
+//            @Override
+//            public void checkCodeSuccess(String s) {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+//                params.put("phone", phone);
+//                params.put("pass", password);
+//
+//                HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
+//                    @Override
+//                    public void onSuccess(String body) {
+//                        showToast("手机号绑定成功");
+//        SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
+//                        LoginBean loginData = SpUtlis.getLoginData(mActivity);
+//                        loginData.setPhone(phone);
+//                        SpUtlis.setLoginData(mActivity, loginData);
+//                        LoginActivity.loginActivity.finish();
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void onError(Request error, Exception e) {
+//                        Log.e("body", "");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void checkCodeFail(int i, String s) {
+//
+//            }
+//        });
     }
 
     private void sendCode() {

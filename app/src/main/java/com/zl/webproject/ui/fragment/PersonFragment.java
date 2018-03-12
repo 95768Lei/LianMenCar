@@ -25,6 +25,7 @@ import com.zl.webproject.ui.activity.FeedBackActivity;
 import com.zl.webproject.ui.activity.LoginActivity;
 import com.zl.webproject.ui.activity.MyCarActivity;
 import com.zl.webproject.ui.activity.MyMotorsActivity;
+import com.zl.webproject.ui.activity.RealCarDealerActivity;
 import com.zl.webproject.ui.activity.RealPersonActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
@@ -80,8 +81,8 @@ public class PersonFragment extends BaseFragment {
     private Integer[] iconCars = {R.mipmap.fbcy, R.mipmap.wdcy, R.mipmap.zjcl, R.mipmap.wdsc};
     private Integer[] iconCarhangs = {R.mipmap.wdgz, R.mipmap.wdch, R.mipmap.zj};
     private Integer[] iconWoMens = {R.mipmap.kfdh, R.mipmap.mzsm, R.mipmap.yjfk, R.mipmap.gy};
-    private Integer[] iconCenters = {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-            R.mipmap.ic_launcher};
+    private Integer[] iconCenters = {R.mipmap.ic_person_man, R.mipmap.ic_update_password, R.mipmap.ic_person_ren_zheng,
+            R.mipmap.ic_ren_zheng};
 
     public PersonFragment() {
         // Required empty public constructor
@@ -249,7 +250,12 @@ public class PersonFragment extends BaseFragment {
                                 break;
                             //车行认证
                             case "车行认证":
-                                SystemUtils.toActivity(mActivity, new Intent(mActivity, CarShareListActivity.class));
+                                if (SpUtlis.getUserData(mActivity).getCarDealerId() != -1){
+                                    SystemUtils.toActivity(mActivity, new Intent(mActivity, RealCarDealerActivity.class));
+                                }else{
+                                    showToast("你还没有车行，请先上传车行信息");
+                                }
+
                                 break;
                         }
                     }
@@ -323,9 +329,14 @@ public class PersonFragment extends BaseFragment {
             if (!TextUtils.isEmpty(userData.getUserImg())) {
                 ImageLoader.loadImageUrl(mActivity, userData.getUserImg(), ivPersonIcon);
             }
+            List<Integer> list = new ArrayList<>();
             if (userData.getUserApply() == 1) {
-                tagViewPerson.addImage(R.mipmap.rzzj);
+                list.add(R.mipmap.rzzj);
             }
+            if (userData.getCarDealerId() != 0 && userData.getUserDealerApply() != 0) {
+                list.add(R.mipmap.rzch);
+            }
+            tagViewPerson.addImage(list);
 
         }
     }

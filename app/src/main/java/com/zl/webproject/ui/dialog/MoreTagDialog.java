@@ -143,7 +143,7 @@ public class MoreTagDialog {
                         CarDictionaryEntity entity = new Gson().fromJson(carlvType.opt(i).toString(), CarDictionaryEntity.class);
                         TagBean bean = new TagBean();
                         bean.setTag(entity.getDictName());
-                        bean.setId(entity.getId()+"");
+                        bean.setId(entity.getId() + "");
                         carlvList.add(bean);
                     }
                     carlv.setTagList(carlvList);
@@ -158,7 +158,7 @@ public class MoreTagDialog {
                         CarDictionaryEntity entity = new Gson().fromJson(gearboxType.opt(i).toString(), CarDictionaryEntity.class);
                         TagBean bean = new TagBean();
                         bean.setTag(entity.getDictName());
-                        bean.setId(bean.getId());
+                        bean.setId(entity.getId() + "");
                         gearboxList.add(bean);
                     }
                     gearbox.setTagList(gearboxList);

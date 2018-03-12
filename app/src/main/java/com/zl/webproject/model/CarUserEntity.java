@@ -122,6 +122,17 @@ public class CarUserEntity implements java.io.Serializable {
      */
     private Integer userApply = 0;
 
+    /** 车行认证 0：未认证，1：认证 */
+    private Integer userDealerApply = 0;
+
+    public Integer getUserDealerApply() {
+        return userDealerApply;
+    }
+
+    public void setUserDealerApply(Integer userDealerApply) {
+        this.userDealerApply = userDealerApply;
+    }
+
     /**
      * 完善信息表
      */

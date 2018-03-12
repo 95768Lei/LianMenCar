@@ -1,6 +1,8 @@
 package com.zl.webproject.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -44,7 +46,6 @@ public class CarSearchActivity extends BaseActivity {
     WrapLayout wrapHot;
     @BindView(R.id.et_search)
     EditText etSearch;
-    private String[] myData1 = {"奥迪", "宝马", "特斯拉", "奔驰", "大众", "雪佛兰", "东风日产"};
     private List<String> hotCarList;
     private List<String> hotList;
 
@@ -62,14 +63,16 @@ public class CarSearchActivity extends BaseActivity {
             @Override
             public void clickMark(int position) {
                 String s = hotCarList.get(position);
-                etSearch.setText(s);
+                String trim = etSearch.getText().toString().trim();
+                etSearch.setText(trim + s);
             }
         });
         wrapHot.setMarkClickListener(new WrapLayout.MarkClickListener() {
             @Override
             public void clickMark(int position) {
-                String s = hotCarList.get(position);
-                etSearch.setText(s);
+                String s = hotList.get(position);
+                String trim = etSearch.getText().toString().trim();
+                etSearch.setText(trim + s);
             }
         });
     }
@@ -133,6 +136,12 @@ public class CarSearchActivity extends BaseActivity {
 
     private void search() {
         String searchData = etSearch.getText().toString().trim();
-
+        if (TextUtils.isEmpty(searchData)) {
+            showToast("搜索内容不能为空");
+            return;
+        }
+        Intent intent = new Intent(mActivity, CarSearchDataActivity.class);
+        intent.putExtra("searchData", searchData);
+        startActivity(intent);
     }
 }

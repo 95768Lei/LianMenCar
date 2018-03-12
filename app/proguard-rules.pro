@@ -23,3 +23,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.umeng.commonsdk.** {*;}
+-keep class cn.jpush.sms.SMSSDK {*;}
+-keep class cn.jpush.sms.listener.** {*;}

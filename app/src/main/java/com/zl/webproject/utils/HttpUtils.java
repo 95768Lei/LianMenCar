@@ -223,7 +223,7 @@ public class HttpUtils {
                                     } else {
                                         Toast.makeText(activity, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
                                         if (callback != null) {
-                                            callback.onError(call.request(), new Exception());
+                                            callback.onError(call.request(), new Exception(jsonObject.optString("msg")));
                                         }
                                     }
                                 } catch (Exception e) {

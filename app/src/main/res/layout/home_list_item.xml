@@ -332,10 +332,9 @@
 
         <ImageView
             android:id="@+id/iv_tag"
-            android:layout_width="156px"
-            android:layout_height="156px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_width="126px"
+            android:layout_height="126px"
+            android:layout_centerInParent="true"
             android:layout_marginRight="@dimen/dp_32"
             android:src="@mipmap/ic_sold_out"
             android:visibility="gone" />

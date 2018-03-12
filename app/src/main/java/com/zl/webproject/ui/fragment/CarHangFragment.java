@@ -71,6 +71,8 @@ public class CarHangFragment extends BaseFragment {
     private List<CarDealerEntity> mList = new ArrayList<>();
     private int page = 1;
     private AddressDialog addressDialog;
+    private View viewBottom;
+    private TextView tvBottom;
 
     public CarHangFragment() {
         // Required empty public constructor
@@ -117,7 +119,7 @@ public class CarHangFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(mActivity, CarHangDetailActivity.class);
-                intent.putExtra("did",mList.get(i).getId());
+                intent.putExtra("did", mList.get(i).getId());
                 startActivity(intent);
             }
         });
@@ -176,10 +178,6 @@ public class CarHangFragment extends BaseFragment {
                     }
                     JSONObject object = new JSONObject(body);
                     JSONArray array = object.optJSONArray("items");
-                    if (array.length() <= 0) {
-                        showToast("没有更多了");
-                        return;
-                    }
                     for (int i = 0; i < array.length(); i++) {
                         CarDealerEntity carDealerEntity = new Gson().fromJson(array.optString(i), CarDealerEntity.class);
                         mList.add(carDealerEntity);
@@ -188,6 +186,17 @@ public class CarHangFragment extends BaseFragment {
 
                     if (page == 1) {
                         carHangListView.setSelection(0);
+                    }
+
+                    if (array.length() <= 0) {
+                        if (carHangListView.getFooterViewsCount() <= 0) {
+                            tvBottom.setText("共" + mList.size() + "条车行信息");
+                            carHangListView.addFooterView(viewBottom);
+                        }
+                    } else {
+                        if (carHangListView.getFooterViewsCount() > 0) {
+                            carHangListView.removeFooterView(viewBottom);
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -217,6 +226,9 @@ public class CarHangFragment extends BaseFragment {
         initProgress(carHangTrl);
 
         addressDialog = new AddressDialog(mActivity);
+
+        viewBottom = LayoutInflater.from(mActivity).inflate(R.layout.tv_bottom_layout, null);
+        tvBottom = viewBottom.findViewById(R.id.tv_bottom);
     }
 
     @Override

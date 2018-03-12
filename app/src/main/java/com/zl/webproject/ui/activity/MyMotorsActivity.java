@@ -10,17 +10,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.RegexUtils;
-import com.foamtrace.photopicker.SelectModel;
-import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 import com.google.gson.Gson;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseActivity;
 import com.zl.webproject.model.CarDealerEntity;
 import com.zl.webproject.model.CarDealerResourceEntity;
-import com.zl.webproject.model.CarResourceEntity;
 import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.model.CityBean;
+import com.zl.webproject.model.ShareBean;
 import com.zl.webproject.ui.dialog.AddressDialog;
+import com.zl.webproject.ui.dialog.GongNengDialog;
 import com.zl.webproject.ui.dialog.ImagePreviewDialog;
 import com.zl.webproject.ui.fragment.ImageFragment;
 import com.zl.webproject.utils.API;
@@ -28,6 +29,7 @@ import com.zl.webproject.utils.FragmentHelper;
 import com.zl.webproject.utils.HttpUtils;
 import com.zl.webproject.utils.ImageFactory;
 import com.zl.webproject.utils.ImageLoader;
+import com.zl.webproject.utils.ShareUtils;
 import com.zl.webproject.utils.SpUtlis;
 
 import org.json.JSONException;
@@ -103,6 +105,7 @@ public class MyMotorsActivity extends BaseActivity {
     private List<String> imagePaths;
     private CarDealerEntity carDealerEntity;
     private ImagePreviewDialog previewDialog;
+    private GongNengDialog gongNengDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +113,13 @@ public class MyMotorsActivity extends BaseActivity {
         setContentView(R.layout.activity_my_motors);
         ButterKnife.bind(this);
         initView();
-        initData();
         initListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     private void initData() {
@@ -150,7 +158,7 @@ public class MyMotorsActivity extends BaseActivity {
         tvChooseAddress.setText(carDealerEntity.getCity().getCityName());
         etCarContent.setText(carDealerEntity.getDealerContext());
 
-        tvTitleRight.setText("编辑车行");
+        tvTitleRight.setText("操作车行");
 
     }
 
@@ -178,6 +186,69 @@ public class MyMotorsActivity extends BaseActivity {
                 imagePaths = path;
             }
         });
+        gongNengDialog.setOnGongNengListener(new GongNengDialog.OnGongNengListener() {
+            @Override
+            public void share() {
+                shareCarDealer();
+            }
+
+            @Override
+            public void edit() {
+                editCarDealer();
+            }
+
+            @Override
+            public void refresh() {
+                showToast("刷新成功");
+                initData();
+            }
+        });
+    }
+
+    /**
+     * 编辑车行
+     */
+    private void editCarDealer() {
+        Intent intent = new Intent(mActivity, EditMotorsActivity.class);
+        intent.putExtra("data", carDealerEntity);
+        startActivity(intent);
+    }
+
+    /**
+     * 分享车行
+     */
+    private void shareCarDealer() {
+        if (carDealerEntity == null) return;
+        ShareBean shareBean = new ShareBean();
+        shareBean.setShareTitle(carDealerEntity.getDealerName());
+        shareBean.setImgUrl(carDealerEntity.getDealerImg());
+        shareBean.setShareContent(carDealerEntity.getDealerContext());
+        shareBean.setUrl(API.toCarShop + "?did=" + carDealerEntity.getId());
+        ShareUtils.share(mActivity, shareBean, new ShareUtils.OnShareListener() {
+            @Override
+            public void shareSuccess(SHARE_MEDIA share_media) {
+                showToast("分享成功");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("did", carDealerEntity.getId() + "");
+                HttpUtils.getInstance().Post(mActivity, params, API.toForwardCarDealer, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void shareError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+        });
     }
 
     private void initView() {
@@ -189,11 +260,15 @@ public class MyMotorsActivity extends BaseActivity {
         helper = FragmentHelper.builder(mActivity).attach(R.id.motors_car_rl).addFragment(imageFragment).commit();
 
         previewDialog = new ImagePreviewDialog(mActivity);
+        tvTitleRight.setText("提交保存");
+
+        gongNengDialog = new GongNengDialog(mActivity);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(mActivity).onActivityResult(requestCode, resultCode, data);
         imageFragment.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -218,7 +293,7 @@ public class MyMotorsActivity extends BaseActivity {
                 break;
             case R.id.tv_title_right:
                 if (carDealerEntity != null) {
-                    edit();
+                    gongNengDialog.showDialog(view);
                 } else {
                     commit();
                 }
@@ -242,13 +317,6 @@ public class MyMotorsActivity extends BaseActivity {
                 etCarAddress.setText("");
                 break;
         }
-    }
-
-    /**
-     * 编辑车行
-     */
-    private void edit() {
-        startActivity(new Intent(mActivity, EditMotorsActivity.class));
     }
 
     private void addImage() {
@@ -384,6 +452,12 @@ public class MyMotorsActivity extends BaseActivity {
                                     boolean result = jsonObject.optBoolean("result");
                                     if (result) {
                                         showToast("成功发布车行");
+                                        //储存车行id
+                                        JSONObject data = jsonObject.optJSONObject("data");
+                                        int id = data.optInt("id");
+                                        CarUserEntity userData = SpUtlis.getUserData(mActivity);
+                                        userData.setCarDealerId(id);
+                                        SpUtlis.setUserData(mActivity, userData);
                                         finish();
                                     } else {
                                         showToast(jsonObject.optString("msg"));
