@@ -24,6 +24,7 @@ import com.zl.webproject.model.MoreTagBean;
 import com.zl.webproject.model.TagBean;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.OnDismissListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +50,11 @@ public class MoreTagDialog {
     private PopupWindow mPopupWindow;
     private Map<Integer, Integer> sparseArray = new HashMap<>();
     private View bgTv;
+    private OnDismissListener onDismissListener;
+
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
 
     public MoreTagDialog(Activity mActivity) {
         this.mActivity = mActivity;
@@ -70,6 +76,15 @@ public class MoreTagDialog {
             @Override
             public void onClick(View view) {
                 dismiss();
+            }
+        });
+
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (onDismissListener != null){
+                    onDismissListener.onDismiss();
+                }
             }
         });
     }

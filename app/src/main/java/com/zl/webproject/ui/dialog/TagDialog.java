@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.zl.webproject.R;
 import com.zl.webproject.base.UniversalAdapter;
 import com.zl.webproject.base.UniversalViewHolder;
+import com.zl.webproject.utils.OnDismissListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,11 @@ public class TagDialog {
     private int mPostion = -1;
     private View bgTv;
     private View view;
+    private OnDismissListener onDismissListener;
+
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
 
     public TagDialog(Activity mActivity, List<String> mList) {
         this.mActivity = mActivity;
@@ -72,6 +78,15 @@ public class TagDialog {
                 dismiss();
             }
         });
+
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (onDismissListener != null) {
+                    onDismissListener.onDismiss();
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -107,11 +122,10 @@ public class TagDialog {
         mList.clear();
         mList.addAll(list);
         mAdapter.notifyDataSetChanged();
-
     }
 
     public void showDialog(View view) {
-        mPopupWindow.showAsDropDown(view);
+        mPopupWindow.showAsDropDown(view, 0, 0);
     }
 
     public void dismiss() {

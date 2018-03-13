@@ -4,6 +4,7 @@ package com.zl.webproject.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,7 @@ public class CarHangFragment extends BaseFragment {
     private AddressDialog addressDialog;
     private View viewBottom;
     private TextView tvBottom;
+    private String KeyWord = "";
 
     public CarHangFragment() {
         // Required empty public constructor
@@ -137,6 +139,7 @@ public class CarHangFragment extends BaseFragment {
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 page = 1;
+                KeyWord = "";
                 getListData();
             }
 
@@ -161,7 +164,7 @@ public class CarHangFragment extends BaseFragment {
     private void getListData() {
         CityBean locationData = SpUtlis.getLocationData(mActivity);
         final Map<String, String> params = new HashMap<>();
-        params.put("keyWord", "");
+        params.put("keyWord", KeyWord);
         params.put("cityCode", locationData.getCityCode());
         params.put("page", page + "");
 
@@ -237,7 +240,7 @@ public class CarHangFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_city, R.id.iv_message, R.id.fab_loop})
+    @OnClick({R.id.tv_city, R.id.iv_message, R.id.fab_loop, R.id.iv_search})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_city:
@@ -249,7 +252,24 @@ public class CarHangFragment extends BaseFragment {
             case R.id.fab_loop:
                 refreshData();
                 break;
+            case R.id.iv_search:
+                search();
+                break;
         }
+    }
+
+    /**
+     * 搜索车行
+     */
+    private void search() {
+        String searchData = etSearchData.getText().toString().trim();
+        if (TextUtils.isEmpty(searchData)) {
+            showToast("搜索内容不能为空");
+            return;
+        }
+        KeyWord = searchData;
+        page = 1;
+        getListData();
     }
 
     /**

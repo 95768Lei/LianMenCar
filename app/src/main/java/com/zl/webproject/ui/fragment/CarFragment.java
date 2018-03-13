@@ -1,10 +1,12 @@
 package com.zl.webproject.ui.fragment;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ import com.zl.webproject.ui.dialog.TagDialog;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.BindDataUtils;
 import com.zl.webproject.utils.HttpUtils;
+import com.zl.webproject.utils.OnDismissListener;
 import com.zl.webproject.utils.SpUtlis;
 
 import org.json.JSONArray;
@@ -45,7 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,6 +85,34 @@ public class CarFragment extends BaseFragment {
     AutoLinearLayout linearGongNeng;
     @BindView(R.id.message_iv_tag)
     ImageView messageIvTag;
+    @BindView(R.id.et_search_data)
+    TextView etSearchData;
+    @BindView(R.id.linear_qu_jian_money)
+    AutoLinearLayout linearQuJianMoney;
+    @BindView(R.id.linear_car_nian_xian)
+    AutoLinearLayout linearCarNianXian;
+    @BindView(R.id.linear_run_range)
+    AutoLinearLayout linearRunRange;
+    @BindView(R.id.linear_more)
+    AutoLinearLayout linearMore;
+    @BindView(R.id.tv_money_pai_xu)
+    TextView tvMoneyPaiXu;
+    @BindView(R.id.linear_money_pai_xu)
+    AutoLinearLayout linearMoneyPaiXu;
+    @BindView(R.id.tv_car_year_pai_xu)
+    TextView tvCarYearPaiXu;
+    @BindView(R.id.linear_car_year_pai_xu)
+    AutoLinearLayout linearCarYearPaiXu;
+    @BindView(R.id.car_run_range_pai_xu)
+    TextView carRunRangePaiXu;
+    @BindView(R.id.linear_run_range_pai_xu)
+    AutoLinearLayout linearRunRangePaiXu;
+    @BindView(R.id.tv_more_pai_xu)
+    TextView tvMorePaiXu;
+    @BindView(R.id.linear_more_pai_xu)
+    AutoLinearLayout linearMorePaiXu;
+    @BindView(R.id.linear_gong_neng2)
+    AutoLinearLayout linearGongNeng2;
     private UniversalAdapter<CarInfoEntity> mAdapter;
     private List<CarInfoEntity> mList = new ArrayList<>();
     private TagDialog tagDialog;
@@ -98,6 +128,8 @@ public class CarFragment extends BaseFragment {
     private Map<String, String> params = new HashMap<>();
     private View viewBottom;
     private TextView tvBottom;
+    private String[] items = {"全部车源", "个人车源", "车行车源"};
+    private AlertDialog alertDialog;
 
     public CarFragment() {
         // Required empty public constructor
@@ -249,6 +281,31 @@ public class CarFragment extends BaseFragment {
                 Log.e("data", data.toString());
                 params.putAll(data);
                 getDataList();
+            }
+        });
+
+        tagDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tvQuJianMoney.setSelected(false);
+            }
+        });
+        tagAgeDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tvCarNianXian.setSelected(false);
+            }
+        });
+        tagRunDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                carRunRange.setSelected(false);
+            }
+        });
+        moreTagDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tvMore.setSelected(false);
             }
         });
     }
@@ -422,6 +479,27 @@ public class CarFragment extends BaseFragment {
 
         viewBottom = LayoutInflater.from(mActivity).inflate(R.layout.tv_bottom_layout, null);
         tvBottom = viewBottom.findViewById(R.id.tv_bottom);
+
+        alertDialog = new AlertDialog.Builder(mActivity).setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        tvMorePaiXu.setText("全部车源");
+                        tvMorePaiXu.setSelected(false);
+                        break;
+                    case 1:
+                        tvMorePaiXu.setText("个人车源");
+                        tvMorePaiXu.setSelected(true);
+                        break;
+                    case 2:
+                        tvMorePaiXu.setText("车行车源");
+                        tvMorePaiXu.setSelected(true);
+                        break;
+                }
+                alertDialog.dismiss();
+            }
+        }).create();
     }
 
     @Override
@@ -431,7 +509,8 @@ public class CarFragment extends BaseFragment {
     }
 
     @OnClick({R.id.tv_city, R.id.fab_loop, R.id.iv_message, R.id.linear_qu_jian_money, R.id.linear_car_nian_xian,
-            R.id.linear_run_range, R.id.et_search_data, R.id.linear_more})
+            R.id.linear_run_range, R.id.et_search_data, R.id.linear_more, R.id.linear_money_pai_xu,
+            R.id.linear_car_year_pai_xu, R.id.linear_run_range_pai_xu, R.id.linear_more_pai_xu})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //选择城市
@@ -448,23 +527,54 @@ public class CarFragment extends BaseFragment {
                 break;
             //价格区间
             case R.id.linear_qu_jian_money:
+                tvQuJianMoney.setSelected(true);
                 showWindow(tagDialog);
                 break;
             //车辆年限
             case R.id.linear_car_nian_xian:
+                tvCarNianXian.setSelected(true);
                 showWindow(tagAgeDialog);
                 break;
             //行驶里程
             case R.id.linear_run_range:
+                carRunRange.setSelected(true);
                 showWindow(tagRunDialog);
                 break;
             //更多检索
             case R.id.linear_more:
+                tvMore.setSelected(true);
                 showMoreWindow();
                 break;
             //进入车辆搜索
             case R.id.et_search_data:
                 startActivity(new Intent(mActivity, CarSearchActivity.class));
+                break;
+            case R.id.linear_money_pai_xu:
+                tvMoneyPaiXu.setSelected(!tvMoneyPaiXu.isSelected());
+                if (tvMoneyPaiXu.isSelected()) {
+                    tvMoneyPaiXu.setText("价格最低");
+                } else {
+                    tvMoneyPaiXu.setText("价格最高");
+                }
+                break;
+            case R.id.linear_car_year_pai_xu:
+                tvCarYearPaiXu.setSelected(!tvCarYearPaiXu.isSelected());
+                if (tvCarYearPaiXu.isSelected()) {
+                    tvCarYearPaiXu.setText("年限最低");
+                } else {
+                    tvCarYearPaiXu.setText("年限最高");
+                }
+                break;
+            case R.id.linear_run_range_pai_xu:
+                carRunRangePaiXu.setSelected(!carRunRangePaiXu.isSelected());
+                if (carRunRangePaiXu.isSelected()) {
+                    carRunRangePaiXu.setText("里程最高");
+                } else {
+                    carRunRangePaiXu.setText("里程最低");
+                }
+                break;
+            case R.id.linear_more_pai_xu:
+                alertDialog.show();
                 break;
         }
     }

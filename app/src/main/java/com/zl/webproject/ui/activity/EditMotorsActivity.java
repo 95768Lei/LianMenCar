@@ -191,7 +191,7 @@ public class EditMotorsActivity extends BaseActivity {
         addressDialog = new AddressDialog(mActivity);
         tvTitleName.setText("我的车行");
         tvTitleRight.setVisibility(View.VISIBLE);
-        tvTitleRight.setText("保存编辑");
+        tvTitleRight.setText("保存");
     }
 
     @Override

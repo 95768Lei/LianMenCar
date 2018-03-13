@@ -250,9 +250,9 @@ public class PersonFragment extends BaseFragment {
                                 break;
                             //车行认证
                             case "车行认证":
-                                if (SpUtlis.getUserData(mActivity).getCarDealerId() != -1){
+                                if (SpUtlis.getUserData(mActivity).getCarDealerId() != -1) {
                                     SystemUtils.toActivity(mActivity, new Intent(mActivity, RealCarDealerActivity.class));
-                                }else{
+                                } else {
                                     showToast("你还没有车行，请先上传车行信息");
                                 }
 
@@ -330,6 +330,9 @@ public class PersonFragment extends BaseFragment {
                 ImageLoader.loadImageUrl(mActivity, userData.getUserImg(), ivPersonIcon);
             }
             List<Integer> list = new ArrayList<>();
+            if (userData.getUserInter() == 1) {
+                list.add(R.mipmap.smrz);
+            }
             if (userData.getUserApply() == 1) {
                 list.add(R.mipmap.rzzj);
             }

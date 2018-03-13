@@ -1,6 +1,5 @@
 package com.zl.webproject.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -92,73 +91,54 @@ public class BindPhoneActivity extends BaseActivity {
             return;
         }
 
-//        if (TextUtils.isEmpty(code)) {
-//            showToast("验证码不能为空");
-//            return;
-//        }
+        if (TextUtils.isEmpty(code)) {
+            showToast("验证码不能为空");
+            return;
+        }
 
         if (TextUtils.isEmpty(password)) {
             showToast("密码不能为空");
             return;
         }
-        Map<String, String> params = new HashMap<>();
-        params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
-        params.put("phone", phone);
-        params.put("pass", password);
-        HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
+
+        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
             @Override
-            public void onSuccess(String body) {
-                showToast("手机号绑定成功");
-                SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
-                LoginBean loginData = SpUtlis.getLoginData(mActivity);
-                loginData.setPhone(phone);
-                SpUtlis.setLoginData(mActivity, loginData);
-                LoginActivity.loginActivity.finish();
-                finish();
+            public void checkCodeSuccess(String s) {
+                Map<String, String> params = new HashMap<>();
+                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
+                params.put("phone", phone);
+                params.put("pass", password);
+
+                HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+                        showToast("手机号绑定成功");
+                        SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
+                        LoginBean loginData = SpUtlis.getLoginData(mActivity);
+                        loginData.setPhone(phone);
+                        loginData.setPassword(password);
+                        loginData.setLogin(true);
+                        SpUtlis.setLoginData(mActivity, loginData);
+                        LoginActivity.loginActivity.finish();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+                        Log.e("body", "");
+                    }
+                });
             }
 
             @Override
-            public void onError(Request error, Exception e) {
-                Log.e("body", "");
+            public void checkCodeFail(int i, String s) {
+
             }
         });
-
-//        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
-//            @Override
-//            public void checkCodeSuccess(String s) {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("uid", SpUtlis.getUserData(mActivity).getId() + "");
-//                params.put("phone", phone);
-//                params.put("pass", password);
-//
-//                HttpUtils.getInstance().Post(mActivity, params, API.saveBindingPhone, new HttpUtils.OnOkHttpCallback() {
-//                    @Override
-//                    public void onSuccess(String body) {
-//                        showToast("手机号绑定成功");
-//        SpUtlis.setUserData(mActivity, new Gson().fromJson(body, CarUserEntity.class));
-//                        LoginBean loginData = SpUtlis.getLoginData(mActivity);
-//                        loginData.setPhone(phone);
-//                        SpUtlis.setLoginData(mActivity, loginData);
-//                        LoginActivity.loginActivity.finish();
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onError(Request error, Exception e) {
-//                        Log.e("body", "");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void checkCodeFail(int i, String s) {
-//
-//            }
-//        });
     }
 
     private void sendCode() {
-        String phone = etInputPhone.getText().toString();
+        final String phone = etInputPhone.getText().toString();
 
         if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
@@ -169,7 +149,17 @@ public class BindPhoneActivity extends BaseActivity {
             showToast("手机号格式不对");
             return;
         }
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        HttpUtils.getInstance().Post(mActivity, params, API.checkPhone, new HttpUtils.OnOkHttpCallback() {
+            @Override
+            public void onSuccess(String body) {
+                SmsUtils.sendCode(mActivity, phone, tvSendCode);
+            }
 
-        SmsUtils.sendCode(mActivity, phone, tvSendCode);
+            @Override
+            public void onError(Request error, Exception e) {
+            }
+        });
     }
 }

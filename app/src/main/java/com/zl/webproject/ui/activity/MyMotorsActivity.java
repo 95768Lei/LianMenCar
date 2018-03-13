@@ -158,7 +158,7 @@ public class MyMotorsActivity extends BaseActivity {
         tvChooseAddress.setText(carDealerEntity.getCity().getCityName());
         etCarContent.setText(carDealerEntity.getDealerContext());
 
-        tvTitleRight.setText("操作车行");
+        tvTitleRight.setText("编辑");
 
     }
 

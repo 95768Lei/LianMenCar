@@ -93,6 +93,7 @@ public class SpUtlis {
         edit.putString("userNikeName", userEntity.getUserNikeName());
         edit.putInt("carDealerId", userEntity.getCarDealerId());
         edit.putInt("userDealerApply", userEntity.getUserDealerApply());
+        edit.putInt("userInter", userEntity.getUserInter());
         edit.putString("userPhone", userEntity.getUserPhone());
         edit.commit();
     }
@@ -108,6 +109,7 @@ public class SpUtlis {
         entity.setCarDealerId(sp.getInt("carDealerId", -1));
         entity.setUserDealerApply(sp.getInt("userDealerApply", 0));
         entity.setUserPhone(sp.getString("userPhone", ""));
+        entity.setUserInter(sp.getInt("userInter", -1));
         return entity;
     }
 

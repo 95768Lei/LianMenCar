@@ -163,6 +163,11 @@ public class DiscussActivity extends BaseActivity {
     }
 
     private void sendDiscuss() {
+
+        if(!SpUtlis.getLoginData(mActivity).isLogin()){
+            showToast("您还未登录，无法进行评价");
+        }
+
         final String discuss = etDiscuss.getText().toString().trim();
         if (TextUtils.isEmpty(discuss)) {
             showToast("内容不能为空");

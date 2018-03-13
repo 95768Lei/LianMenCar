@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.zl.webproject.R;
 import com.zl.webproject.base.BaseFragment;
 import com.zl.webproject.model.CarIntermediaryEntity;
+import com.zl.webproject.model.CarUserEntity;
 import com.zl.webproject.ui.activity.CameraActivity;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.HttpUtils;
@@ -232,6 +233,9 @@ public class RealPersonFragment extends BaseFragment {
             public void onSuccess(String body) {
                 pDialog.hide();
                 showToast("实名认证成功");
+                CarUserEntity userData = SpUtlis.getUserData(mActivity);
+                userData.setUserInter(1);
+                SpUtlis.setUserData(mActivity, userData);
 //                getFragmentManager().popBackStack();
                 mActivity.finish();
             }

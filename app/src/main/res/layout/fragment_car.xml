@@ -29,12 +29,6 @@
                 style="@style/TextCarStyle"
                 android:text="@string/money_interval" />
 
-            <ImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:layout_marginLeft="@dimen/dp_4"
-                app:srcCompat="@drawable/ic_money" />
-
         </com.zhy.autolayout.AutoLinearLayout>
 
         <com.zhy.autolayout.AutoLinearLayout
@@ -48,12 +42,6 @@
                 android:id="@+id/tv_car_nian_xian"
                 style="@style/TextCarStyle"
                 android:text="@string/car_nian_xian" />
-
-            <ImageView
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_marginLeft="@dimen/dp_4"
-                app:srcCompat="@drawable/ic_xin_hao" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
@@ -69,12 +57,6 @@
                 style="@style/TextCarStyle"
                 android:text="行驶里程" />
 
-            <ImageView
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_marginLeft="@dimen/dp_4"
-                app:srcCompat="@drawable/ic_li_cheng_biao" />
-
         </com.zhy.autolayout.AutoLinearLayout>
 
         <com.zhy.autolayout.AutoLinearLayout
@@ -89,11 +71,70 @@
                 style="@style/TextCarStyle"
                 android:text="更多检索" />
 
-            <ImageView
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_marginLeft="@dimen/dp_4"
-                app:srcCompat="@drawable/ic_format_list_numbered_black" />
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/linear_gong_neng2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_below="@id/linear_gong_neng"
+        android:background="@drawable/bottom_line_bg">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_money_pai_xu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_money_pai_xu"
+                style="@style/TextCarStyle"
+                android:text="价格最高" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_car_year_pai_xu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_car_year_pai_xu"
+                style="@style/TextCarStyle"
+                android:text="年限最低" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_run_range_pai_xu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/car_run_range_pai_xu"
+                style="@style/TextCarStyle"
+                android:text="里程最低" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/linear_more_pai_xu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_more_pai_xu"
+                style="@style/TextCarStyle"
+                android:text="全部车源" />
 
         </com.zhy.autolayout.AutoLinearLayout>
 
@@ -103,7 +144,7 @@
         android:id="@+id/car_trl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/linear_gong_neng">
+        android:layout_below="@id/linear_gong_neng2">
 
         <ListView
             android:id="@+id/car_listView"

@@ -15,7 +15,7 @@ public class CarUserEntity implements java.io.Serializable {
     /**
      * 主键自增ID
      */
-    private Integer id;
+    private Integer id = 0;
 
     /**
      * 用户类型：0，个人；1:中介；2：商家；
@@ -105,7 +105,7 @@ public class CarUserEntity implements java.io.Serializable {
     /**
      * 城市地址
      */
-    private Integer userCityId;
+    private Integer userCityId = 0;
 
     /**
      * 推送码
@@ -115,7 +115,7 @@ public class CarUserEntity implements java.io.Serializable {
     /**
      * 完善信息表
      */
-    private Integer userInter;
+    private Integer userInter = 0;
 
     /**
      * 申请认证中介 0：未申请，1：申请

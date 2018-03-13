@@ -27,6 +27,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.sms.listener.SmscheckListener;
 import okhttp3.Request;
 
 /**
@@ -85,7 +86,7 @@ public class RegisterActivity extends BaseActivity {
     private void register() {
         final String phone = etInputPhone.getText().toString().trim();
         String code = etInputCode.getText().toString().trim();
-        String password = etInputPassword.getText().toString().trim();
+        final String password = etInputPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(phone)) {
             showToast("手机号不能为空");
@@ -97,41 +98,48 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
 
-//        if (TextUtils.isEmpty(code)) {
-//            showToast("验证码不能为空");
-//            return;
-//        }
+        if (TextUtils.isEmpty(code)) {
+            showToast("验证码不能为空");
+            return;
+        }
 
         if (TextUtils.isEmpty(password)) {
             showToast("密码不能为空");
             return;
         }
-
-//        if (!SmsUtils.checkSmsCode(mActivity, phone, code)) {
-//            return;
-//        }
-        CityBean locationData = SpUtlis.getCuLocationData(mActivity);
-        Map<String, String> params = new HashMap<>();
-        params.put("phone", phone);
-        params.put("pass", password);
-        params.put("cityCode", locationData.getCityCode());
-        params.put("location", locationData.getCityData());
-        HttpUtils.getInstance().Post(mActivity, params, API.Register, new HttpUtils.OnOkHttpCallback() {
+        SmsUtils.checkSmsCode(mActivity, phone, code, new SmscheckListener() {
             @Override
-            public void onSuccess(String body) {
-                Log.e("body", body.toString());
-                showToast("注册成功");
-                Intent intent = new Intent();
-                intent.putExtra("phone", phone);
-                setResult(RESULT_OK, intent);
-                finish();
+            public void checkCodeSuccess(String s) {
+                CityBean locationData = SpUtlis.getCuLocationData(mActivity);
+                Map<String, String> params = new HashMap<>();
+                params.put("phone", phone);
+                params.put("pass", password);
+                params.put("cityCode", locationData.getCityCode());
+                params.put("location", locationData.getCityData());
+                HttpUtils.getInstance().Post(mActivity, params, API.Register, new HttpUtils.OnOkHttpCallback() {
+                    @Override
+                    public void onSuccess(String body) {
+                        Log.e("body", body.toString());
+                        showToast("注册成功");
+                        Intent intent = new Intent();
+                        intent.putExtra("phone", phone);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Request error, Exception e) {
+                        Log.e("body", "");
+                    }
+                });
             }
 
             @Override
-            public void onError(Request error, Exception e) {
-                Log.e("body", "");
+            public void checkCodeFail(int i, String s) {
+
             }
         });
+
     }
 
     private void sendCode() {
