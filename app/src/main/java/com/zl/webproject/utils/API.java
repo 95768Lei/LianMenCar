@@ -22,8 +22,8 @@ public class API {
     public static final String GYWM_URL = "http://app.tzlm.cc/app/main/toAboutUs.do";
 
 //    public static final String BASEURL = "http://app.tzlm.cc";
-    public static final String BASEURL = "http://60.6.202.157:8889/CARS";
-//    public static final String BASEURL = "http://172.16.18.20:8888/CARS";
+//    public static final String BASEURL = "http://60.6.202.157:8889/CARS";
+    public static final String BASEURL = "http://172.16.18.20:8888/CARS";
 
     //用户登录
     public static final String login = BASEURL + "/app/user/login.do";
@@ -131,5 +131,11 @@ public class API {
     public static final String toForwardCarInfo = BASEURL + "/app/forward/toForwardCarInfo.do";
     //转发车行信息（接口）
     public static final String toForwardCarDealer = BASEURL + "/app/forward/toForwardCarDealer.do";
+    //发布服务
+    public static final String saveOrUpdateServerInfo = BASEURL + "/app/server/saveOrUpdateServerInfo.do";
+    //获取服务列表
+    public static final String getServerList = BASEURL + "/app/server/getServerList.do";
+    //获取服务详情
+    public static final String getServerInfoById = BASEURL + "/app/server/getServerInfoById.do";
 
 }

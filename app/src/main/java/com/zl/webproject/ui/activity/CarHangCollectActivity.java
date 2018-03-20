@@ -217,6 +217,8 @@ public class CarHangCollectActivity extends BaseActivity implements View.OnClick
         holder.setText(R.id.tv_car_hang_phone, "联系电话：" + s.getDealerPhone());
         holder.setText(R.id.tv_car_hang_data, "简述：" + s.getDealerContext());
         holder.setImageUrl(mActivity, R.id.iv_car_hang_icon, s.getDealerImg());
+        holder.setText(R.id.carForWard, s.getDealerForWard() + "");
+        holder.setText(R.id.tv_carBrowse, s.getDealerBrowse() + "");
     }
 
     @Override

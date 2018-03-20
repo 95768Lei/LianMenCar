@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
                 .addFragment(carHangFragment)
                 .addFragment(personFragment)
                 .commit();
-        helper.showFragment(homeFragment);
+//        helper.showFragment(homeFragment);
     }
 
     @Override

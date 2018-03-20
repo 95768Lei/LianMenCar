@@ -182,7 +182,12 @@
         <activity android:name=".ui.activity.RealPersonActivity" />
         <activity android:name=".ui.activity.RealCarDealerActivity" />
         <activity android:name=".ui.activity.CarDiscussActivity" />
-        <activity android:name=".ui.activity.CarSearchDataActivity"></activity>
+        <activity android:name=".ui.activity.CarSearchDataActivity" />
+        <activity android:name=".ui.activity.SendServiceActivity" />
+        <activity android:name=".ui.activity.MyServiceActivity" />
+        <activity android:name=".ui.activity.EditServiceActivity" />
+        <activity android:name=".ui.activity.ServiceListActivity" />
+        <activity android:name=".ui.activity.ServiceDetailActivity"></activity>
     </application>
 
 </manifest>

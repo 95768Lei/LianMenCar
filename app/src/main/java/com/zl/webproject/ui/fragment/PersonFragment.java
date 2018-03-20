@@ -25,9 +25,11 @@ import com.zl.webproject.ui.activity.FeedBackActivity;
 import com.zl.webproject.ui.activity.LoginActivity;
 import com.zl.webproject.ui.activity.MyCarActivity;
 import com.zl.webproject.ui.activity.MyMotorsActivity;
+import com.zl.webproject.ui.activity.MyServiceActivity;
 import com.zl.webproject.ui.activity.RealCarDealerActivity;
 import com.zl.webproject.ui.activity.RealPersonActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
+import com.zl.webproject.ui.activity.SendServiceActivity;
 import com.zl.webproject.ui.activity.SettingsActivity;
 import com.zl.webproject.ui.activity.UpdatePasswordActivity;
 import com.zl.webproject.ui.activity.WebActivity;
@@ -76,6 +78,7 @@ public class PersonFragment extends BaseFragment {
     private String[] carHangs = {"车行关注", "我的车行", "中介认证",};
     private String[] womens = {"客服电话", "免责声明", "意见反馈", "关于我们"};
     private String[] centers = {"用户信息", "密码修改", "实名认证", "车行认证"};
+    private String[] services = {"发布服务", "我的服务"};
 
 
     private Integer[] iconCars = {R.mipmap.fbcy, R.mipmap.wdcy, R.mipmap.zjcl, R.mipmap.wdsc};
@@ -83,6 +86,7 @@ public class PersonFragment extends BaseFragment {
     private Integer[] iconWoMens = {R.mipmap.kfdh, R.mipmap.mzsm, R.mipmap.yjfk, R.mipmap.gy};
     private Integer[] iconCenters = {R.mipmap.ic_person_man, R.mipmap.ic_update_password, R.mipmap.ic_person_ren_zheng,
             R.mipmap.ic_ren_zheng};
+    private Integer[] iconServices = {R.mipmap.ic_send_service, R.mipmap.ic_my_service};
 
     public PersonFragment() {
         // Required empty public constructor
@@ -164,10 +168,22 @@ public class PersonFragment extends BaseFragment {
         }
         centerBean.setImageList(centerList);
 
+        PersonGridBean serviceBean = new PersonGridBean();
+        centerBean.setTitle("个人中心");
+        List<PersonGridBean.ImageList> serviceList = new ArrayList<>();
+        for (int i = 0; i < services.length; i++) {
+            PersonGridBean.ImageList bean = new PersonGridBean.ImageList();
+            bean.setName(services[i]);
+            bean.setImagePath(iconServices[i]);
+            serviceList.add(bean);
+        }
+        serviceBean.setImageList(serviceList);
+
         mList.add(carBean);
         mList.add(carHangBean);
         mList.add(carWoMenBean);
         mList.add(centerBean);
+        mList.add(serviceBean);
 
         mAdapter.notifyDataSetChanged();
     }
@@ -255,7 +271,14 @@ public class PersonFragment extends BaseFragment {
                                 } else {
                                     showToast("你还没有车行，请先上传车行信息");
                                 }
-
+                                break;
+                            //车行认证
+                            case "发布服务":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, SendServiceActivity.class));
+                                break;
+                            //车行认证
+                            case "我的服务":
+                                SystemUtils.toActivity(mActivity, new Intent(mActivity, MyServiceActivity.class));
                                 break;
                         }
                     }

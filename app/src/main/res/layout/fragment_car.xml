@@ -80,7 +80,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_42"
         android:layout_below="@id/linear_gong_neng"
-        android:background="@drawable/bottom_line_bg">
+        android:background="@drawable/bottom_line_bg"
+        android:visibility="gone">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/linear_money_pai_xu"

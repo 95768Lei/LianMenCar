@@ -185,8 +185,14 @@ public class CarFragment extends BaseFragment {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                page = 1;
-                getDataList();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        getDataList();
+                    }
+                }, 600);
+
             }
 
             @Override
@@ -324,7 +330,7 @@ public class CarFragment extends BaseFragment {
         params.put("fuel", "");
         params.put("label", "");
         params.put("gearbox", "");
-        getDataList();
+        carTrl.startRefresh();
         getTagList();
     }
 

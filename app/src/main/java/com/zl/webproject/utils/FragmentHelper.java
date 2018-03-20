@@ -1,6 +1,7 @@
 package com.zl.webproject.utils;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
@@ -16,9 +17,14 @@ public class FragmentHelper {
 
     private AppCompatActivity mActivity;
     private Fragment hideFragment;
+    private List<Fragment> fList;
+    private int layoutId;
 
     private FragmentHelper(Builder builder) {
         mActivity = builder.mActivity;
+        fList = builder.mList;
+        hideFragment = fList.get(0);
+        layoutId = builder.layoutId;
     }
 
     /**
@@ -27,11 +33,22 @@ public class FragmentHelper {
      * @param fragment
      */
     public void showFragment(Fragment fragment) {
+
         if (hideFragment != null) {
+            //想要显示的Fragment 和需要隐藏的Fragment是同一个，则返回
+            if (fragment == hideFragment) {
+                return;
+            }
             hideFragment(hideFragment);
         }
-        FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
-        transaction.show(fragment).commit();
+
+        //判断该Fragment是否已经添加到实务当中
+        if (!mActivity.getSupportFragmentManager().getFragments().contains(fragment)) {
+            mActivity.getSupportFragmentManager().beginTransaction().add(layoutId, fragment).show(fragment).commit();
+        } else {
+            mActivity.getSupportFragmentManager().beginTransaction().show(fragment).commit();
+        }
+
         hideFragment = fragment;
     }
 
@@ -50,19 +67,19 @@ public class FragmentHelper {
     }
 
     public interface IParentLayout {
-        public IFragmentInterface attach(int layoutId);
+        IFragmentInterface attach(int layoutId);
     }
 
     public interface IFragmentInterface {
-        public IFragmentInterface addFragment(Fragment fragment);
+        IFragmentInterface addFragment(Fragment fragment);
 
-        public IFragmentSetting beginSettings();
+        IFragmentSetting beginSettings();
 
-        public FragmentHelper commit();
+        FragmentHelper commit();
     }
 
     public interface IFragmentSetting {
-        public IFragmentInterface endSettings();
+        IFragmentInterface endSettings();
     }
 
     public static class Builder implements IParentLayout, IFragmentInterface, IFragmentSetting {
@@ -86,7 +103,6 @@ public class FragmentHelper {
         @Override
         public IFragmentInterface addFragment(Fragment fragment) {
             mList.add(fragment);
-            transaction.add(layoutId, fragment).hide(fragment);
             return this;
         }
 
@@ -97,7 +113,7 @@ public class FragmentHelper {
 
         @Override
         public FragmentHelper commit() {
-            transaction.commit();
+            transaction.add(layoutId, mList.get(0)).commit();
             return new FragmentHelper(this);
         }
 

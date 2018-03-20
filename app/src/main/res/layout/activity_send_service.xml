@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.zl.webproject.ui.activity.SendServiceActivity">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/base_title_layout" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="460px"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/xiangce" />
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_car_hang_icon"
+                        android:layout_width="@dimen/dp_64"
+                        android:layout_height="@dimen/dp_48"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:layout_marginLeft="@dimen/dp_18"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/xiangce" />
+
+                    <ImageView
+                        android:id="@+id/iv_clear_motor_name"
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp_16"
+                        app:srcCompat="@drawable/ic_clear" />
+
+                    <EditText
+                        android:id="@+id/et_motors_name"
+                        style="@style/EditTextSendCarType"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_clear_motor_name"
+                        android:hint="请输入服务名称" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/SendGoodsTextStyle"
+                        android:text="联系人" />
+
+                    <ImageView
+                        android:id="@+id/iv_clear_name"
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_16"
+                        app:srcCompat="@drawable/ic_clear" />
+
+                    <EditText
+                        android:id="@+id/et_name"
+                        style="@style/EditTextSendCarType"
+                        android:layout_toLeftOf="@id/iv_clear_name"
+                        android:hint="请输入姓名" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/SendGoodsTextStyle"
+                        android:text="联系方式" />
+
+                    <ImageView
+                        android:id="@+id/iv_clear_phone"
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_16"
+                        app:srcCompat="@drawable/ic_clear" />
+
+                    <EditText
+                        android:id="@+id/et_phone"
+                        style="@style/EditTextSendCarType"
+                        android:layout_toLeftOf="@id/iv_clear_phone"
+                        android:hint="若为座机请输入区号"
+                        android:inputType="number" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/SendGoodsTextStyle"
+                        android:text="所在地区" />
+
+                    <TextView
+                        android:id="@+id/tv_choose_address"
+                        style="@style/TextStyle_right"
+                        android:text="@string/click_selector" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/SendGoodsTextStyle"
+                        android:text="服务类型" />
+
+                    <TextView
+                        android:id="@+id/tv_choose_service_type"
+                        style="@style/TextStyle_right"
+                        android:text="@string/click_selector" />
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/SendGoodsTextStyle"
+                        android:text="详细地址" />
+
+                    <ImageView
+                        android:id="@+id/iv_clear_car_address"
+                        android:layout_width="@dimen/dp_18"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_16"
+                        app:srcCompat="@drawable/ic_clear" />
+
+                    <EditText
+                        android:id="@+id/et_car_address"
+                        style="@style/EditTextSendCarType"
+                        android:layout_toLeftOf="@id/iv_clear_car_address"
+                        android:hint="请输入地址" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <EditText
+                    android:id="@+id/et_car_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_18"
+                    android:background="@drawable/line_ju_xing_bg"
+                    android:gravity="top"
+                    android:hint="服务描述"
+                    android:minHeight="260px"
+                    android:padding="@dimen/dp_8"
+                    android:textSize="@dimen/dp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginLeft="@dimen/dp_18"
+                    android:background="@color/light_grey" />
+
+            </com.zhy.autolayout.AutoLinearLayout>
+        </ScrollView>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/motors_car_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
+
+</com.zhy.autolayout.AutoRelativeLayout>

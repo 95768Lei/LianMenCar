@@ -138,9 +138,15 @@ public class CarHangFragment extends BaseFragment {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                page = 1;
-                KeyWord = "";
-                getListData();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        KeyWord = "";
+                        getListData();
+                    }
+                }, 600);
+
             }
 
             @Override
@@ -158,7 +164,7 @@ public class CarHangFragment extends BaseFragment {
     }
 
     private void initData() {
-        getListData();
+        carHangTrl.startRefresh();
     }
 
     private void getListData() {
@@ -223,6 +229,8 @@ public class CarHangFragment extends BaseFragment {
                 holder.setText(R.id.tv_car_hang_phone, "联系电话：" + s.getDealerPhone());
                 holder.setText(R.id.tv_car_hang_data, "简述：" + s.getDealerContext());
                 holder.setImageUrl(mActivity, R.id.iv_car_hang_icon, s.getDealerImg());
+                holder.setText(R.id.carForWard, s.getDealerForWard() + "");
+                holder.setText(R.id.tv_carBrowse, s.getDealerBrowse() + "");
             }
         };
         carHangListView.setAdapter(mAdapter);

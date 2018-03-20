@@ -35,7 +35,10 @@ import com.zl.webproject.model.CityBean;
 import com.zl.webproject.ui.activity.CarDetailActivity;
 import com.zl.webproject.ui.activity.CarSearchActivity;
 import com.zl.webproject.ui.activity.MessageActivity;
+import com.zl.webproject.ui.activity.MyServiceActivity;
 import com.zl.webproject.ui.activity.SendCarActivity;
+import com.zl.webproject.ui.activity.SendServiceActivity;
+import com.zl.webproject.ui.activity.ServiceListActivity;
 import com.zl.webproject.ui.dialog.AddressDialog;
 import com.zl.webproject.utils.API;
 import com.zl.webproject.utils.BindDataUtils;
@@ -174,15 +177,27 @@ public class HomeFragment extends BaseFragment {
                         break;
                     //违章处理
                     case 5:
+                        Intent intent1 = new Intent(mActivity, ServiceListActivity.class);
+                        intent1.putExtra("type",1);
+                        startActivity(intent1);
                         break;
                     //维修服务
                     case 6:
+                        Intent intent2 = new Intent(mActivity, ServiceListActivity.class);
+                        intent2.putExtra("type",2);
+                        startActivity(intent2);
                         break;
                     //保险服务
                     case 7:
+                        Intent intent3 = new Intent(mActivity, ServiceListActivity.class);
+                        intent3.putExtra("type",3);
+                        startActivity(intent3);
                         break;
                     //年审服务
                     case 8:
+                        Intent intent4 = new Intent(mActivity, ServiceListActivity.class);
+                        intent4.putExtra("type",4);
+                        startActivity(intent4);
                         break;
                     //联盟论坛
                     case 9:

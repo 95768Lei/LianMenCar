@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.zl.webproject.ui.activity.CarHangDetailActivity">
+
+    <include
+        android:id="@+id/service_hang_detail_title"
+        layout="@layout/base_title_layout" />
+
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/service_scroll_trl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/service_hang_detail_title">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="420px">
+
+                    <com.bigkoo.convenientbanner.ConvenientBanner
+                        android:id="@+id/service_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:canLoop="true" />
+
+                    <TextView
+                        android:id="@+id/tv_serviceCollectionCount"
+                        android:layout_width="160px"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/black_bottom_round_bg"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/dp_8"
+                        android:paddingRight="@dimen/dp_8"
+                        android:text="热度 12"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dp_14" />
+
+                    <ImageView
+                        android:id="@+id/iv_isFollowDetails"
+                        android:layout_width="160px"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="@dimen/dp_32"
+                        android:background="@drawable/red_top_round_bg"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/dp_6"
+                        android:paddingTop="@dimen/dp_6"
+                        app:srcCompat="@drawable/ic_favorite_border_white" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16"
+                    android:paddingTop="@dimen/dp_8">
+
+                    <ImageView
+                        android:id="@+id/iv_service_hang_icon"
+                        android:layout_width="260px"
+                        android:layout_height="175px"
+                        android:layout_marginRight="@dimen/dp_8"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/icon1" />
+
+                    <TextView
+                        android:id="@+id/tv_service_hang_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:layout_toRightOf="@id/iv_service_hang_icon"
+                        android:singleLine="true"
+                        android:text="XXXX"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dp_14" />
+
+                    <TextView
+                        android:id="@+id/tv_service_data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_service_hang_name"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:layout_toRightOf="@id/iv_service_hang_icon"
+                        android:text="地址："
+                        android:textSize="@dimen/dp_12" />
+
+                    <TextView
+                        android:id="@+id/tv_service_hang_person"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_service_data"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:layout_toRightOf="@id/iv_service_hang_icon"
+                        android:text="联系人："
+                        android:textSize="@dimen/dp_12" />
+
+                    <TextView
+                        android:id="@+id/tv_service_person_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/iv_service_hang_icon"
+                        android:layout_marginBottom="@dimen/dp_2"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:layout_toRightOf="@id/iv_service_hang_icon"
+                        android:text="联系电话："
+                        android:textSize="@dimen/dp_12" />
+
+                    <ImageView
+                        android:id="@+id/iv_call"
+                        android:layout_width="@dimen/dp_32"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_8"
+                        android:background="@drawable/pink_round_bg"
+                        android:padding="@dimen/dp_6"
+                        app:srcCompat="@drawable/ic_call_white" />
+
+                </com.zhy.autolayout.AutoRelativeLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/service_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bg_color"
+                    app:tabIndicatorColor="@color/colorPrimary"
+                    app:tabSelectedTextColor="@color/colorPrimary"
+                    app:tabTextColor="@color/text_grey"></android.support.design.widget.TabLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/service_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/tab_item_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dp_16"
+                        android:text="服务描述"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dp_14" />
+
+                    <TextView
+                        android:id="@+id/tv_service_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:paddingBottom="@dimen/dp_6" />
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/linear_dis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_32"
+                        android:layout_marginTop="@dimen/dp_8">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/tab_item_bg"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp_16"
+                            android:text="服务评论"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_info_more_discuss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:layout_marginRight="@dimen/dp_8"
+                            android:text="查看更多>>"
+                            android:textSize="@dimen/dp_14" />
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+                    <com.zl.webproject.view.MyListView
+                        android:id="@+id/discuss_listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></com.zl.webproject.view.MyListView>
+
+                    <TextView
+                        android:id="@+id/tv_to_discuss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:drawablePadding="@dimen/dp_6"
+                        android:drawableRight="@mipmap/send"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/dp_8"
+                        android:paddingTop="@dimen/dp_8"
+                        android:text="还没有人来评论，点击去评论" />
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </ScrollView>
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+</com.zhy.autolayout.AutoRelativeLayout>

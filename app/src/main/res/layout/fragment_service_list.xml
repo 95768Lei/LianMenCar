@@ -1,0 +1,22 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/service_list_srl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zl.webproject.ui.fragment.ServiceListFragment">
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.zl.webproject.view.MRecyclerView
+            android:id="@+id/service_list_mrv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.zl.webproject.view.MRecyclerView>
+
+        <include layout="@layout/fab_loop_layout" />
+
+        <include layout="@layout/null_layout" />
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>
